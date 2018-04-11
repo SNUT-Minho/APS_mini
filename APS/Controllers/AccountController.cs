@@ -6,19 +6,16 @@ using System.Web.Mvc;
 
 namespace APS.Controllers
 {
-    public class HomeController : Controller
+    public class AccountController : Controller
     {
+        // GET: Account
         public ActionResult Index()
         {
-            ViewBag.Title = "APSmini";
-
             return View();
         }
 
-        [HttpPost]
-        public ActionResult Index(string textUserID, string textPassword)
+        public ActionResult Register()
         {
-
             return View();
         }
     }
