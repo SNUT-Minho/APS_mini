@@ -6,15 +6,12 @@ using System.Web.Mvc;
 
 namespace APS.Controllers
 {
-    public class HomeController : Controller
+    public class BoardController : Controller
     {
+        // GET: Board
         public ActionResult Index()
         {
-            ViewBag.Title = "APSmini";
-
             return View();
         }
-
-
     }
 }
