@@ -15,12 +15,14 @@
                     <h3 class="form-signin-heading" style="">APS mini에 로그인</h3>
                     <input type="text" id="txtUserID" name="txtUserID" class="form-control" placeholder="User ID" required autofocus style="margin-bottom:10px;">
                     <input type="password" id="txtPassword" name="txtPassword" class="form-control" placeholder="Password" required style="margin-bottom:10px;">
-                    <h>계정이 없으십니까? &nbsp;</h>@Html.ActionLink("만들기!", "Register", "Account", new { area = " " }, null)<br />
+                    <h>계정이 없으십니까? &nbsp;</h>@Html.ActionLink("만들러 가기", "Register", "Account", new { area = "" }, null)<br />
                     <input type="button" class="btn btn-lg btn-danger btn-block" value="Sign in" style="margin-top:10px;" />
-                    <input type="button" class="btn btn-lg btn-primary btn-block" value="게시판" style="margin-top:10px;" />
                 </div>
             </form>
-        </div>
+            <form class="form-signin" role="form" action="/Account/Register" method="post"> 
+                <input type="button" class="btn btn-lg btn-primary btn-block" value="게시판" style="margin-top:10px;" />
+            </form>
+        </div> 
     </div>
     <div class="col-lg-4"></div>
 </div>
