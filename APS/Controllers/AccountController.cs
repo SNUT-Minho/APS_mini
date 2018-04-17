@@ -1,4 +1,5 @@
-﻿using System;
+﻿using APS.Models.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,12 +9,15 @@ namespace APS.Controllers
 {
     public class AccountController : Controller
     {
+        // USER 저장소 객체
+        private UserRepository user = new UserRepository();
+
         // GET: Account
         [HttpGet]
         public ActionResult Index()
         {
             Response.RedirectPermanent("/Account/Login");
-
+            
             return View();
         }
 
@@ -24,7 +28,7 @@ namespace APS.Controllers
         [HttpGet]
         public ActionResult Register()
         {
-            Response.Write("등록");
+            
             return View();
         }
 
@@ -48,9 +52,22 @@ namespace APS.Controllers
 
 
         [HttpPost]
-        public ActionResult Login(string textUserID, string textPassword)
+        public ActionResult Login(string txtUserID, string txtPassword)
         {
-            Response.RedirectPermanent("/Account/Register");
+            string originLastLoginIP;
+            DateTime originLastLoginDate;
+            // 여기서 로그인 처리해서 성공 1 이면 -> Redirect Board/Index
+            // 실패시 -> 로그인 실패 Script 처리후 -> Redirect Account/Login
+            int result = user.LoginUser(txtUserID, txtPassword, Request.UserHostAddress.Replace("::1", "127.0.0.1"), out originLastLoginIP, out originLastLoginDate);
+
+            if (result == 1)// 로그인 성공
+            {
+                Response.RedirectPermanent("/Board/Index");
+            }
+            else // 로그인 실패
+            {
+                Response.RedirectPermanent("/Account/Login");
+            }
 
             return View();
         }

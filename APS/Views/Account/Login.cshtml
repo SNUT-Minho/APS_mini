@@ -30,7 +30,7 @@
     $(document).ready(function () {
         $('form').validate({
             rules: {
-                txtDomainID: {
+                txtUserID: {
                     required: true,
                     //minlength: 5,
                     //maxlenght: 15
@@ -42,7 +42,7 @@
                 }
             },
             messages: {
-                txtDomainID: {
+                txtUserID: {
                     required: "",
                     //minlength: "{0}자 이상 입력하시오.",
                     //maxlength: "{0}자 이하로 입력하시오."
@@ -67,7 +67,7 @@
                 <form class="form-signin" role="form" action="/Account/Login" method="post">
                     <h3 class="form-signin-heading" style="">APS mini에 로그인</h3>
 
-                    <input type="text" id="txtDomainID" name="txtDomainID" class="form-control" placeholder="User ID" style="margin-bottom:10px;" required autofocus>
+                    <input type="text" id="txtUserID" name="txtUserID" class="form-control" placeholder="User ID" style="margin-bottom:10px;" required autofocus>
                     <input type="password" id="txtPassword" name="txtPassword" class="form-control" placeholder="Password" style="margin-bottom:10px;" required>
                     <div><h>계정이 없으십니까? &nbsp;</h>@Html.ActionLink("만들러 가기", "Register", "Account", new { area = "" }, null)<br /></div>
                     <input id="btnSignIn" type="submit" class="btn btn-lg btn-danger btn-block" value="Sign in" style="margin-top:10px;" />
