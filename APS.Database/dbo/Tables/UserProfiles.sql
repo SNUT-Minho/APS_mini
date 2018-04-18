@@ -6,7 +6,7 @@ CREATE TABLE [dbo].[UserProfiles]
 	[ID] INT Identity(1,1) NOT NULL PRIMARY KEY,     -- 일련번호
 	[UID] Int Not Null,								 -- Domains Table의 UID 값(회원 일련번호)
 	[Password] NVarChar(50) Not Null,				 -- 비밀번호
-	[Email] NVarChar(50) Not Null,					 -- 이메일
+	[Email] NVarChar(50) Null,					 -- 이메일
 
 	[CreatedDate] DateTime Default(GetDate()),		 -- 계정 생성일
 	[LastLoginDate] DateTime Null,					 -- 마지막 로그인 날짜

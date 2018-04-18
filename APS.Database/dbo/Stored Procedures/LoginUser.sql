@@ -1,4 +1,4 @@
-﻿-- 로그인 저장 프로시저 :  UserRepository/LoginUser
+﻿-- [!] 로그인 저장 프로시저 :  UserRepository/LoginUser
 -------------------------------------------------
 
 CREATE PROCEDURE [dbo].[LoginUser]

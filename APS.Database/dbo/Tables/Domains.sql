@@ -11,8 +11,8 @@ CREATE TABLE [dbo].[Domains]
 	
 	-----------------------------------------
 
-	[Description] NVarChar(255) Not Null,			 -- 회사소개
-	[Industry] NVarChar(20) Default('기타'),		     -- 회사가 속해 있는 산업 분야 
+	[Description] NVarChar(255) Null,			 -- 회사소개
+	[Industry] NVarChar(20) Default(N'기타'),		     -- 회사가 속해 있는 산업 분야 
 	
 	------------------------------------------
 

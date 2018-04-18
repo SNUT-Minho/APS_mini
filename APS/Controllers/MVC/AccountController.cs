@@ -1,4 +1,5 @@
-﻿using APS.Models.Repositories;
+﻿using APS.Models;
+using APS.Models.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,15 +33,17 @@ namespace APS.Controllers
             return View();
         }
 
+
         /// <summary>
         ///  구현 예정 (새 계정 등록 로직 + DB연동)
         /// </summary>
         /// <param name="temp"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Register(string temp)
+        public ActionResult Register(User user)
         {
-            Response.Write("등록");
+            UserRepository userRepo = new UserRepository();
+            userRepo.RegisterUser(user);
             return View();
         }
 

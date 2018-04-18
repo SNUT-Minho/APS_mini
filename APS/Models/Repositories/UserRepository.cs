@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Web.UI;
 using Dapper;
 
 namespace APS.Models.Repositories
@@ -50,6 +51,31 @@ namespace APS.Models.Repositories
             db.Close();
             return Convert.ToInt32(result);
 
+        }
+
+        /// <summary>
+        /// User 정보가 넘겨올때 user.CompanyName을 가지고 db.Find(x=>x.CompanyName) True일시 해당 GroupUID를 가져와서 @GroupUID로 넘겨주면 될 듯
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int RegisterUser(User user)
+        { 
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@UserID", user.UserID);
+            parameters.Add("@CompanyName", user.CompanyName);
+            parameters.Add("@UserName", user.UserName);
+            parameters.Add("@Industry", user.Industry);
+            parameters.Add("@Password", user.Password);
+            parameters.Add("@UID", dbType: DbType.Int32, direction: ParameterDirection.Output);
+            parameters.Add("@GroupUID", 3); // ex) 삼성그룹 
+
+            db.Open();
+
+            db.Execute("RegisterUser", parameters, commandType: CommandType.StoredProcedure);
+        
+            db.Close();
+
+            return 1;
         }
     }
 }

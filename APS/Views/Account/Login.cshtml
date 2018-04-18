@@ -4,11 +4,13 @@
 }
 
 <style>
-    .error {
-        color: #ff0000;
+    body {
+        padding-top: 10%;
+        padding-bottom: 10%;
     }
 
-    label.error{
+
+    label.error {
         float: left;
         clear: both;
     }
@@ -33,12 +35,12 @@
                 txtUserID: {
                     required: true,
                     //minlength: 5,
-                    //maxlenght: 15
+                    //maxlength: 15
                 },
                 txtPassword: {
                     required: true
                     //minlength: 5,
-                    //maxlenght: 15
+                    //maxlength: 15
                 }
             },
             messages: {
@@ -50,34 +52,41 @@
                 txtPassword: {
                     required: "",
                     //minlength: "비밀번호를 입력하시오.",
-                    //maxlenght: "비밀번호를 입력하시오"
+                    //maxlength: "비밀번호를 입력하시오"
                 }
             }
         });
     });
 </script>
-<body>
+
+<body style="background-color:aqua">
     <div class="row" style="">
         <!--로그인 폼 디자인-->
         <div class="col-lg-4"></div>
         <div class="col-lg-4" style="align-content:center;">
             <h2 style="color:white; text-align:center; margin-bottom:30px;">APS_mini</h2>
-            <div class="container" style=" padding-left: 25%; padding-right:25%; padding-top:50px; padding-bottom:50px; border:1px solid black; background-color:white; ">
-                <!--로그인 폼-->
-                <form class="form-signin" role="form" action="/Account/Login" method="post">
-                    <h3 class="form-signin-heading" style="">APS mini에 로그인</h3>
-
-                    <input type="text" id="txtUserID" name="txtUserID" class="form-control" placeholder="User ID" style="margin-bottom:10px;" required autofocus>
-                    <input type="password" id="txtPassword" name="txtPassword" class="form-control" placeholder="Password" style="margin-bottom:10px;" required>
-                    <div><h>계정이 없으십니까? &nbsp;</h>@Html.ActionLink("만들러 가기", "Register", "Account", new { area = "" }, null)<br /></div>
-                    <input id="btnSignIn" type="submit" class="btn btn-lg btn-danger btn-block" value="Sign in" style="margin-top:10px;" />
-                </form>
-                <!--로그인 폼-->
-                <!--게시판 이동-->
-                <a href="@Url.Action("Index","Board")">
-                    <input type="button" class="btn btn-lg btn-primary btn-block" value="게시판" style="margin-top:10px;" />
-                </a>
-                <!--게시판 이동-->
+            <div class="container" style=" align-content:center; padding-top:50px; padding-bottom:50px; border:1px solid black; background-color:white; ">
+                <div style="margin-left:auto; margin-right:auto; align-content:center;">
+                    <div class="container">
+                        <div style="margin-left:auto; margin-right:auto; align-content:center; max-width:280px;">
+                            <!--로그인 폼-->
+                            <form class="form-signin" role="form" action="/Account/Login" method="post">
+                                <h3 class="form-signin-heading" style="">APS mini에 로그인</h3>
+                                <hr />
+                                <input type="text" id="txtUserID" name="txtUserID" class="form-control" placeholder="User ID" style="margin-bottom:10px;" required autofocus>
+                                <input type="password" id="txtPassword" name="txtPassword" class="form-control" placeholder="Password" style="margin-bottom:10px;" required>
+                                <div><h>계정이 없으십니까? &nbsp;</h>@Html.ActionLink("만들기", "Register", "Account", new { area = "" }, null)<br /></div>
+                                <input id="btnSignIn" type="submit" class="btn btn-lg btn-danger btn-block" value="Sign in" style="margin-top:10px;" />
+                            </form>
+                            <!--로그인 폼-->
+                            <!--게시판 이동-->
+                            <a href="@Url.Action("Index","Board")">
+                                <input type="button" class="btn btn-lg btn-primary btn-block" value="게시판" style="margin-top:10px;" />
+                            </a>
+                            <!--게시판 이동-->
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <!--로그인 폼 디자인-->

@@ -69,6 +69,10 @@
     <Build Include="dbo\Stored Procedures\LoginUser.sql" />
     <Build Include="dbo\Tables\LoginHistories.sql" />
     <Build Include="dbo\Views\Users.sql" />
+    <Build Include="dbo\Stored Procedures\RegisterUser.sql" />
+    <Build Include="dbo\Tables\Industries.sql" />
+    <Build Include="dbo\Tables\Membership.sql" />
+    <Build Include="dbo\Stored Procedures\CheckUserID.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="APS.Database.publish.Test.xml" />

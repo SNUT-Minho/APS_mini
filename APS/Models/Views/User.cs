@@ -19,7 +19,13 @@ namespace APS.Models
 
         public int UID { get; set; }
         public string UserID { get; set; }
-        public string CompanyName { get; set; }
+
+        // [!!미적용!!] -- 회사명을 기존 데이터베이스 내에서 검색해서 일치하는게 있으면 해당 그룹으로 Group UID 를 넘겨주면 됨
+        /// <summary>
+        /// 만약 새로운 기업이면 해당 기업 명으로 Domain Group 생성 + Domain User 생성
+        /// </summary>
+        public string CompanyName { get; set; }   
+                                                     
         public string UserName { get; set; }
         public string Description { get; set; }
         public string Industry { get; set; }
