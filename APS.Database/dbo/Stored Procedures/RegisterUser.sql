@@ -17,7 +17,7 @@ AS
 		Set @UID = 0
 
 
-	Select @Industry = Industry From Industries Where IndustryVal = @Industry  
+	-- Select @Industry = Industry From Industries Where IndustryVal = @Industry  
 
 	-- Domains 테이블에 데이터 입력
 	Insert Into Domains (UserID, CompanyName, UserName, Industry, Type, Description)

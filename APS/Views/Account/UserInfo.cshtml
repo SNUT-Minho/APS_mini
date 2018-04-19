@@ -1,0 +1,200 @@
+﻿
+@{
+    ViewBag.Title = "APSmini";
+}
+
+<style>
+
+    body {
+        padding-top: 5%;
+        padding-bottom: 5%;
+    }
+
+    label.error {
+        color: red;
+    }
+
+    input.error {
+        border-color: #ff0000;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    }
+
+    select.error {
+        border-color: #ff0000;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    }
+
+    input.error:focus {
+        border-color: #ff0000;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
+    }
+
+    select.error:focus {
+        border-color: #ff0000;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
+    }
+</style>
+<script>
+
+    $(document).ready(function () {
+
+        // !! jQuery Validator
+        $('form').validate({
+            rules: {
+                UserID: {
+                    required: true,
+                    minlength: 5,
+                    maxlength: 15
+                },
+                Password: {
+                    minlength: 5,
+                    maxlength: 15,
+
+                },
+                PasswordConfirm: {
+                    equalTo: "#Password"
+                },
+                CompanyName: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 15
+                },
+                UserName: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 5
+                },
+                Industry: {
+                    required: true,
+                }
+            },
+            messages: {
+                UserID: {
+                    required: "아이디를 입력해주세요.",
+                    minlength: "{0}자 이상 입력하시오",
+                    maxlength: "{0}자 이하로 입력하시오."
+                },
+                Password: {
+                    minlength: "{0}자 이상 입력하시오",
+                    maxlength: "{0}자 이하로 입력하시오"
+
+                },
+                PasswordConfirm: {
+                    equalTo: "비밀번호가 동일하지 않습니다."
+                },
+                CompanyName: {
+                    required: "회사명을 입력해주세요",
+                    minlength: "{0}자 이상 입력하시오",
+                    maxlength: "{0}자 이하로 입력하시오"
+                },
+                UserName: {
+                    required: "사용자명을 입력해주세요",
+                    minlength: "{0}자 이상 입력하시오",
+                    maxlength: "{0}자 이하로 입력하시오"
+                },
+                Industry: {
+                    required: "산업구분을 선택해주세요"
+                }
+            }
+        });
+
+
+        function clearUserID() {
+            $('#UserID').val('');
+        }
+
+        $('option[value=@Session["Industry"]]').attr("selected", "true");
+    });
+
+</script>
+
+<body style="background-color:aqua">
+    <div class="row" style="">
+        <div class="col-lg-2">
+
+        </div>
+        <!--회원정보 폼 디자인-->
+        <div class="col-lg-8" style="align-content:center;">
+            <form role="form" method="post" action="/Account/UserInfo">
+                <h2 style="color: white; text-align:center; margin-bottom:30px;">APS_mini</h2>
+                <div class="container" style=" align-content:center; padding-top:50px; padding-bottom:50px; border:1px solid black; background-color:white; ">
+                    <div style="margin-left:auto; margin-right:auto; align-content:center; max-width:680px;">
+                        <h3>회원 정보 수정</h3>
+                        <hr />
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="control-label" for="UserID">ID </label>
+                                <input type="text" class="form-control" id="UserID" name="UserID" required value="@Session["UserID"]" readonly>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label" for="Password">Password </label>
+                                <input type="password" class="form-control" id="Password" name="Password" placeholder="새 비밀번호를 입력하시오." style="margin-bottom:10px;" value="">
+                                <input type="password" class="form-control" id="PasswordConfirm" name="PasswordConfirm" placeholder="비밀번호 확인." value="">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="control-label" for="CompanyName">회사명</label>
+                                <input type="text" class="form-control" id="CompanyName" name="CompanyName" placeholder="회사명을 입력하시오." value="@Session["CompanyName"]" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label" for="UserName">회원 이름 </label>
+                                <input type="text" class="form-control" id="UserName" name="UserName" placeholder="회원 이름을 입력하시오." value="@Session["UserName"]" required>
+                            </div>
+                        </div>
+
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="control-label" for="Industry">산업 </label>
+                                <select class="form-control" id="Industry" name="Industry" required>
+                                    <option value="">-- 산업구분 --</option>
+                                    <option value="1">전기-전자-제어</option>
+                                    <option value="2">반도체-디스플레이-광학</option>
+                                    <option value="3">기계-기계설비</option>
+                                    <option value="4">자동차-조선-철강-항공</option>
+                                    <option value="5">금속-재료-자재</option>
+                                    <option value="6">화학-에너지-환경</option>
+                                    <option value="7">섬유-의류-패션</option>
+                                    <option value="8">생활화학-화장품</option>
+                                    <option value="9">생활용품-소비재-기타</option>
+                                    <option value="10">목재-제지-가구</option>
+                                    <option value="11">식품가공</option>
+                                    <option value="12">농축산-어업-임업</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label" for="Email">E-mail </label>
+                                <input type="email" class="form-control" id="Email" name="Email" placeholder="이메일을 입력하시오." value="@Session["Email"]">
+                            </div>
+                        </div>
+                        <br />
+                        <button type="submit" class="btn btn-primary">수정</button> <button type="button" class="btn btn-danger" onclick="location.href='@Url.Action("UserDelete", "Account")';return false;">탈퇴</button>
+                        <hr />
+                        @*<h3>회원 탈퇴</h3>
+                            <hr />
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label class="control-label" for="Password">Password </label>
+                                    <input type="password" class="form-control" id="Password" name="Password" placeholder="비밀번호를 입력하시오." style="margin-bottom:10px;" required>
+                                    <input type="password" class="form-control" id="PasswordConfirm" name="PasswordConfirm" placeholder="비밀번호 확인." required>
+                                </div>
+                            </div>
+                            <br />
+                            <button type="submit" class="btn btn-danger">탈퇴</button>
+                            <hr />*@
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!--회원정보 폼 디자인-->
+        <div class="col-lg-2">
+
+        </div>
+    </div>
+</body>
+@Html.Raw(TempData["msg"])

@@ -20,6 +20,33 @@ namespace APS.Models.Repositories
         private IDbConnection db = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
 
 
+        public int DeleteUser(User user)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@UserID", user.UserID);
+            parameters.Add("@Password", user.Password);
+         
+            var result = db.Query<int>("DeleteUser", parameters, commandType: CommandType.StoredProcedure).SingleOrDefault();
+
+            return result;
+        }
+
+
+        public int UpdateUser(User user)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@UserID", user.UserID);
+            parameters.Add("@Email", user.Email);
+            parameters.Add("@Password", user.Password);
+            parameters.Add("@CompanyName", user.CompanyName);
+            parameters.Add("@UserName", user.UserName);
+            parameters.Add("@Industry", user.Industry);
+
+            var result = db.Query<int>("UpdateUser", parameters, commandType: CommandType.StoredProcedure).SingleOrDefault();
+
+            return result;
+        }
+
        /// <summary>
        /// 로그인 처리
        /// /Account/Login

@@ -74,6 +74,8 @@
     <Build Include="dbo\Tables\Membership.sql" />
     <Build Include="dbo\Stored Procedures\CheckUserID.sql" />
     <Build Include="dbo\Stored Procedures\GetUser.sql" />
+    <Build Include="dbo\Stored Procedures\UpdateUser.sql" />
+    <Build Include="dbo\Stored Procedures\DeleteUser.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="APS.Database.publish.Test.xml" />

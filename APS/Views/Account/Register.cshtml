@@ -1,8 +1,10 @@
 ﻿
 @{
-    ViewBag.Title = "회원가입";
+    ViewBag.Title = "APSmini";
 }
+
 <style>
+
     body {
         padding-top: 5%;
         padding-bottom: 5%;
@@ -18,14 +20,26 @@
         box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     }
 
-        input.error:focus {
-            border-color: #ff0000;
-            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
-            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
-        }
+    select.error {
+        border-color: #ff0000;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    }
+
+    input.error:focus {
+        border-color: #ff0000;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
+    }
+
+    select.error:focus {
+        border-color: #ff0000;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
+    }
 </style>
 <script>
- 
+
     $(document).ready(function () {
 
         // !! jQuery Validator
@@ -40,12 +54,10 @@
                     required: true,
                     minlength: 5,
                     maxlength: 15,
-                  
+
                 },
                 PasswordConfirm: {
                     required: true,
-                    minlength: 5,
-                    maxlength: 15,
                     equalTo: "#Password"
                 },
                 CompanyName: {
@@ -63,12 +75,39 @@
                 }
             },
             messages: {
+                UserID: {
+                    required: "아이디를 입력해주세요.",
+                    minlength: "{0}자 이상 입력하시오",
+                    maxlength: "{0}자 이하로 입력하시오."
+                },
+                Password: {
+                    required: "비밀번호를 입력해주세요.",
+                    minlength: "{0}자 이상 입력하시오",
+                    maxlength: "{0}자 이하로 입력하시오"
 
+                },
+                PasswordConfirm: {
+                    required: "비밀번호를 확인해주세요",
+                    equalTo: "비밀번호가 동일하지 않습니다."
+                },
+                CompanyName: {
+                    required: "회사명을 입력해주세요",
+                    minlength: "{0}자 이상 입력하시오",
+                    maxlength: "{0}자 이하로 입력하시오"
+                },
+                UserName: {
+                    required: "사용자명을 입력해주세요",
+                    minlength: "{0}자 이상 입력하시오",
+                    maxlength: "{0}자 이하로 입력하시오"
+                },
+                Industry: {
+                    required: "산업구분을 선택해주세요"
+                }
             }
         });
 
 
-        // 아이디 중복 체크 
+        // 아이디 중복 체크
         var timer;
         $("#UserID").on('keyup', function () {
             clearTimeout(timer);  //clear any running timeout on key up
