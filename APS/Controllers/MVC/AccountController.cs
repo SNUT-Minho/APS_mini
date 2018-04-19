@@ -5,13 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace APS.Controllers
 {
     public class AccountController : Controller
     {
         // USER 저장소 객체
-        private UserRepository user = new UserRepository();
+        private UserRepository userRepo = new UserRepository();
 
         // GET: Account
         [HttpGet]
@@ -22,54 +23,77 @@ namespace APS.Controllers
             return View();
         }
 
-        /// <summary>
-        /// 사용자 계정 생성 창
-        /// </summary>
-        /// <returns></returns>
+
+        // 회원 가입 페이지
         [HttpGet]
         public ActionResult Register()
         {
-            
+            // empty
+
             return View();
         }
 
-
-        /// <summary>
-        ///  구현 예정 (새 계정 등록 로직 + DB연동)
-        /// </summary>
-        /// <param name="temp"></param>
-        /// <returns></returns>
+        // 회원 가입 로직
         [HttpPost]
         public ActionResult Register(User user)
         {
-            UserRepository userRepo = new UserRepository();
             userRepo.RegisterUser(user);
-            return View();
+            return View("Greeting");
         }
 
         [HttpGet]
-        public ActionResult Login()
+        public ActionResult Greeting()
         {
             return View();
         }
 
 
+        // 로그인 페이지
+        [HttpGet]
+        public ActionResult Login()
+        {
+            // Empty
+            return View();
+        }
+
+        // 로그인 로직
         [HttpPost]
         public ActionResult Login(string txtUserID, string txtPassword)
         {
             string originLastLoginIP;
             DateTime originLastLoginDate;
-            // 여기서 로그인 처리해서 성공 1 이면 -> Redirect Board/Index
-            // 실패시 -> 로그인 실패 Script 처리후 -> Redirect Account/Login
-            int result = user.LoginUser(txtUserID, txtPassword, Request.UserHostAddress.Replace("::1", "127.0.0.1"), out originLastLoginIP, out originLastLoginDate);
+           
+            int result = userRepo.LoginUser(txtUserID, txtPassword, Request.UserHostAddress.Replace("::1", "127.0.0.1"), out originLastLoginIP, out originLastLoginDate);
 
             if (result == 1)// 로그인 성공
             {
-                Response.RedirectPermanent("/Board/Index");
+                var user = userRepo.GetUser(txtUserID);
+                if(user != null)
+                {
+                    // 특정 사용자의 정보를 Application 전역 변수에 기록 (하나의 아이디가 여러번 로그인 되는 것을 방지)
+                    System.Web.HttpContext.Current.Application.Lock();
+                    System.Web.HttpContext.Current.Application["UserInfo@" + user.UserID] = Session.SessionID + "!" + Request.ServerVariables["REMOTE_HOST"];
+                    System.Web.HttpContext.Current.Application.UnLock();
+
+                    // 세션 변수에 사용자 정보를 저장
+                    Session["UID"] = user.UID;
+                    Session["UserID"] = user.UserID;
+                    Session["CompanyName"] = user.CompanyName;
+                    Session["UserName"] = user.UserName;
+                }
+
+                // 튕겨나온 페이지가 있다면, 로그인 후 해당 페이지로 다시 이동
+                if (!String.IsNullOrEmpty(Request["ReturnUrl"]))
+                {
+                    Response.RedirectPermanent(Request["ReturnUrl"]);
+                }
+
+                return Redirect("/Board/Index");
             }
             else // 로그인 실패
             {
-                Response.RedirectPermanent("/Account/Login");
+                TempData["msg"] = "<script>alert('아이디와 비밀번호를 확인해주세요');</script>";
+               // Response.RedirectPermanent("/Account/Login");
             }
 
             return View();

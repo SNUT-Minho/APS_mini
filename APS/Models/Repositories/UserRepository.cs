@@ -58,7 +58,7 @@ namespace APS.Models.Repositories
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public int RegisterUser(User user)
+        public User RegisterUser(User user)
         { 
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("@UserID", user.UserID);
@@ -72,10 +72,19 @@ namespace APS.Models.Repositories
             db.Open();
 
             db.Execute("RegisterUser", parameters, commandType: CommandType.StoredProcedure);
-        
+            user.UID = parameters.Get<int>("@UID");
+
             db.Close();
 
-            return 1;
+            return user;
+        }
+
+        public User GetUser(string userID)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@UserID", userID);
+
+            return db.Query<User>("GetUser", parameters, commandType: CommandType.StoredProcedure).SingleOrDefault();
         }
     }
 }

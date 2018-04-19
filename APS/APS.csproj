@@ -187,7 +187,6 @@
     <Compile Include="Controllers\MVC\AccountController.cs" />
     <Compile Include="Controllers\MVC\BoardController.cs" />
     <Compile Include="Controllers\MVC\HomeController.cs" />
-    <Compile Include="Controllers\MVC\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -296,6 +295,7 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Board\Index.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Greeting.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

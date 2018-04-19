@@ -73,6 +73,7 @@
     <Build Include="dbo\Tables\Industries.sql" />
     <Build Include="dbo\Tables\Membership.sql" />
     <Build Include="dbo\Stored Procedures\CheckUserID.sql" />
+    <Build Include="dbo\Stored Procedures\GetUser.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="APS.Database.publish.Test.xml" />
