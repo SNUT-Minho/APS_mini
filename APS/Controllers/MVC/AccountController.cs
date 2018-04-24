@@ -76,6 +76,15 @@ namespace APS.Controllers
             return View(user);
         }
 
+        // 로그아웃 페이지
+        [HttpGet]
+        public ActionResult Logout()
+        {
+            // 로직 처리후에 로그인 페이지로 이동
+
+            return View();
+        }
+
 
         // 회원 탈퇴 페이지
         [HttpGet]

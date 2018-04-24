@@ -13,5 +13,25 @@ namespace APS.Controllers
         {
             return View();
         }
+
+        public ActionResult About()
+        {
+            return View();
+        }
+
+        public ActionResult Pages()
+        {
+            return View();
+        }
+
+        public ActionResult Portfolio()
+        {
+            return View();
+        }
+
+        public ActionResult Contact()
+        {
+            return View();
+        }
     }
 }

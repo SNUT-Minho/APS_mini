@@ -1,0 +1,304 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <link href="~/Content/font-awesome.css" rel="stylesheet" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <script>
+
+    </script>
+    <style>
+        body {
+            background: #f9f9f9;
+        }
+
+        #wrapper {
+            padding: 90px 15px;
+        }
+
+        .navbar-expand-lg .navbar-nav.side-nav {
+            flex-direction: column;
+        }
+
+        .card {
+            margin-bottom: 15px;
+            border-radius: 0;
+            box-shadow: 0 3px 5px rgba(0,0,0,.1);
+        }
+
+        .header-top {
+            box-shadow: 0 3px 5px rgba(0,0,0,.1)
+        }
+
+        .leftmenutrigger {
+            display: none
+        }
+
+        @@media(min-width:992px) {
+            .leftmenutrigger {
+                display: block;
+                display: block;
+                margin: 7px 20px 4px 0;
+                cursor: pointer;
+            }
+
+            #wrapper {
+                padding: 90px 15px 15px 15px;
+            }
+
+            .navbar-nav.side-nav.open {
+                left: 0;
+            }
+
+            .navbar-nav.side-nav {
+                background: #585f66;
+                box-shadow: 2px 1px 2px rgba(0,0,0,.1);
+                position: fixed;
+                top: 56px;
+                flex-direction: column !important;
+                left: -220px;
+                width: 200px;
+                overflow-y: auto;
+                bottom: 0;
+                overflow-x: hidden;
+                padding-bottom: 40px
+            }
+        }
+
+        .animate {
+            -webkit-transition: all .3s ease-in-out;
+            -moz-transition: all .3s ease-in-out;
+            -o-transition: all .3s ease-in-out;
+            transition: all .3s ease-in-out
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrapper" class="animate">
+        <nav class="navbar header-top fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <span class="navbar-toggler-icon leftmenutrigger"></span>
+            <a class="navbar-brand" href="/Board/Index">APSmini</a>
+            @*<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle Navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>*@
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav animate side-nav">
+                    <li class="nav-item" style="text-align:center;">
+                        <a class="nav-link" href="#">
+                            Schedule
+                        </a>
+                    </li>
+                    <li class="nav-item" style="text-align:center;">
+                        <a class="nav-link" href="#">
+                            Line Capacity
+                        </a>
+                    </li>
+                    <li class="nav-item" style="text-align:center;">
+                        <a class="nav-link" href="#">
+                            Worker
+                        </a>
+                    </li>
+                    <li class="nav-item" style="text-align:center;">
+                        <a class="nav-link" href="#">
+                            Routing
+                        </a>
+                    </li>
+                    <li class="nav-item" style="text-align:center;">
+                        <a class="nav-link" href="#">
+                            Work Station
+                        </a>
+                    </li>
+                    <li class="nav-item" style="text-align:center;">
+                        <a class="nav-link" href="#">
+                            Product
+                        </a>
+                    </li>
+                    <li class="nav-item" style="text-align:center;">
+                        <a class="nav-link" href="#">
+                            BOM
+                        </a>
+                    </li>
+                    <li class="nav-item" style="text-align:center;">
+                        <a class="nav-link" href="#">
+                            Inventory
+                        </a>
+                    </li>
+                    <li class="nav-item" style="text-align:center;">
+                        <a class="nav-link" href="#">
+                            Memo
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <ul class="nav navbar-right">
+                <li class="dropdown open">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-user" style="color:white"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user" style="right:0px; left:auto;">
+                        <li class="nav-item">
+                            <a href="/Account/UserInfo" class="nav-link">
+                                <i class="fa fa-user fa-fw"></i>
+                                User Profile
+                            </a>
+                        </li>
+                        <li class="dropdown-divider"></li>
+                        <li class="nav-item">
+                            <a href="/Account/Logout" class="nav-link">
+                                <i class="fa fa-sign-out fa-fw"></i>
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+        @*<div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Try Other</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Bootstrap 4.0.0 Snippet by pradeep330</h6>
+                            <p class="card-text">You can also try different version of Bootstrap V4 side menu. Click below link to view all Bootstrap Menu versions.</p>
+                            <a href="https://bootsnipp.com/pradeep330" class="card-link">link</a>
+                            <a href="http://websitedesigntamilnadu.com" class="card-link">Another link</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Try Other</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Bootstrap 4.0.0 Snippet by pradeep330</h6>
+                            <p class="card-text">You can also try different version of Bootstrap V4 side menu. Click below link to view all Bootstrap Menu versions.</p>
+                            <a href="https://bootsnipp.com/pradeep330" class="card-link">link</a>
+                            <a href="http://websitedesigntamilnadu.com" class="card-link">Another link</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Try Other</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Bootstrap 4.0.0 Snippet by pradeep330</h6>
+                            <p class="card-text">You can also try different version of Bootstrap V4 side menu. Click below link to view all Bootstrap Menu versions.</p>
+                            <a href="https://bootsnipp.com/pradeep330" class="card-link">link</a>
+                            <a href="http://websitedesigntamilnadu.com" class="card-link">Another link</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Try Other</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Bootstrap 4.0.0 Snippet by pradeep330</h6>
+                            <p class="card-text">You can also try different version of Bootstrap V4 side menu. Click below link to view all Bootstrap Menu versions.</p>
+                            <a href="https://bootsnipp.com/pradeep330" class="card-link">link</a>
+                            <a href="http://websitedesigntamilnadu.com" class="card-link">Another link</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Try Other</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Bootstrap 4.0.0 Snippet by pradeep330</h6>
+                            <p class="card-text">You can also try different version of Bootstrap V4 side menu. Click below link to view all Bootstrap Menu versions.</p>
+                            <a href="https://bootsnipp.com/pradeep330" class="card-link">link</a>
+                            <a href="http://websitedesigntamilnadu.com" class="card-link">Another link</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Try Other</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Bootstrap 4.0.0 Snippet by pradeep330</h6>
+                            <p class="card-text">You can also try different version of Bootstrap V4 side menu. Click below link to view all Bootstrap Menu versions.</p>
+                            <a href="https://bootsnipp.com/pradeep330" class="card-link">link</a>
+                            <a href="http://websitedesigntamilnadu.com" class="card-link">Another link</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">First</th>
+                                        <th scope="col">Last</th>
+                                        <th scope="col">Handle</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">1</th>
+                                        <td>Mark</td>
+                                        <td>Otto</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">2</th>
+                                        <td>Jacob</td>
+                                        <td>Thornton</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">3</th>
+                                        <td>Larry</td>
+                                        <td>the Bird</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+    </div>
+
+
+
+    <!-- 페이지 Content-->
+    <div id="content">
+        @RenderBody()
+    </div>
+
+    <script>
+
+        $(document).ready(function () {
+            var url = window.location;
+
+            $('ul.components a').filter(function () {
+                return this.href == url;
+            }).parent().addClass('active');
+        });
+
+
+        $(document).ready(function () {
+            $('.leftmenutrigger').on('click', function (e) {
+                $('.side-nav').toggleClass("open");
+                e.preventDefault();
+            });
+        });
+    </script>
+</body>
+</html>
