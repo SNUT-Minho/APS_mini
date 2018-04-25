@@ -79,6 +79,7 @@
     <Build Include="dbo\Tables\Memos.sql" />
     <Build Include="dbo\Stored Procedures\GetAllMemos.sql" />
     <Build Include="dbo\Stored Procedures\DeleteMemo.sql" />
+    <Build Include="dbo\Stored Procedures\CreateMemo.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="APS.Database.publish.Test.xml" />

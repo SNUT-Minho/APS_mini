@@ -10,7 +10,7 @@ using Dapper;
 
 namespace APS.Models.Repositories
 {
-  
+
     public class MemoRepository
     {
         IDbConnection db = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
@@ -28,6 +28,23 @@ namespace APS.Models.Repositories
 
             parameters.Add("@Id", id);
             db.Execute("DeleteMemo", parameters, commandType: CommandType.StoredProcedure);
+        }
+
+        public Memo CreateMemo(Memo memo)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@Title", memo.Title);
+            parameters.Add("@Description", memo.Description);
+
+            parameters.Add("@Id", dbType: DbType.Int32, direction: ParameterDirection.Output);
+            parameters.Add("@CreatedTime", dbType: DbType.DateTime, direction: ParameterDirection.Output);
+
+            db.Execute("CreateMemo", parameters, commandType: CommandType.StoredProcedure);
+
+            memo.CreatedTime = parameters.Get<DateTime>("@CreatedTime");
+            memo.Id = parameters.Get<int>("@Id");
+
+            return memo;
         }
     }
 }

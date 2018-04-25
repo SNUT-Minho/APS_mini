@@ -26,9 +26,11 @@ namespace APS.Controllers.API
         }
 
         // POST: api/Memo
-        public void Post([FromBody]string value)
+        public Memo Post([FromBody]Memo memo)
         {
+            Memo m = memoRepo.CreateMemo(memo);
 
+            return m;
         }
 
         // PUT: api/Memo/5

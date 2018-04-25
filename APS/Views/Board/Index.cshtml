@@ -66,22 +66,56 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModal-label">Modal title</h4>
+                <h4 class="modal-title" id="myModal-label">Create Memo</h4>
             </div>
             <div class="modal-body">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <input type="text" name="name" id="newMemo" value="" class="form-control" style="max-width:100%;" maxlength="50"/>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" id="modalClose">Close</button>
-                <button type="button" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="modalClose" onclick="clearMemo();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="createMemo();">Save</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
- 
 
+ 
+    // 메모장의 내용 Clear하기
+    function clearMemo() {
+        $('#newMemo').val('');
+    };
+
+    // 새 메모 생성하기
+    function createMemo() {
+        var description = $('#newMemo').val();
+        var title = '@Session["UserName"]';
+        var json = "{ Title : \"" + title + "\", Description : \"" + description + "\"}";
+
+        $.ajax({
+            type: "POST",
+            url: "/api/Memo/",
+            data: json,
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                var date = new Date(response.CreatedTime).toLocaleString();
+
+                var memo = "<div class='col-md-3'><div class='card' style='height:200px'>";
+                memo += "<h5 class='card-title'>" + response.Title + "<span class='hide-button' style='float: right; padding-right: 5px;'><a href='#'>";
+                memo += "<i class='fa fa-remove' id='" + response.Id + "'></i></a ></span ></h5 > ";
+                memo += "<h6 class='card-subtitle mb-2 text-muted'>" + date + "</h6>";
+                memo += "<p class='card-text'>" + response.Description + "</p></div></div>";
+
+                $('#memoContainer').append(memo);
+                $('#modalClose').click();
+            }
+        });
+    }; 
+    
+
+    // 전체 메모 불러오기
     function DisplayMemo() {
         $.getJSON("/api/Memo",
             function (data, textStatus, jqXHR) {
@@ -95,16 +129,13 @@
                     memo += "<p class='card-text'>" + value.Description + "</p></div></div>";
 
                     $('#memoContainer').append(memo);
-
-                
-                    
                 });
             }
         );
     };
 
+    // 전체 메모 지우기
     function ClearMemo() {
-
         $('#memoContainer').html('');
     };
 
@@ -113,9 +144,7 @@
 
         // 이벤트 관리 컨테이너
         $('#memoContainer').on('click', function (event) {
-
             var id = $(event.target).attr('id');
-              
             // Delete API 호출
             $.ajax({
                 type: "DELETE",
@@ -128,8 +157,5 @@
                 }
             });
         });
-      
-
-    
     });
 </script>
