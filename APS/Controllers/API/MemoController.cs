@@ -28,16 +28,19 @@ namespace APS.Controllers.API
         // POST: api/Memo
         public void Post([FromBody]string value)
         {
+
         }
 
         // PUT: api/Memo/5
         public void Put(int id, [FromBody]string value)
         {
+
         }
 
         // DELETE: api/Memo/5
         public void Delete(int id)
         {
+            memoRepo.DeleteMemo(id);
         }
     }
 }

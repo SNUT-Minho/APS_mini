@@ -21,5 +21,13 @@ namespace APS.Models.Repositories
 
             return result;
         }
+
+        public void DeleteMemo(int id)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+
+            parameters.Add("@Id", id);
+            db.Execute("DeleteMemo", parameters, commandType: CommandType.StoredProcedure);
+        }
     }
 }
