@@ -92,49 +92,50 @@
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav animate side-nav">
                     <li class="nav-item" style="text-align:center;">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="/Board/Schedule">
                             Schedule
                         </a>
                     </li>
                     <li class="nav-item" style="text-align:center;">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="/Board/Capacity">
                             Line Capacity
                         </a>
                     </li>
                     <li class="nav-item" style="text-align:center;">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="/Board/Worker">
                             Worker
                         </a>
                     </li>
                     <li class="nav-item" style="text-align:center;">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="/Board/Routing">
                             Routing
                         </a>
                     </li>
                     <li class="nav-item" style="text-align:center;">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="/Board/Station">
                             Work Station
                         </a>
                     </li>
                     <li class="nav-item" style="text-align:center;">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="/Board/Product">
                             Product
                         </a>
                     </li>
                     <li class="nav-item" style="text-align:center;">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="/Board/BOM">
                             BOM
                         </a>
                     </li>
                     <li class="nav-item" style="text-align:center;">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="/Board/Memo">
                             Memo
                         </a>
                     </li>
                 </ul>
             </div>
             <ul class="nav navbar-right">
-                <li class="dropdown open">
+                <li class="navbar-text">@Session["UserName"] (@Session["CompanyName"]) &nbsp;</li>
+                <li class="navbar dropdown open">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                         <i class="fa fa-user" style="color:white"></i>
                     </a>
@@ -185,4 +186,5 @@
         });
     </script>
 </body>
+@Html.Raw(TempData["msg"])
 </html>

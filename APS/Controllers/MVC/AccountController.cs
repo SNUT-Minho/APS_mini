@@ -18,8 +18,8 @@ namespace APS.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            Response.RedirectPermanent("/Account/Login");
 
+            Response.RedirectPermanent("/Account/Login");
             return View();
         }
 
@@ -68,6 +68,7 @@ namespace APS.Controllers
             // 사용자 체크
             if (Session["UserID"].ToString() == "Anonymous" || Session["UserID"] == null)
             {
+                TempData["msg"] = "<script>alert('잘못된 접근경로입니다. 로그인 후 이용하세요.');</script>";
                 return RedirectPermanent("~/");
             }
 
@@ -81,8 +82,34 @@ namespace APS.Controllers
         public ActionResult Logout()
         {
             // 로직 처리후에 로그인 페이지로 이동
+            // 사용자 체크
+            if (Session["UserID"].ToString() == "Anonymous" || Session["UserID"] == null)
+            {
+                TempData["msg"] = "<script>alert('잘못된 접근경로입니다. 로그인 후 이용하세요.');</script>";
+                return RedirectPermanent("~/");
+            }
 
-            return View();
+            // 쿠키 제거
+            Response.Cookies["UserID"].Expires = DateTime.Now.AddDays(-1);
+            Response.Cookies["Passwords"].Expires = DateTime.Now.AddDays(-1);
+
+            // 어플리케이션 전역변수 제거 (동시 로그인 방지)
+            System.Web.HttpContext.Current.Application["UserInfo@" + Session["UserID"].ToString()] = null;
+
+            // 세션 정보 클리어
+            Session.Abandon();
+
+            // 기본 세션값으로 초기화
+            Session.Timeout = 60;
+            Session["UID"] = 1;
+            Session["UserID"] = "abc";
+            Session["UserName"] = "이민호";
+            Session["CompanyName"] = "서울과기대";
+
+            //[DevStateManagement] 새 세션이 시작할 때 실행되는 코드입니다.
+            Session["Now"] = DateTime.Now;
+
+            return RedirectPermanent("~/");
         }
 
 
@@ -91,11 +118,11 @@ namespace APS.Controllers
         public ActionResult UserDelete()
         {
             // 배포시 변경
-            if (Session["UserID"].ToString() == "Anonymous" || Session["UserID"] == null)
+            if (Session["UserID"].ToString() == "Anonymous" || Session["UserID"] == null || Session["UserID"].ToString() == "abc")
             {
-                return RedirectPermanent("~/");
+                TempData["msg"] = "<script>alert('잘못된 접근경로입니다. 로그인 후 이용하세요.');</script>";
+                return RedirectPermanent("/Board/Index");
             }
-
 
             return View();
         }
@@ -104,19 +131,20 @@ namespace APS.Controllers
         // 회원 탈퇴 페이지
         [HttpPost]
         public ActionResult UserDelete(User user)
-        { 
+        {
             // 사용자 체크
-            if (Session["UserID"].ToString() == "Anonymous" || Session["UserID"] == null)
+            if (Session["UserID"].ToString() == "Anonymous" || Session["UserID"] == null || Session["UserID"].ToString() == "abc")
             {
-                return RedirectPermanent("~/");
+                TempData["msg"] = "<script>alert('잘못된 접근경로입니다. 로그인 후 이용하세요.');</script>";
+                return RedirectPermanent("/Board/Index");
             }
-
 
             var result = userRepo.DeleteUser(user);
 
             if (result > 0)
             {
                 TempData["msg"] = "<script>alert('회원탈퇴 완료.');</script>";
+                return RedirectPermanent("~/");
             }
             else
             {
@@ -133,10 +161,15 @@ namespace APS.Controllers
             // 사용자 체크
             if (Session["UserID"].ToString() == "Anonymous" || Session["UserID"] == null)
             {
+                TempData["msg"] = "<script>alert('잘못된 접근경로입니다. 로그인 후 이용하세요.');</script>";
                 return RedirectPermanent("~/");
             }
-
-            return View();
+            else
+            {
+                string userId = Session["UserID"].ToString();
+                User user = userRepo.GetUser(userId);
+                return View(user);
+            }
         }
 
 
@@ -148,7 +181,7 @@ namespace APS.Controllers
             userRepo.UpdateUser(user);
             TempData["msg"] = "<script>alert('회원정보 수정완료');</script>";
 
-            return View();
+            return RedirectPermanent("/Account/UserInfo");
         }
 
 
@@ -180,7 +213,7 @@ namespace APS.Controllers
                     System.Web.HttpContext.Current.Application.UnLock();
 
                     // 세션 변수에 사용자 정보를 저장
-                    Session["UID"] = user.UID;
+                    Session["UID"] = user.UID; 
                     Session["UserID"] = user.UserID;
                     Session["CompanyName"] = user.CompanyName;
                     Session["UserName"] = user.UserName;

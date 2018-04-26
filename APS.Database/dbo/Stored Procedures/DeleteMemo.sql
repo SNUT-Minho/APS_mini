@@ -2,5 +2,5 @@
 	@Id Int
 AS
 	Delete Memos
-	Where Id = @Id
+	Where Id = @Id 
 Go

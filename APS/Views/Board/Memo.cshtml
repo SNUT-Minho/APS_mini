@@ -1,0 +1,197 @@
+﻿
+@{
+    ViewBag.Title = "Memo";
+}
+
+<style>
+    h5, h6, p {
+        padding: 8px;
+    }
+
+    .hide-button {
+        display: none;
+        color: gray;
+    }
+
+        .hide-button a {
+            text-decoration: none;
+            color: gray;
+        }
+
+            .hide-button a:hover {
+                color: red;
+            }
+
+    .card:hover {
+        background-color: #2e2c2c;
+        color: white;
+    }
+
+        .card:hover .hide-button {
+            display: block;
+        }
+</style>
+
+
+<!--Modal 데이터 저장소-->
+<input type="hidden" name="name" value="" id="memo-subject" />
+<input type="hidden" name="name" value="" id="memo-day" />
+<input type="hidden" name="name" value="" id="memo-description" />
+
+
+<div class="row">
+    <div class="col-md-2 col-lg-2"></div>
+    <div class="col-md-8 col-lg-8 container-fluid">
+        <h3>Memo  <button data-target="#myModal" data-toggle="modal" class="btn btn-primary" style="float:right;">메모 작성</button></h3>
+
+        <hr />
+        <div class="row" id="memoContainer">
+            @*<div class="col-md-3">
+                    <div class="card" style="height:200px">
+                        <h5 class="card-title">Try Other <span class="hide-button" style="float:right; padding-right:5px;"><a href="#"><i class="fa fa-remove"></i></a></span></h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Bootstrap 4.0.0 Snippet by pradeep330</h6>
+                        <p class="card-text">You can also try different version of Bootstrap V4 side menu. Click below link to view all Bootstrap Menu versions.</p>
+                    </div>
+                </div>*@
+        </div>
+    </div>
+    <div class="col-md-2 col-lg-2"></div>
+</div>
+
+
+<!--Modal(새 메모 작성)-->
+<div class="modal fade" draggable="true" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModal-label">Create Memo</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" name="name" id="newMemo" value="" class="form-control" style="max-width:100%;" maxlength="115" autofocus />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="modalClose" onclick="clearMemo();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="createMemo();">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+    // 메모장의 내용 Clear하기
+    function clearMemo() {
+        $('#newMemo').val('');
+    };
+
+
+    // 새 메모 생성하기
+    function createMemo() {
+        var description = $('#newMemo').val();
+        var title = '@Session["UserName"]';
+        var json = "{ Title : \"" + title + "\", Description : \"" + description + "\", UID : \"" + @Session["UID"] + "\"}";
+
+        $.ajax({
+            type: "POST",
+            url: "/api/Memo/",
+            data: json,
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                var date = new Date(response.CreatedTime).toLocaleString();
+                var memo = "<div class='col-md-3'  id='" + response.Id + "'><div class='card' style='height:200px' draggable='true'>";
+                memo += "<h5 class='card-title'>" + response.Title + "<span class='hide-button' style='float: right; padding-right: 5px;'><a href='#'>";
+                memo += "<i class='fa fa-remove' id='" + response.Id + "'></i></a ></span ></h5 > ";
+                memo += "<h6 class='card-subtitle mb-2 text-muted'>" + date + "</h6>";
+                memo += "<p class='card-text'>" + response.Description + "</p></div></div>";
+                $('#memoContainer').append(memo);
+                $('#modalClose').click();
+            }
+        });
+    };
+
+
+    // 전체 메모 불러오기
+    function DisplayMemo() {
+        $.getJSON("/api/Memo/" + @Session["UID"],
+            function (data, textStatus, jqXHR) {
+                var result = '';
+                $.each(data, function (key, value) {
+                    var date = new Date(value.CreatedTime).toLocaleString();
+                    var memo = "<div class='col-md-3' id='" + value.Id + "'><div class='card' style='height:200px' draggable='true'>";
+                    memo += "<h5 class='card-title'>" + value.Title + "<span class='hide-button' style='float: right; padding-right: 5px;'><a href='#'>";
+                    memo += "<i class='fa fa-remove' id='" + value.Id + "'></i></a ></span ></h5 > ";
+                    memo += "<h6 class='card-subtitle mb-2 text-muted'>" + date + "</h6>";
+                    memo += "<p class='card-text'>" + value.Description + "</p></div></div>";
+                    result += memo;
+                });
+                $('#memoContainer').append(result);
+            }
+        );
+    };
+
+    // 전체 메모 지우기
+    function ClearMemo() {
+        $('#memoContainer').html('');
+    };
+
+    function saveMemoOrder() {
+        // 메모 순서 저장
+        var order = $('#memoContainer').sortable('toArray');
+        var json = "{ Title : \"" + order + "\"}";
+
+        $.ajax({
+            type: "PUT",
+            url: "/api/Memo/" + @Session["UID"],
+            data: json,
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+            }
+        });
+    };
+
+    $(document).ready(function () {
+
+        // 모달 auto focus
+        $('#myModal').on('shown.bs.modal', function () {
+            $('#newMemo').focus();
+        });
+
+        // 윈도우 종료시 실행되는 메서드
+        $(window).on('beforeunload', function () {
+            saveMemoOrder();
+            return '';
+        });
+
+        DisplayMemo();
+
+        // 메모 위치 이동
+        // 드래그앤 드롭후 위치 변경
+        $('#memoContainer').sortable({
+            connectWith: '#memoContainer',
+            update: function (e, ui) {
+            }
+        });
+        $('#memoContainer').disableSelection();
+
+        // 메모 삭제
+        // 이벤트 관리 컨테이너
+        $('#memoContainer').on('click', '.fa', function (event) {
+            var id = $(event.target).attr('id');
+            // Delete API 호출
+            $.ajax({
+                type: "DELETE",
+                url: "/api/Memo/" + id,
+                data: "name=John&location=Boston",
+                dataType: "json",
+                success: function (response) {
+                    ClearMemo();
+                    DisplayMemo();
+                }
+            });
+        });
+    });
+</script>
+

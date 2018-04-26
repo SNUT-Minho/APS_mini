@@ -10,6 +10,14 @@
         padding-bottom: 5%;
     }
 
+    a:hover {
+        text-decoration: none;
+    }
+
+    #mainForm {
+        box-shadow: 10px 10px gray;
+    }
+
     label.error {
         color: red;
     }
@@ -36,6 +44,10 @@
         border-color: #ff0000;
         -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
         box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
+    }
+
+    #brand {
+        text-shadow: 0px 4px 3px rgba(0,0,0,0.4), 0px 8px 13px rgba(0,0,0,0.1), 0px 18px 23px rgba(0,0,0,0.1);
     }
 </style>
 <script>
@@ -139,8 +151,8 @@
         <!--회원가입 폼 디자인-->
         <div class="col-lg-4" style="align-content:center;">
             <form class="form-group" role="form" method="post" action="/Account/Register">
-                <a href="/Account/Login"><h2 style="color: white; text-align:center; margin-bottom:30px;">APS_mini</h2></a>
-                <div class="container" style=" align-content:center; padding-top:50px; padding-bottom:50px; border:1px solid black; background-color:white; ">
+                <a href="/Account/Login"><h2 style="color: white; text-align:center; margin-bottom:30px;" id="brand">APS_mini</h2></a>
+                <div class="container" id="mainForm" style=" align-content:center; padding-top:50px; padding-bottom:50px; border:1px solid black; background-color:white; ">
                     <div style="margin-left:auto; margin-right:auto; align-content:center; max-width:280px;">
                         <h3>회원 가입</h3>
                         <hr />

@@ -34,15 +34,20 @@ namespace APS
             Application["Now"] = DateTime.Now;
         }
 
+        protected void Application_End() {
+           
+        }
+
         void Session_Start(object sender, EventArgs e)
         {
             // 세션 유지시간 2시간
             Session.Timeout = 60;
 
             // 로그인 후에 해당 사용자의 정보 값으로 대체
-            Session["UID"] = 7;
-            Session["UserID"] = "Anonymous";
-            Session["UserName"] = "손님";
+            Session["UID"] = 1;
+            Session["UserID"] = "abc";
+            Session["UserName"] = "이민호";
+            Session["CompanyName"] = "서울과기대";
 
             //[DevStateManagement] 새 세션이 시작할 때 실행되는 코드입니다.
             Session["Now"] = DateTime.Now;

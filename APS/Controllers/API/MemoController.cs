@@ -16,13 +16,14 @@ namespace APS.Controllers.API
         // GET: api/Memo
         public IEnumerable<Memo> Get()
         {
-            return memoRepo.GetAllMemos(); 
+            // empty
+            return null; 
         }
 
         // GET: api/Memo/5
-        public string Get(int id)
+        public IEnumerable<Memo> Get(int id)
         {
-            return "value";
+            return memoRepo.GetAllMemos(id);
         }
 
         // POST: api/Memo
@@ -34,9 +35,10 @@ namespace APS.Controllers.API
         }
 
         // PUT: api/Memo/5
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, [FromBody]Memo memo)
         {
-
+            memo.UID = id;
+            memoRepo.UpdateMemo(memo);
         }
 
         // DELETE: api/Memo/5

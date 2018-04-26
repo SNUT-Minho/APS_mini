@@ -15,9 +15,11 @@ namespace APS.Models.Repositories
     {
         IDbConnection db = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
 
-        public IEnumerable<Memo> GetAllMemos()
+        public IEnumerable<Memo> GetAllMemos(int uid)
         {
-            var result = db.Query<Memo>("GetAllMemos", commandType: CommandType.StoredProcedure);
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@UID", uid);
+            var result = db.Query<Memo>("GetAllMemos", parameters ,commandType: CommandType.StoredProcedure);
 
             return result;
         }
@@ -35,6 +37,7 @@ namespace APS.Models.Repositories
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("@Title", memo.Title);
             parameters.Add("@Description", memo.Description);
+            parameters.Add("@UID", memo.UID);
 
             parameters.Add("@Id", dbType: DbType.Int32, direction: ParameterDirection.Output);
             parameters.Add("@CreatedTime", dbType: DbType.DateTime, direction: ParameterDirection.Output);
@@ -45,6 +48,21 @@ namespace APS.Models.Repositories
             memo.Id = parameters.Get<int>("@Id");
 
             return memo;
+        }
+
+        public void UpdateMemo(Memo memo)
+        {
+            string[] arr = memo.Title.Split(',');
+
+
+            for (int i = 0; i < arr.Length; i++)
+            {
+                DynamicParameters parameters = new DynamicParameters();
+                parameters.Add("@Id", arr[i]);
+                parameters.Add("@ViewOrder", i);
+                parameters.Add("@UID", memo.UID);
+                db.Execute("UpdateMemoOrder", parameters, commandType: CommandType.StoredProcedure);
+            }
         }
     }
 }
