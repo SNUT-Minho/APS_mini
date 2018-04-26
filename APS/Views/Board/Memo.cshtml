@@ -42,17 +42,11 @@
 <div class="row">
     <div class="col-md-2 col-lg-2"></div>
     <div class="col-md-8 col-lg-8 container-fluid">
-        <h3>Memo  <button data-target="#myModal" data-toggle="modal" class="btn btn-primary" style="float:right;">메모 작성</button></h3>
+        <h3>Memo<button data-target="#myModal" data-toggle="modal" class="btn btn-primary" style="float:right;">메모 작성</button></h3>
 
         <hr />
         <div class="row" id="memoContainer">
-            @*<div class="col-md-3">
-                    <div class="card" style="height:200px">
-                        <h5 class="card-title">Try Other <span class="hide-button" style="float:right; padding-right:5px;"><a href="#"><i class="fa fa-remove"></i></a></span></h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Bootstrap 4.0.0 Snippet by pradeep330</h6>
-                        <p class="card-text">You can also try different version of Bootstrap V4 side menu. Click below link to view all Bootstrap Menu versions.</p>
-                    </div>
-                </div>*@
+            <!--메모 생성되는 Container-->
         </div>
     </div>
     <div class="col-md-2 col-lg-2"></div>
@@ -79,12 +73,10 @@
 
 <script>
 
-
     // 메모장의 내용 Clear하기
     function clearMemo() {
         $('#newMemo').val('');
     };
-
 
     // 새 메모 생성하기
     function createMemo() {

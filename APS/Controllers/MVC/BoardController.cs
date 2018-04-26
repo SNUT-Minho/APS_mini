@@ -32,7 +32,7 @@ namespace APS.Controllers
             return View();
         }
 
-        public ActionResult Capacity()
+        public ActionResult LineCapacity()
         {
             // 로그인 안한 사용자 Redirect 
             if (Session["UserID"].ToString() == "Anonymous" || Session["UserID"] == null)
@@ -68,7 +68,7 @@ namespace APS.Controllers
             return View();
         }
 
-        public ActionResult Station()
+        public ActionResult WorkStation()
         {
             // 로그인 안한 사용자 Redirect 
             if (Session["UserID"].ToString() == "Anonymous" || Session["UserID"] == null)
@@ -92,7 +92,7 @@ namespace APS.Controllers
             return View();
         }
 
-        public ActionResult Bom()
+        public ActionResult BOM()
         {
             // 로그인 안한 사용자 Redirect 
             if (Session["UserID"].ToString() == "Anonymous" || Session["UserID"] == null)

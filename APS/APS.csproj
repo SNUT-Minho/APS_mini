@@ -356,12 +356,12 @@
     <Content Include="Views\Account\Logout.cshtml" />
     <Content Include="Views\Board\Memo.cshtml" />
     <Content Include="Views\Board\Schedule.cshtml" />
-    <Content Include="Views\Board\Capacity.cshtml" />
+    <Content Include="Views\Board\LineCapacity.cshtml" />
     <Content Include="Views\Board\Worker.cshtml" />
     <Content Include="Views\Board\Routing.cshtml" />
-    <Content Include="Views\Board\Station.cshtml" />
+    <Content Include="Views\Board\WorkStation.cshtml" />
     <Content Include="Views\Board\Product.cshtml" />
-    <Content Include="Views\Board\Bom.cshtml" />
+    <Content Include="Views\Board\BOM.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
