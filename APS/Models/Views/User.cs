@@ -24,10 +24,12 @@ namespace APS.Models
         /// <summary>
         /// 만약 새로운 기업이면 해당 기업 명으로 Domain Group 생성 + Domain User 생성
         /// </summary>
+    
+        public int GroupUID { get; set; }
+        public int SELECT_INDEX { get; set; }
         public string CompanyName { get; set; }   
                                                      
         public string UserName { get; set; }
-        public string Description { get; set; }
         public string Industry { get; set; }
         public string Type { get; set; }
 

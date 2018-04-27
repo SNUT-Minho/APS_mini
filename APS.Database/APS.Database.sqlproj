@@ -65,7 +65,6 @@
   <ItemGroup>
     <Build Include="dbo\Tables\Domains.sql" />
     <Build Include="dbo\Tables\UserProfiles.sql" />
-    <Build Include="dbo\Views\Groups.sql" />
     <Build Include="dbo\Stored Procedures\LoginUser.sql" />
     <Build Include="dbo\Tables\LoginHistories.sql" />
     <Build Include="dbo\Views\Users.sql" />
@@ -81,6 +80,14 @@
     <Build Include="dbo\Stored Procedures\DeleteMemo.sql" />
     <Build Include="dbo\Stored Procedures\CreateMemo.sql" />
     <Build Include="dbo\Stored Procedures\UpdateMemoOrder.sql" />
+    <Build Include="dbo\Tables\Product.sql" />
+    <Build Include="dbo\Tables\ProductGroup.sql" />
+    <Build Include="dbo\Tables\ProductType.sql" />
+    <Build Include="dbo\Tables\Company.sql" />
+    <Build Include="dbo\Stored Procedures\GetAllCompany.sql" />
+    <Build Include="dbo\Stored Procedures\CreateCompany.sql" />
+    <Build Include="dbo\Stored Procedures\GetCompany.sql" />
+    <Build Include="dbo\Stored Procedures\GetSecureCode.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="APS.Database.publish.Test.xml" />

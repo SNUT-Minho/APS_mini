@@ -183,6 +183,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\API\CompanyController.cs" />
     <Compile Include="Controllers\API\MemoController.cs" />
     <Compile Include="Controllers\API\UserController.cs" />
     <Compile Include="Controllers\MVC\AccountController.cs" />
@@ -191,9 +192,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Repositories\CompanyRepository.cs" />
     <Compile Include="Models\Repositories\MemoRepository.cs" />
     <Compile Include="Models\Repositories\UserRepository.cs" />
-    <Compile Include="Models\Views\Group.cs" />
+    <Compile Include="Models\Views\Company.cs" />
     <Compile Include="Models\Views\Memo.cs" />
     <Compile Include="Models\Views\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -362,6 +364,7 @@
     <Content Include="Views\Board\WorkStation.cshtml" />
     <Content Include="Views\Board\Product.cshtml" />
     <Content Include="Views\Board\BOM.cshtml" />
+    <Content Include="Views\Account\TempUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

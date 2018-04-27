@@ -1,8 +1,8 @@
 ﻿CREATE PROCEDURE [dbo].[GetAllMemos]
-	@UID Int
+	@GroupUID Int
 AS
 	Select *
 	From Memos
-	Where UID = @UID
+	Where GroupUID = @GroupUID
 	Order by ViewOrder;
 Go

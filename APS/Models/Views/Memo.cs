@@ -8,6 +8,7 @@ namespace APS.Models.Views
     public class Memo
     {
         public int Id { get; set; }
+        public int GroupUID { get; set; }
         public int UID { get; set; }
         public string Title { get; set; }
         public DateTime CreatedTime { get; set; }

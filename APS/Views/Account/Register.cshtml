@@ -50,98 +50,7 @@
         text-shadow: 0px 4px 3px rgba(0,0,0,0.4), 0px 8px 13px rgba(0,0,0,0.1), 0px 18px 23px rgba(0,0,0,0.1);
     }
 </style>
-<script>
 
-    $(document).ready(function () {
-
-        // !! jQuery Validator
-        $('form').validate({
-            rules: {
-                UserID: {
-                    required: true,
-                    minlength: 5,
-                    maxlength: 15
-                },
-                Password: {
-                    required: true,
-                    minlength: 5,
-                    maxlength: 15,
-
-                },
-                PasswordConfirm: {
-                    required: true,
-                    equalTo: "#Password"
-                },
-                CompanyName: {
-                    required: true,
-                    minlength: 2,
-                    maxlength: 15
-                },
-                UserName: {
-                    required: true,
-                    minlength: 3,
-                    maxlength: 5
-                },
-                Industry: {
-                    required: true,
-                }
-            },
-            messages: {
-                UserID: {
-                    required: "아이디를 입력해주세요.",
-                    minlength: "{0}자 이상 입력하시오",
-                    maxlength: "{0}자 이하로 입력하시오."
-                },
-                Password: {
-                    required: "비밀번호를 입력해주세요.",
-                    minlength: "{0}자 이상 입력하시오",
-                    maxlength: "{0}자 이하로 입력하시오"
-
-                },
-                PasswordConfirm: {
-                    required: "비밀번호를 확인해주세요",
-                    equalTo: "비밀번호가 동일하지 않습니다."
-                },
-                CompanyName: {
-                    required: "회사명을 입력해주세요",
-                    minlength: "{0}자 이상 입력하시오",
-                    maxlength: "{0}자 이하로 입력하시오"
-                },
-                UserName: {
-                    required: "사용자명을 입력해주세요",
-                    minlength: "{0}자 이상 입력하시오",
-                    maxlength: "{0}자 이하로 입력하시오"
-                },
-                Industry: {
-                    required: "산업구분을 선택해주세요"
-                }
-            }
-        });
-
-
-        // 아이디 중복 체크
-        var timer;
-        $("#UserID").on('keyup', function () {
-            clearTimeout(timer);  //clear any running timeout on key up
-            timer = setTimeout(function () {
-                var id = $('#UserID').val();
-                $.getJSON("/api/User/" + id,
-                    function (data, textStatus, jqXHR) {
-                        if (!data) {
-                            alert('이미 존재하는 아이디입니다.');
-                            clearUserID();
-                        }
-                    }
-                );
-            }, 1000);
-        });
-
-        function clearUserID() {
-            $('#UserID').val('');
-        }
-    });
-
-</script>
 
 <body style="background-color:aqua">
     <div class="row" style="">
@@ -168,33 +77,27 @@
 
                         <div class="form-group">
                             <label class="control-label" for="CompanyName">회사명 </label>
-                            <input type="text" class="form-control" id="CompanyName" name="CompanyName" placeholder="회사명을 입력하시오." required>
+
+                            <div class="form-inline">
+                                <select class="form-control" id="SELECT_INDEX" name="SELECT_INDEX" style="width:75%; overflow-y:scroll;" required>
+                                    <option value="0">-- 회사명 --</option>
+                                </select>
+                                <input type="button" data-target="#myModal2" data-toggle="modal" style="margin-left:10px;" class="btn btn-dark" value="추가" />
+                            </div>
                         </div>
+
                         <div class="form-group">
                             <label class="control-label" for="UserName">회원 이름 </label>
                             <input type="text" class="form-control" id="UserName" name="UserName" placeholder="회원 이름을 입력하시오." required>
                         </div>
                         <div class="form-group">
-                            <label class="control-label" for="Industry">산업 </label>
-                            <select class="form-control" id="Industry" name="Industry" required>
-                                <option value="">-- 산업구분 --</option>
-                                <option value="1">전기-전자-제어</option>
-                                <option value="2">반도체-디스플레이-광학</option>
-                                <option value="3">기계-기계설비</option>
-                                <option value="4">자동차-조선-철강-항공</option>
-                                <option value="5">금속-재료-자재</option>
-                                <option value="6">화학-에너지-환경</option>
-                                <option value="7">섬유-의류-패션</option>
-                                <option value="8">생활화학-화장품</option>
-                                <option value="9">생활용품-소비재-기타</option>
-                                <option value="10">목재-제지-가구</option>
-                                <option value="11">식품가공</option>
-                                <option value="12">농축산-어업-임업</option>
-                            </select>
+                            <label class="control-label" for="SecureCode" style="color:red;">가입 코드 </label>
+                            <input type="text" class="form-control" id="SecureCode" name="SecureCode" placeholder="가입 코드를 입력해주세요" required>
+                            <input type="hidden" id="hdn" name="hdn" value="getCode();" />
                         </div>
                     </div>
                 </div>
-                <button class="btn btn-danger form-control" style="margin-top: 10px; height:50px;">가입 완료</button>
+                <button class="btn btn-danger form-control" style="margin-top: 10px; height:50px;" onclick="return checkCode(); return false;">가입 완료</button>
             </form>
         </div>
         <!--회원가입 폼 디자인-->
@@ -202,4 +105,186 @@
 
         </div>
     </div>
+
+    <!--Modal(회사명 찾아보기)-->
+    <div class="modal fade" draggable="true" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModal-label">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModal-label">회사명 추가</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="text" name="newCompany" id="newCompany" value="" class="form-control" style="max-width:100%;" maxlength="115" autofocus />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="modalClose" onclick="clearCompany();">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="createCompany();">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </body>
+<script>
+
+    $(document).ready(function () {
+
+        // !! jQuery Validator
+        $('form').validate({
+            rules: {
+                UserID: {
+                    required: true,
+                    minlength: 5,
+                    maxlength: 15
+                },
+                Password: {
+                    required: true,
+                    minlength: 5,
+                    maxlength: 15,
+
+                },
+                PasswordConfirm: {
+                    required: true,
+                    equalTo: "#Password"
+                },
+                SELECT_INDEX: {
+                    required: true,
+                },
+                UserName: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 5
+                },
+                SecureCode: {
+                    required: true
+
+                }
+            },
+            messages: {
+                UserID: {
+                    required: "아이디를 입력해주세요.",
+                    minlength: "{0}자 이상 입력하시오",
+                    maxlength: "{0}자 이하로 입력하시오."
+                },
+                Password: {
+                    required: "비밀번호를 입력해주세요.",
+                    minlength: "{0}자 이상 입력하시오",
+                    maxlength: "{0}자 이하로 입력하시오"
+
+                },
+                PasswordConfirm: {
+                    required: "비밀번호를 확인해주세요",
+                    equalTo: "비밀번호가 동일하지 않습니다."
+                },
+                SELECT_INDEX: {
+                    required: "회사명을 입력해주세요",
+                },
+                UserName: {
+                    required: "사용자명을 입력해주세요",
+                    minlength: "{0}자 이상 입력하시오",
+                    maxlength: "{0}자 이하로 입력하시오"
+                },
+                SecureCode: {
+                    required: "가입코드를 작성해주세요."
+
+                }
+            }
+        });
+
+
+        // 아이디 중복 체크
+        var timer;
+        $("#UserID").on('keyup', function () {
+            clearTimeout(timer);  //clear any running timeout on key up
+            timer = setTimeout(function () {
+                var id = $('#UserID').val();
+                $.getJSON("/api/User/" + id,
+                    function (data, textStatus, jqXHR) {
+                        if (!data) {
+                            alert('이미 존재하는 아이디입니다.');
+                            clearUserID();
+                        }
+                    }
+                );
+            }, 1000);
+        });
+
+        // 회사명 리스트에 데이터 바인드
+        $.getJSON("/api/Company",
+            function (data, textStatus, jqXHR) {
+                $.each(data, function (key, value) {
+               
+                    var company = "<option value=\"" + value.CID + "\" >" + value.CompanyName + "</option>";
+                    $('#SELECT_INDEX').append(company);
+                });
+            }
+        );
+
+        function clearUserID() {
+            $('#UserID').val('');
+        }
+
+        // 모달 auto focus
+        $('#myModal2').on('shown.bs.modal', function () {
+            $('#newCompany').focus();
+        });
+    });
+
+    // 새 회사 생성하기
+    function createCompany() {
+        var companyName = $('#newCompany').val();
+        var json = "{ CompanyName : \"" + companyName + "\"}";
+
+        $.ajax({
+            type: "POST",
+            url: "/api/Company/",
+            data: json,
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                // 새로 생성한 회사면 가입코드를 쏴주고 / 다른 기업은 선택 못하게 지워버림
+                $('#SELECT_INDEX').html('');
+                var company = "<option value=\"" + response.CID + "\"  selected >" + response.CompanyName + "</option>";
+                $('#SELECT_INDEX').append(company);
+                $('#SecureCode').val(response.SecureCode);
+                $('#modalClose').click();
+            }
+        });
+
+        $('#SecureCode').attr("readonly", "true");
+        $('#SELECT_INDEX').attr("readonly", "true");
+    };
+
+    // 회사 추가창의 내용 Clear하기
+    function clearCompany() {
+        $('#newCompany').val('');
+    };
+
+  
+    // 실제 가입코드랑 같은지 확인
+    function checkCode() {
+        var result;
+
+        $.ajax({
+            type: "GET",
+            async: false,
+            url: "/api/Company/" + $('#SELECT_INDEX').val(),
+            data: "name=John&location=Boston",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                var data = $('#SecureCode').val();
+
+                if (data == response) {
+                    result = true;
+                } else {
+                    $('#SecureCode').val('');
+                    alert('가입코드를 확인하세요');
+                    result = false;
+                }
+            }
+        });
+        return result;
+    };
+</script>

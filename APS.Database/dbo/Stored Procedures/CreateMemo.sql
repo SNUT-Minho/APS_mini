@@ -1,6 +1,7 @@
 ﻿CREATE PROCEDURE [dbo].[CreateMemo]
 	@UID Int,
-	
+	@GroupUID Int,
+
 	@Title NVarChar(10),
 	@Description NVarChar(255),
 
@@ -8,7 +9,7 @@
 	@CreatedTime DateTime Output
 
 AS
-	Insert Into Memos (UID, Title, Description) Values (@UID, @Title,@Description)
+	Insert Into Memos (UID, GroupUID, Title, Description) Values (@UID, @GroupUID, @Title, @Description)
 
 	Select @Id  = SCOPE_IDENTITY()
 

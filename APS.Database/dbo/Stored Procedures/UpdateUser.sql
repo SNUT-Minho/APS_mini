@@ -5,7 +5,6 @@ CREATE PROCEDURE [dbo].[UpdateUser]
 	@Email NVarChar(50),
 	@UserID NVarChar(25),
 	@Password NVarChar(50),
-	@CompanyName  NVarChar(50),
 	@UserName  NVarChar(50),
 	@Industry   NVarChar(20)
 AS
@@ -15,7 +14,7 @@ AS
 	IF @UID Is Not Null
 	Begin
 		Update Domains
-		Set CompanyName = @CompanyName, UserName = @UserName, Industry = @Industry
+		Set UserName = @UserName, Industry = @Industry
 		Where UserID = @UserID
 
 		IF @Password IS Not Null

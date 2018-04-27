@@ -13,6 +13,9 @@ namespace APS.Controllers
     {
         // USER 저장소 객체
         private UserRepository userRepo = new UserRepository();
+        private CompanyRepository companyRepo = new CompanyRepository();
+
+    
 
         // GET: Account
         [HttpGet]
@@ -52,8 +55,12 @@ namespace APS.Controllers
 
             // 세션 변수에 사용자 정보를 저장
             Session["UID"] = user.UID;
+            Session["GroupUID"] = user.GroupUID;
             Session["UserID"] = user.UserID;
+
+            user.CompanyName = companyRepo.getCompany(user.GroupUID);
             Session["CompanyName"] = user.CompanyName;
+
             Session["UserName"] = user.UserName;
             Session["Industry"] = user.Industry;
             Session["Email"] = user.Email;
@@ -102,6 +109,7 @@ namespace APS.Controllers
             // 기본 세션값으로 초기화
             Session.Timeout = 60;
             Session["UID"] = 1;
+            Session["GroupUID"] = 1;
             Session["UserID"] = "abc";
             Session["UserName"] = "이민호";
             Session["CompanyName"] = "서울과기대";
@@ -168,6 +176,8 @@ namespace APS.Controllers
             {
                 string userId = Session["UserID"].ToString();
                 User user = userRepo.GetUser(userId);
+                user.CompanyName = companyRepo.getCompany(user.GroupUID);
+
                 return View(user);
             }
         }
@@ -213,9 +223,10 @@ namespace APS.Controllers
                     System.Web.HttpContext.Current.Application.UnLock();
 
                     // 세션 변수에 사용자 정보를 저장
-                    Session["UID"] = user.UID; 
+                    Session["UID"] = user.UID;
                     Session["UserID"] = user.UserID;
-                    Session["CompanyName"] = user.CompanyName;
+                    Session["GroupUID"] = user.GroupUID;
+                    Session["CompanyName"] = companyRepo.getCompany(user.GroupUID);
                     Session["UserName"] = user.UserName;
                     Session["Industry"] = user.Industry;
                     Session["Email"] = user.Email;
@@ -236,6 +247,26 @@ namespace APS.Controllers
             }
 
             return View();
+        }
+
+        
+        public ActionResult TempUser()
+        {
+
+            // 세션 유지시간 2시간
+            Session.Timeout = 60;
+
+            // 로그인 후에 해당 사용자의 정보 값으로 대체
+            Session["UID"] = 1;
+            Session["GroupUID"] = 1;
+            Session["UserID"] = "abc";
+            Session["UserName"] = "이민호";
+            Session["CompanyName"] = "서울과기대";
+
+            //DevStateManagement] 새 세션이 시작할 때 실행되는 코드입니다.
+            Session["Now"] = DateTime.Now;
+
+            return Redirect("/Board/Index");
         }
     }
 }

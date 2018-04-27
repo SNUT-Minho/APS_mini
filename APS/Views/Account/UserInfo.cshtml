@@ -87,9 +87,7 @@
                     minlength: 3,
                     maxlength: 5
                 },
-                Industry: {
-                    required: true,
-                }
+            
             },
             messages: {
                 UserID: {
@@ -115,9 +113,7 @@
                     minlength: "{0}자 이상 입력하시오",
                     maxlength: "{0}자 이하로 입력하시오"
                 },
-                Industry: {
-                    required: "산업구분을 선택해주세요"
-                }
+              
             }
         });
 
@@ -126,7 +122,7 @@
             $('#UserID').val('');
         }
 
-        $('option[value=@Html.DisplayFor(model => model.Industry)]').attr("selected", "true");
+        @*$('option[value=@Html.DisplayFor(model => model.Industry)]').attr("selected", "true");*@
     });
 
 </script>
@@ -158,7 +154,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label class="control-label" for="CompanyName">회사명</label>
-                                <input type="text" class="form-control" id="CompanyName" name="CompanyName" placeholder="회사명을 입력하시오." value="@Html.DisplayFor(model => model.CompanyName)" required>
+                                <input type="text" class="form-control" id="CompanyName" name="CompanyName" placeholder="회사명을 입력하시오." value="@Html.DisplayFor(model => model.CompanyName)" required readonly>
                             </div>
                             <div class="form-group col-md-6">
                                 <label class="control-label" for="UserName">회원 이름 </label>
@@ -169,22 +165,8 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label class="control-label" for="Industry">산업 </label>
-                                <select class="form-control" id="Industry" name="Industry" required>
-                                    <option value="">-- 산업구분 --</option>
-                                    <option value="1">전기-전자-제어</option>
-                                    <option value="2">반도체-디스플레이-광학</option>
-                                    <option value="3">기계-기계설비</option>
-                                    <option value="4">자동차-조선-철강-항공</option>
-                                    <option value="5">금속-재료-자재</option>
-                                    <option value="6">화학-에너지-환경</option>
-                                    <option value="7">섬유-의류-패션</option>
-                                    <option value="8">생활화학-화장품</option>
-                                    <option value="9">생활용품-소비재-기타</option>
-                                    <option value="10">목재-제지-가구</option>
-                                    <option value="11">식품가공</option>
-                                    <option value="12">농축산-어업-임업</option>
-                                </select>
+                                <label class="control-label" for="Industry" style="color:red;">가입 코드 </label>
+                                <input type="text" class="form-control" id="SecureCode" name="SecureCode" placeholder="가입 코드를 입력해주세요" required>
                             </div>
                             <div class="form-group col-md-6">
                                 <label class="control-label" for="Email">E-mail </label>
@@ -217,3 +199,23 @@
     </div>
 </body>
 @Html.Raw(TempData["msg"])
+<script>
+    $(document).ready(function () {
+
+        var groupUID = @Html.DisplayFor(model => model.GroupUID);
+        // Secure 코드 가져오기
+
+        $.ajax({
+            type: "GET",
+            async: false,
+            url: "/api/Company/" + groupUID,
+            data: "name=John&location=Boston",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                $('#SecureCode').val(response);
+                $('#SecureCode').attr("readonly", "true");
+            }
+        });   
+    });
+</script>

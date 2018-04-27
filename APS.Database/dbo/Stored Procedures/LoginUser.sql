@@ -14,13 +14,13 @@ BEGIN
 
 	Declare @Result Int
 	Declare @UID Int
-	Declare @CompanyName NVarChar(50)
+	Declare @GroupUID Int
 	Declare @UserName	NVarChar(25)
 
-	Select @Result = Count(*), @UID = UID, @CompanyName =CompanyName, @UserName = UserName
+	Select @Result = Count(*), @UID = UID, @GroupUID = GroupUID, @UserName = UserName
 	From Users
 	Where UserID = @UserID And Password = @Password
-	Group By UID, CompanyName, UserName    -- Group by 안하게되면 @UID, @CompanyName, @UserName이 중복이 된다.
+	Group By UID, GroupUID, UserName    -- Group by 안하게되면 @UID, @CompanyName, @UserName이 중복이 된다.
   
 	-- 로그인 History 저장
 	IF @Result >0
@@ -43,8 +43,8 @@ BEGIN
 		WHERE UID = @UID
 
 		-- 로그인 히스토리 테이블
-		Insert Into LoginHistories(UID ,UserID, CompanyName, UserName, LoginDate, LoginIP)
-		Values(@UID, @UserID, @CompanyName, @UserName, GETDATE(), @LastLoginIP)
+		Insert Into LoginHistories(UID ,UserID, GroupUID, UserName, LoginDate, LoginIP)
+		Values(@UID, @UserID, @GroupUID, @UserName, GETDATE(), @LastLoginIP)
 
 		Select '1' -- 로그인 성공 Signal
 	END

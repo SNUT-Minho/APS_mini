@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
+using APS.Models.Views;
 using Dapper;
 
 namespace APS.Models.Repositories
@@ -18,7 +19,6 @@ namespace APS.Models.Repositories
         /// Dapper 전용 db 커넥션
         /// </summary>
         private IDbConnection db = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
-
 
         public int DeleteUser(User user)
         {
@@ -38,7 +38,6 @@ namespace APS.Models.Repositories
             parameters.Add("@UserID", user.UserID);
             parameters.Add("@Email", user.Email);
             parameters.Add("@Password", user.Password);
-            parameters.Add("@CompanyName", user.CompanyName);
             parameters.Add("@UserName", user.UserName);
             parameters.Add("@Industry", user.Industry);
 
@@ -86,21 +85,25 @@ namespace APS.Models.Repositories
         /// <param name="user"></param>
         /// <returns></returns>
         public User RegisterUser(User user)
-        { 
+        {
+            user.GroupUID = Convert.ToInt32(user.SELECT_INDEX);
+
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("@UserID", user.UserID);
-            parameters.Add("@CompanyName", user.CompanyName);
             parameters.Add("@UserName", user.UserName);
             parameters.Add("@Industry", user.Industry);
             parameters.Add("@Password", user.Password);
             parameters.Add("@UID", dbType: DbType.Int32, direction: ParameterDirection.Output);
-            parameters.Add("@GroupUID", 3); // ex) 삼성그룹 
+            parameters.Add("@CompanyName", dbType: DbType.String, direction: ParameterDirection.Output, size: 25);
+
+            // Company Group // CID
+            parameters.Add("@GroupUID", user.GroupUID); 
 
             db.Open();
 
             db.Execute("RegisterUser", parameters, commandType: CommandType.StoredProcedure);
             user.UID = parameters.Get<int>("@UID");
-
+            user.CompanyName = parameters.Get<string>("@CompanyName");
             db.Close();
 
             return user;

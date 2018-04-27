@@ -15,10 +15,10 @@ namespace APS.Models.Repositories
     {
         IDbConnection db = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
 
-        public IEnumerable<Memo> GetAllMemos(int uid)
+        public IEnumerable<Memo> GetAllMemos(int groupUID)
         {
             DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("@UID", uid);
+            parameters.Add("@GroupUID", groupUID);
             var result = db.Query<Memo>("GetAllMemos", parameters ,commandType: CommandType.StoredProcedure);
 
             return result;
@@ -38,6 +38,7 @@ namespace APS.Models.Repositories
             parameters.Add("@Title", memo.Title);
             parameters.Add("@Description", memo.Description);
             parameters.Add("@UID", memo.UID);
+            parameters.Add("@GroupUID", memo.GroupUID);
 
             parameters.Add("@Id", dbType: DbType.Int32, direction: ParameterDirection.Output);
             parameters.Add("@CreatedTime", dbType: DbType.DateTime, direction: ParameterDirection.Output);

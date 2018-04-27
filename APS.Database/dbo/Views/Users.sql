@@ -11,9 +11,8 @@ As
 	Select
 		Domains.UID As UID,
 		Domains.UserID As UserID,
-		Domains.CompanyName As CompanyName,
+		Domains.GroupUID As GroupUID,
 		Domains.UserName As UserName,
-		Domains.Description As Description,
 		Domains.Industry As Industry,
 		Domains.Type As Type,
 		UserProfiles.Password As Password,

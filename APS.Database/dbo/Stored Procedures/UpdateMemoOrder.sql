@@ -5,5 +5,5 @@
 AS
 	Update Memos
 	Set ViewOrder = @ViewOrder
-	Where Id = @Id And UID = @UID
+	Where Id = @Id And UID = @UID 
 Go

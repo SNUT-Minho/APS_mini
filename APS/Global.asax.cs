@@ -44,13 +44,14 @@ namespace APS
             Session.Timeout = 60;
 
             // 로그인 후에 해당 사용자의 정보 값으로 대체
-            Session["UID"] = 1;
-            Session["UserID"] = "abc";
-            Session["UserName"] = "이민호";
-            Session["CompanyName"] = "서울과기대";
+            //Session["UID"] = 1;
+            //Session["GroupUID"] = 1;
+            Session["UserID"] = "Anonymous";
+            //Session["UserName"] = "이민호";
+            //Session["CompanyName"] = "서울과기대";
 
             //[DevStateManagement] 새 세션이 시작할 때 실행되는 코드입니다.
-            Session["Now"] = DateTime.Now;
+            //Session["Now"] = DateTime.Now;
         }
 
         // ASP.NET MVC Manual Configuration in Global.asax - Localization
