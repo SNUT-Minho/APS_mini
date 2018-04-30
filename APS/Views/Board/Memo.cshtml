@@ -33,12 +33,6 @@
 </style>
 
 
-<!--Modal 데이터 저장소-->
-<input type="hidden" name="name" value="" id="memo-subject" />
-<input type="hidden" name="name" value="" id="memo-day" />
-<input type="hidden" name="name" value="" id="memo-description" />
-
-
 <div class="row">
     <div class="col-md-2 col-lg-2"></div>
     <div class="col-md-8 col-lg-8 container-fluid">
@@ -84,7 +78,8 @@
         // 윈도우 종료시 실행되는 메서드
         $(window).on('beforeunload', function () {
             saveMemoOrder();
-            return '';
+
+            // return '';
         });
 
         DisplayMemo();

@@ -266,7 +266,7 @@ namespace APS.Controllers
             //DevStateManagement] 새 세션이 시작할 때 실행되는 코드입니다.
             Session["Now"] = DateTime.Now;
 
-            return Redirect("/Board/Index");
+            return Redirect("/Board/Product");
         }
     }
 }

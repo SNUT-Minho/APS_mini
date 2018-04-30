@@ -6,13 +6,255 @@
 <div class="row">
     <div class="col-md-2 col-lg-2"></div>
     <div class="col-md-8 col-lg-8 container-fluid">
-        <h3>Product</h3>
+        <h3>
+            Product
+            <button data-target="#" data-toggle="modal" class="btn btn-info" style="float:right;" id="uploadExcel" name="uploadExcel">
+                <i class="fa fa-file-excel-o"></i>
+            </button>
+            <button data-target="#myModal" data-toggle="modal" class="btn btn-primary" style="float:right; margin-right:5px;" id="createProduct" name="createProduct">품목 생성</button>
+            <button data-target="#" data-toggle="modal" class="btn btn-danger" style="float:right; margin-right:5px;" id="deleteProduct" name="deleteProduct">품목 삭제</button>
+        </h3>
         <hr />
-        <div class="row" id="ProductContainer">
-            <!--내용 Container-->
+        <div class="row">
+            <div class="col-10">
+                <h5 style="width:30%; display:inline-block">
+                    Group : <select class="custom-select" style="width:120px;" id="GroupLst" name="GroupLst">
+                        <option style="padding-left:10px;" value="0">--전체--</option>
+                    </select>
+                    <button class="btn btn-primary" data-target="#GroupModal" data-toggle="modal"><i class="fa fa-database"></i></button>
+                </h5>
+                <h5 style="width:30%; display:inline-block">
+                    Type : <select class="custom-select" style="width:120px;" id="TypeLst" name="TypeLst">
+                        <option style="text-align:center;" value="0">--전체--</option>
+                    </select>
+                    <button class="btn btn-primary" data-target="#TypeModal" data-toggle="modal"><i class="fa fa-database"></i></button>
+                </h5>
+                <h5 style="width:30%; display:inline-block">
+                    Order : <select class="custom-select" style="width:120px;" id="OrderLst" name="OrderLst">
+                        <option style="text-align:center;" value="0">--전체--</option>
+                    </select>
+                    <button class="btn btn-warning" data-target="#Warning" data-toggle="modal"><i class="fa fa-plus"></i></button>
+                </h5>
+            </div>
+            <div class="col-3">
+
+            </div>
+            <div class="col-3">
+
+            </div>
         </div>
+        <hr />
+        <div class="row container-fluid" id="ProductContainer">
+                <!--Product 리스트 테이블-->
+                <table class="table table-bordered table-striped table-hover" id="ProductLst" name="ProductLst" style="text-align:center; margin-left:10px;">
+                    <tr>
+                        <th style="width:200px;">Number</th>
+                        <th style="width:200px;">Group</th>
+                        <th style="width:200px;">Type</th>
+                        <th>Description</th>
+                        <th style="width:100px;">선택</th>
+                        <th style="width:100px;">수정</th>
+                    </tr>
+                </table>
+            </div>
+    
     </div>
     <div class="col-md-2 col-lg-2"></div>
 </div>
 
+<!--Order Rule 생성은 관리자에게 문의하세요-->
+<div class="modal fade" id="Warning" tabindex="-1" role="dialog" aria-labelledby="Warning-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fa fa-warning"> &nbsp;Warning</i></h2>
+            </div>
+            <div class="modal-body">
+                <p>새로운 규칙은 관리자에게 문의부탁드립니다.</p>
+                <p>(Email : alsgkgk777@naver.com) </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Group 관리-->
+<div class="modal fade" id="GroupModal" tabindex="-1" role="dialog" aria-labelledby="Warning-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Group Management</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="createMemo();">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Type 관리-->
+<div class="modal fade" id="TypeModal" tabindex="-1" role="dialog" aria-labelledby="Warning-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Type Management</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="createMemo();">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal(새 품목 생성)-->
+<div class="modal fade" draggable="true" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModal-label">Create Product</h4>
+            </div>
+            <div class="modal-body">
+                <!--ProductNum-->
+                <div class="form-group">
+                    <div class="form-inline">
+                        <label class="control-label" for="ProductNumber">Product Num : </label>
+                        <input type="text" name="ProductNumber" id="ProductNumber" value="" class="form-control" style="max-width:70%; margin-left:10px;" maxlength="115" autofocus placeholder="품번을 입력하세요" required />
+                    </div>
+                </div>
+                <!--ProductNum-->
+                <!--Description-->
+                <div class="form-group">
+                    <div class="form-inline">
+                        <label class="control-label" for="Description">Description &nbsp;&nbsp; : </label>
+                        <input type="text" name="Description" id="Description" value="" class="form-control" style="max-width:70%; margin-left:10px;" maxlength="115" autofocus placeholder="제품 설명을 입력하세요" required/>
+                    </div>
+                </div>
+                <!--Description-->
+                <!-- Group-->
+                <div class="form-group">
+                    <label class="control-label" for="ModalGroupLst">Group &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : </label>
+                    <select class="custom-select" id="ModalGroupLst" name="ModalGroupLst" style="max-width:50%; margin-left:7px;" maxlength="115" autofocus>
+                        <option style="padding-left:10px;" value="">제품 그룹을 선택하세요</option>
+                    </select>
+                </div>
+                <!-- Group-->
+                <!-- Type-->
+                <div class="form-group">
+                    <label class="control-label" for="ModalTypeLst">Type &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : </label>
+                    <select class="custom-select" id="ModalTypeLst" name="ModalTypeLst" style="max-width:50%; margin-left:7px;" maxlength="115" autofocus>
+                        <option style="padding-left:10px;" value="">제품 타입을 선택하세요</option>
+                    </select>
+                </div>
+                <!-- Type-->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="modalClose" onclick="clearProduct();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="createProduct();">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+        // 모달 auto focus
+        $('#myModal').on('shown.bs.modal', function () {
+            $('#newMemo').focus();
+        });
+
+        // 윈도우 종료시 실행되는 메서드
+        $(window).on('beforeunload', function () {
+            saveMemoOrder();
+
+            // return '';
+        });
+
+
+        // GroupList 데이터 바인드
+        // 회사명 리스트에 데이터 바인드
+        var groupUID = @Session["GroupUID"];
+        $.ajax({
+            type: "GET",
+            url: "/api/ProductGroup/" + groupUID,
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                $.each(response, function (key, value) {
+                    // GroupList 바인드
+                    var productGroup = "<option value=\"" + value.ProductGroupID + "\" >" + value.ProductGroupName + "</option>";
+                    $('#GroupLst').append(productGroup);
+                    $('#ModalGroupLst').append(productGroup);
+                })
+            }
+        });
+
+        // TypeList 데이터 바인드
+        $.ajax({
+            type: "GET",
+            url: "/api/ProductType/" + groupUID,
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                $.each(response, function (key, value) {
+                    // TypeList 바인드
+                    var productType = "<option value=\"" + value.ProductTypeID + "\" >" + value.ProductTypeName + "</option>";
+                    $('#TypeLst').append(productType);
+                    $('#ModalTypeLst').append(productType);
+                })
+            }
+        });
+
+        // OrderList 데이터 바인드
+    });
+
+
+    // Modal 내용 Clear
+    function clearProduct() {
+        $('#ProductNumber').val('');
+        $('#Description').val('');
+        $('#ModalGroupLst').val('');
+        $('#ModalTypeLst').val('');
+    };
+
+     // 새 품목 생성하기
+    function createProduct() {
+        var productNumber = $('#ProductNumber').val();
+        var description = $('#Description').val();
+        var productGroupID = $('#ModalGroupLst').find(":selected").index();
+        var productTypeID = $('#ModalTypeLst').find(":selected").index();
+        var json = "{ ProductNumber : \"" + productNumber + "\", Description : \"" + description + "\", ProductGroupID : \"" + productGroupID + "\", ProductTypeID : \"" + productTypeID + "\", GroupUID : \"" + @Session["GroupUID"] + "\", UID : \"" + @Session["UID"]  + "\"}";
+
+        $.ajax({
+            type: "POST",
+            url: "/api/Product/",
+            data: json,
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                var data = "<tr><td>" + response.ProductNumber + "</td>";
+                data += "<td>" + response.ProductGroupName + "</td>"
+                data += "<td>" + response.ProductTypeName + "</td>"
+                data += "<td>" + response.Description + "</td>"
+                data += "<td></td>";
+                data += "<td></td>";
+                data += "</th>";   
+
+                $('#ProductLst').append(data);
+                $('#modalClose').click();
+            }
+        });
+    };
+</script>
 
