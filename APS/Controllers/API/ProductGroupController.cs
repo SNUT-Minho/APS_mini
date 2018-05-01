@@ -35,8 +35,11 @@ namespace APS.Controllers.API
         }
 
         // POST: api/ProductGroup
-        public void Post([FromBody]string value)
+        public ProductGroup Post([FromBody]ProductGroup productGroup)
         {
+            var result = productRepo.CreateProductGroup(productGroup);
+
+            return result;
         }
 
         // PUT: api/ProductGroup/5

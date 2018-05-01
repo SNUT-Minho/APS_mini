@@ -10,7 +10,8 @@
 	@PID INT Output,
 	@ProductGroupName NvarChar(25) Output,
 	@ProductSubGroupName NvarChar(25) Output,
-	@ProductTypeName NVarChar(25) Output
+	@ProductTypeName NVarChar(25) Output,
+	@CreateUserName NVarChar(25) Output
 AS
 	Insert Into Product(ProductGroupID,ProductSubGroupID, ProductNumber, Description, ProductTypeID, GroupUID, UID) 
 	Values (@ProductGroupID,@ProductSubGroupID, @ProductNumber, @Description, @ProductTypeID, @GroupUID, @UID)
@@ -28,4 +29,9 @@ AS
 	Select @ProductTypeName = ProductTypeName
 	From ProductType
 	Where ProductTypeID = @ProductTypeID
+
+	Select @CreateUserName = UserName
+	From Domains
+	Where UID = @UID
+	
 GO

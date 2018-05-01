@@ -98,6 +98,8 @@
     <Build Include="dbo\Stored Procedures\Product\GetAllProductType.sql" />
     <Build Include="dbo\Stored Procedures\Product\CreateProduct.sql" />
     <Build Include="dbo\Stored Procedures\Product\GetAllProduct.sql" />
+    <Build Include="dbo\Stored Procedures\Product\CreateProductGroup.sql" />
+    <Build Include="dbo\Stored Procedures\Product\CreateProductType.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="APS.Database.publish.Test.xml" />

@@ -20,14 +20,15 @@ namespace APS.Controllers.API
         }
 
         // GET: api/Product/5
-        [Route("api/Product/{groupUID}/{productGroupID}/{productSubGroupID}/{productTypeID}")]
-        public IEnumerable<Product> Get(int groupUID, int productGroupID, int productSubGroupID, int productTypeID)
+        [Route("api/Product/{groupUID}/{productGroupID}/{productSubGroupID}/{productTypeID}/{UID}")]
+        public IEnumerable<Product> Get(int groupUID, int productGroupID, int productSubGroupID, int productTypeID, int UID)
         {
             Product p = new Product();
             p.GroupUID = groupUID;
             p.ProductGroupID = productGroupID;
             p.ProductSubGroupID = productSubGroupID;
             p.ProductTypeID = productTypeID;
+            p.UID = UID;
 
             var result = productRepo.GetAllProduct(p);
             return result;

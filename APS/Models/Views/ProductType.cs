@@ -9,5 +9,7 @@ namespace APS.Models.Views
     {
         public int ProductTypeID { get; set; }
         public string ProductTypeName { get; set; }
+        public int GroupUID { get; set; }               // 회사 그룹 아이디
+
     }
 }

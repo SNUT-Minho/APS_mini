@@ -28,8 +28,11 @@ namespace APS.Controllers.API
         }
 
         // POST: api/ProductType
-        public void Post([FromBody]string value)
+        public ProductType Post([FromBody]ProductType productType)
         {
+           var result =  productRepo.CreateProductType(productType);
+
+            return result;
         }
 
         // PUT: api/ProductType/5
