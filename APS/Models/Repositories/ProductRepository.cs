@@ -14,20 +14,37 @@ namespace APS.Models.Repositories
     {
         private IDbConnection db = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
 
-        public IEnumerable<ProductGroup> GetAllProductGroup(int groupUID)
+        public IEnumerable<ProductGroup> GetAllProductGroup(ProductGroup productGroup)
         {
+
             DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("@GroupUID", groupUID);  
+            parameters.Add("@GroupUID", productGroup.GroupUID);
+            parameters.Add("@ParentProductGroupID", productGroup.ParentProductGroupID);
+            
             var result =  db.Query<ProductGroup>("GetAllProductGroup", parameters, commandType: CommandType.StoredProcedure);
             
             return result;
         }
 
 
-        //internal IEnumerable<Product> GetAllProduct()
-        //{
-            
-        //}
+        public IEnumerable<Product> GetAllProduct(Product product)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@GroupUID", product.GroupUID);
+            parameters.Add("@ProductGroupID", product.ProductGroupID);
+            parameters.Add("@ProductSubGroupID", product.ProductSubGroupID);
+            parameters.Add("@ProductTypeID", product.ProductTypeID);
+
+            var result = db.Query<Product>("GetAllProduct", parameters, commandType: CommandType.StoredProcedure);
+            foreach (var p in result)
+            {
+                p.ProductGroupName = db.Query<String>(@"Select ProductGroupName From ProductGroup Where ProductGroupID = @ProductGroupID ;", p ).SingleOrDefault();
+                p.ProductSubGroupName = db.Query<String>(@"Select ProductGroupName From ProductGroup Where ProductGroupID = @ProductSubGroupID ;", p).SingleOrDefault();
+                p.ProductTypeName = db.Query<String>(@"Select ProductTypeName From ProductType Where ProductTypeID = @ProductTypeID ;", p).SingleOrDefault();
+            }
+
+            return result;
+        }
 
 
 
@@ -44,6 +61,7 @@ namespace APS.Models.Repositories
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("@ProductGroupID", product.ProductGroupID);
+            parameters.Add("@ProductSubGroupID", product.ProductSubGroupID);
             parameters.Add("@ProductNumber", product.ProductNumber);
             parameters.Add("@Description", product.Description);
             parameters.Add("@ProductTypeID", product.ProductTypeID);
@@ -52,12 +70,14 @@ namespace APS.Models.Repositories
 
             parameters.Add("@PID", dbType: DbType.Int32, direction: ParameterDirection.Output);
             parameters.Add("@ProductGroupName", dbType: DbType.String, direction: ParameterDirection.Output, size: 25 );
+            parameters.Add("@ProductSubGroupName", dbType: DbType.String, direction: ParameterDirection.Output, size: 25);
             parameters.Add("@ProductTypeName", dbType: DbType.String, direction: ParameterDirection.Output, size: 25 );
 
             var result = db.Execute("CreateProduct", parameters, commandType: CommandType.StoredProcedure);
 
             product.PID = parameters.Get<int>("@PID");
             product.ProductGroupName = parameters.Get<string>("@ProductGroupName");
+            product.ProductSubGroupName = parameters.Get<string>("@ProductSubGroupName");
             product.ProductTypeName = parameters.Get<string>("@ProductTypeName");
 
             return product;

@@ -16,21 +16,27 @@
         </h3>
         <hr />
         <div class="row">
-            <div class="col-10">
-                <h5 style="width:30%; display:inline-block">
-                    Group : <select class="custom-select" style="width:120px;" id="GroupLst" name="GroupLst">
+            <div class="col-12">
+                <h5 style="width:250px; display:inline-block">
+                    Group : <select class="custom-select" style="width:120px;" id="GroupLst" name="GroupLst" onchange="bindSubData();">
                         <option style="padding-left:10px;" value="0">--전체--</option>
                     </select>
                     <button class="btn btn-primary" data-target="#GroupModal" data-toggle="modal"><i class="fa fa-database"></i></button>
                 </h5>
-                <h5 style="width:30%; display:inline-block">
-                    Type : <select class="custom-select" style="width:120px;" id="TypeLst" name="TypeLst">
+                <h5 style="width:290px; display:inline-block">
+                    Sub Group : <select class="custom-select" style="width:120px;" id="SubGroupLst" name="SubGroupLst" onchange="DisplayProduct();" disabled>
+                        <option style="padding-left:10px;" value="0">--전체--</option>
+                    </select>
+                    <button class="btn btn-primary" data-target="#SubGroupModal" data-toggle="modal"><i class="fa fa-database"></i></button>
+                </h5>
+                <h5 style="width:240px; display:inline-block">
+                    Type : <select class="custom-select" style="width:120px;" id="TypeLst" name="TypeLst" onchange="DisplayProduct();">
                         <option style="text-align:center;" value="0">--전체--</option>
                     </select>
                     <button class="btn btn-primary" data-target="#TypeModal" data-toggle="modal"><i class="fa fa-database"></i></button>
                 </h5>
-                <h5 style="width:30%; display:inline-block">
-                    Order : <select class="custom-select" style="width:120px;" id="OrderLst" name="OrderLst">
+                <h5 style="width:250px; display:inline-block">
+                    Order : <select class="custom-select" style="width:120px;" id="OrderLst" name="OrderLst" onchange="DisplayProduct();">
                         <option style="text-align:center;" value="0">--전체--</option>
                     </select>
                     <button class="btn btn-warning" data-target="#Warning" data-toggle="modal"><i class="fa fa-plus"></i></button>
@@ -45,19 +51,20 @@
         </div>
         <hr />
         <div class="row container-fluid" id="ProductContainer">
-                <!--Product 리스트 테이블-->
-                <table class="table table-bordered table-striped table-hover" id="ProductLst" name="ProductLst" style="text-align:center; margin-left:10px;">
-                    <tr>
-                        <th style="width:200px;">Number</th>
-                        <th style="width:200px;">Group</th>
-                        <th style="width:200px;">Type</th>
-                        <th>Description</th>
-                        <th style="width:100px;">선택</th>
-                        <th style="width:100px;">수정</th>
-                    </tr>
-                </table>
-            </div>
-    
+            <!--Product 리스트 테이블-->
+            <table class="table table-bordered table-striped table-hover" id="ProductLst" name="ProductLst" style="text-align:center; margin-left:10px;">
+                <tr>
+                    <th style="width:200px;">Number</th>
+                    <th style="width:200px;">Group</th>
+                    <th style="width:200px;">Sub Group</th>
+                    <th style="width:200px;">Type</th>
+                    <th>Description</th>
+                    <th style="width:100px;">선택</th>
+                    <th style="width:100px;">수정</th>
+                </tr>
+            </table>
+        </div>
+
     </div>
     <div class="col-md-2 col-lg-2"></div>
 </div>
@@ -97,7 +104,25 @@
         </div>
     </div>
 </div>
+<!--Group 관리-->
+<!--Sub Group 관리-->
+<div class="modal fade" id="SubGroupModal" tabindex="-1" role="dialog" aria-labelledby="Warning-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Sub Group Management</h4>
+            </div>
+            <div class="modal-body">
 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="createMemo();">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Sub Group 관리-->
 <!--Type 관리-->
 <div class="modal fade" id="TypeModal" tabindex="-1" role="dialog" aria-labelledby="Warning-label">
     <div class="modal-dialog" role="document">
@@ -115,7 +140,7 @@
         </div>
     </div>
 </div>
-
+<!--Type 관리-->
 <!--Modal(새 품목 생성)-->
 <div class="modal fade" draggable="true" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal-label">
     <div class="modal-dialog" role="document">
@@ -136,18 +161,26 @@
                 <div class="form-group">
                     <div class="form-inline">
                         <label class="control-label" for="Description">Description &nbsp;&nbsp; : </label>
-                        <input type="text" name="Description" id="Description" value="" class="form-control" style="max-width:70%; margin-left:10px;" maxlength="115" autofocus placeholder="제품 설명을 입력하세요" required/>
+                        <input type="text" name="Description" id="Description" value="" class="form-control" style="max-width:70%; margin-left:10px;" maxlength="115" autofocus placeholder="제품 설명을 입력하세요" required />
                     </div>
                 </div>
                 <!--Description-->
                 <!-- Group-->
                 <div class="form-group">
                     <label class="control-label" for="ModalGroupLst">Group &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : </label>
-                    <select class="custom-select" id="ModalGroupLst" name="ModalGroupLst" style="max-width:50%; margin-left:7px;" maxlength="115" autofocus>
+                    <select class="custom-select" id="ModalGroupLst" name="ModalGroupLst" style="max-width:50%; margin-left:7px;" onchange="bindModalSubData();" maxlength="115" autofocus>
                         <option style="padding-left:10px;" value="">제품 그룹을 선택하세요</option>
                     </select>
                 </div>
                 <!-- Group-->
+                <!-- Sub Group-->
+                <div class="form-group">
+                    <label class="control-label" for="ModalSubGroupLst">Sub Group &nbsp;&nbsp;&nbsp; : </label>
+                    <select class="custom-select" id="ModalSubGroupLst" name="ModalSubGroupLst" style="max-width:50%; margin-left:7px;" maxlength="115" autofocus disabled>
+                        <option style="padding-left:10px;" value="">서브그룹을 선택하세요</option>
+                    </select>
+                </div>
+                <!-- Sub Group-->
                 <!-- Type-->
                 <div class="form-group">
                     <label class="control-label" for="ModalTypeLst">Type &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : </label>
@@ -182,12 +215,13 @@
         });
 
 
-        // GroupList 데이터 바인드
+        // GroupList + Modal 데이터 바인드
         // 회사명 리스트에 데이터 바인드
+        var parentProductGroupID = 0;
         var groupUID = @Session["GroupUID"];
         $.ajax({
             type: "GET",
-            url: "/api/ProductGroup/" + groupUID,
+            url: "/api/ProductGroup/" + groupUID + "/" + parentProductGroupID,
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
@@ -200,7 +234,7 @@
             }
         });
 
-        // TypeList 데이터 바인드
+        // TypeList + Modal 데이터 바인드
         $.ajax({
             type: "GET",
             url: "/api/ProductType/" + groupUID,
@@ -217,7 +251,104 @@
         });
 
         // OrderList 데이터 바인드
+
+
+        // ProductList 데이터 바인드
+        DisplayProduct();
     });
+
+    // Product Lst 테이블에다가 선택된 select에 따라서 bind
+    function DisplayProduct() {
+
+        $('#ProductLst').find("tr:gt(0)").remove();
+        var groupUID = @Session["GroupUID"];
+        var productGroupID = $('#GroupLst').val();
+        var productSubGroupID = $('#SubGroupLst').val();
+        var productTypeID = $('#TypeLst').val();
+        $.ajax({
+            type: "GET",
+            url: "/api/Product/" + groupUID + "/" + productGroupID + "/" + productSubGroupID + "/" + productTypeID,
+            data: "name=John&location=Boston",
+            dataType: "json",
+            success: function (response) {
+                $.each(response, function (key, value) {
+                    var data = "<tr><td>" + value.ProductNumber + "</td>";
+                    data += "<td>" + value.ProductGroupName + "</td>"
+                    data += "<td>" + value.ProductSubGroupName + "</td>"
+                    data += "<td>" + value.ProductTypeName + "</td>"
+                    data += "<td>" + value.Description + "</td>";
+                    data += "<td></td>";
+                    data += "<td></td>";
+                    data += "</th>";
+
+                    $('#ProductLst').append(data);
+                })
+            }
+        });
+    }
+
+    function bindSubData() {
+        var index = $('#GroupLst').val();
+
+        if (index == 0) {
+            $('#SubGroupLst').prop('disabled', true);
+            $('#SubGroupLst').val('0');
+            $('#TypeLst').val('0');
+        } else {
+            $('#SubGroupLst').prop('disabled', false);
+            $('#SubGroupLst').html('');
+            var parentProductGroupID = index;
+            var groupUID = @Session["GroupUID"];
+            var initial = "<option value=\"" + 0 + "\" >" + "--전체--" + "</option>";
+            $('#SubGroupLst').append(initial);
+
+            $.ajax({
+                type: "GET",
+                url: "/api/ProductGroup/" + groupUID + "/" + parentProductGroupID,
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    $.each(response, function (key, value) {
+                        // GroupList 바인드
+                        var productGroup = "<option value=\"" + value.ProductGroupID + "\" >" + value.ProductGroupName + "</option>";
+                         $('#SubGroupLst').append(productGroup);
+                     })
+                 }
+            });
+        }
+        DisplayProduct();
+        // GroupId 주고 -> sub데이터 가져오기
+    }
+
+
+    function bindModalSubData() {
+        var index = $('#ModalGroupLst').find(":selected").index();
+        if (index == 0) {
+            $('#ModalSubGroupLst').prop('disabled', true);
+            $('#ModalSubGroupLst').val('0');
+        } else {
+            $('#ModalSubGroupLst').prop('disabled', false);
+            $('#ModalSubGroupLst').html('');
+            var parentProductGroupID = index;
+            var groupUID = @Session["GroupUID"];
+            var initial = "<option value=\"" + 0 + "\" >" + "--전체--" + "</option>";
+            $('#ModalSubGroupLst').append(initial);
+
+            $.ajax({
+                type: "GET",
+                url: "/api/ProductGroup/" + groupUID + "/" + parentProductGroupID,
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    $.each(response, function (key, value) {
+                        // GroupList 바인드
+                        var productGroup = "<option value=\"" + value.ProductGroupID + "\" >" + value.ProductGroupName + "</option>";
+                        $('#ModalSubGroupLst').append(productGroup);
+                     })
+                 }
+            });
+        }
+    }
 
 
     // Modal 내용 Clear
@@ -225,16 +356,21 @@
         $('#ProductNumber').val('');
         $('#Description').val('');
         $('#ModalGroupLst').val('');
+        $('#ModalSubGroupLst').val('0');
+        $('#ModalSubGroupLst').prop('disabled',true);
         $('#ModalTypeLst').val('');
     };
+
 
      // 새 품목 생성하기
     function createProduct() {
         var productNumber = $('#ProductNumber').val();
         var description = $('#Description').val();
-        var productGroupID = $('#ModalGroupLst').find(":selected").index();
-        var productTypeID = $('#ModalTypeLst').find(":selected").index();
-        var json = "{ ProductNumber : \"" + productNumber + "\", Description : \"" + description + "\", ProductGroupID : \"" + productGroupID + "\", ProductTypeID : \"" + productTypeID + "\", GroupUID : \"" + @Session["GroupUID"] + "\", UID : \"" + @Session["UID"]  + "\"}";
+       
+        var productGroupID = $('#ModalGroupLst').val();
+        var productSubGroupID = $('#ModalSubGroupLst').val();
+        var productTypeID = $('#ModalTypeLst').val();
+        var json = "{ ProductNumber : \"" + productNumber + "\", Description : \"" + description + "\", ProductGroupID : \"" + productGroupID + "\", ProductSubGroupID : \"" + productSubGroupID + "\", ProductTypeID : \"" + productTypeID + "\", GroupUID : \"" + @Session["GroupUID"] + "\", UID : \"" + @Session["UID"]  + "\"}";
 
         $.ajax({
             type: "POST",
@@ -244,12 +380,13 @@
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
                 var data = "<tr><td>" + response.ProductNumber + "</td>";
-                data += "<td>" + response.ProductGroupName + "</td>"
-                data += "<td>" + response.ProductTypeName + "</td>"
-                data += "<td>" + response.Description + "</td>"
+                data += "<td>" + response.ProductGroupName + "</td>";
+                data += "<td>" + response.ProductSubGroupName + "</td>";
+                data += "<td>" + response.ProductTypeName + "</td>";
+                data += "<td>" + response.Description + "</td>";
                 data += "<td></td>";
                 data += "<td></td>";
-                data += "</th>";   
+                data += "</th>";
 
                 $('#ProductLst').append(data);
                 $('#modalClose').click();

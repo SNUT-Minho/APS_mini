@@ -13,6 +13,9 @@ namespace APS.Models.Views
         public int ProductGroupID { get; set; }                      // 제품 그룹군 번호
         public string ProductGroupName { get; set; }                 // 제품 그룹군 이름 (EC-I/EC-FLAT/Bolt/Flange)
 
+        public int ProductSubGroupID { get; set; }                      // 제품 서브 그룹군 번호
+        public string ProductSubGroupName { get; set; }                 // 제품 서브 그룹군 이름 (EC-I40/EC-I30/EC-I52)
+
         public int ProductNumber { get; set; }                       // 실제 사용하는 번호
         public string Description { get; set; }                      // 품목 간단설명
 

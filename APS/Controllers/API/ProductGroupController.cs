@@ -23,9 +23,13 @@ namespace APS.Controllers.API
         }
 
         // GET: api/ProductGroup/5
-        public IEnumerable<ProductGroup> Get(int id)
+        [Route("api/ProductGroup/{groupUID}/{parentProductGroupID}")]
+        public IEnumerable<ProductGroup> Get(int groupUID, int parentProductGroupID)
         {
-            var result = productRepo.GetAllProductGroup(id);
+            ProductGroup p = new ProductGroup();
+            p.GroupUID = groupUID;
+            p.ParentProductGroupID = parentProductGroupID;
+            var result = productRepo.GetAllProductGroup(p);
 
             return result;
         }

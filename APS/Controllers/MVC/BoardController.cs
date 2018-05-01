@@ -33,6 +33,18 @@ namespace APS.Controllers
             return View();
         }
 
+        public ActionResult Order()
+        {
+            // 로그인 안한 사용자 Redirect 
+            if (Session["UserID"].ToString() == "Anonymous" || Session["UserID"] == null)
+            {
+                TempData["msg"] = "<script>alert('잘못된 접근경로입니다. 로그인 후 이용하세요.');</script>";
+                return RedirectPermanent("~/");
+            }
+
+            return View();
+        }
+
         public ActionResult LineCapacity()
         {
             // 로그인 안한 사용자 Redirect 

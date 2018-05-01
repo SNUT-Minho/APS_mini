@@ -372,6 +372,7 @@
     <Content Include="Views\Board\Product.cshtml" />
     <Content Include="Views\Board\BOM.cshtml" />
     <Content Include="Views\Account\TempUser.cshtml" />
+    <Content Include="Views\Board\Order.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
