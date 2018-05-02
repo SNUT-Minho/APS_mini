@@ -3,6 +3,24 @@
     ViewBag.Title = "Product";
 }
 <style>
+
+    @@media (min-width: 400px) and (max-width: 1800px) {
+       tbody{
+
+       }
+    }
+
+    @@media (min-width: 1800px) and (max-width: 2400px) {
+        table tbody {
+            max-height: 650px;
+        }
+    }
+
+    thead tr {
+        width: 100%;
+    }
+
+    
     label.error {
         color: red;
     }
@@ -30,10 +48,23 @@
         -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
         box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
     }
+
+    table tbody {
+        display: block;
+
+        overflow-y: scroll;
+    }
+
+        table thead, table tbody tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
 </style>
 <div class="row">
     <div class="col-md-2 col-lg-2"></div>
     <div class="col-md-8 col-lg-8 container-fluid">
+        <!--Header-->
         <h3>
             Product
             <button data-target="#" data-toggle="modal" class="btn btn-info" style="float:right;" id="uploadExcel" name="uploadExcel">
@@ -42,58 +73,70 @@
             <button data-target="#myModal" data-toggle="modal" class="btn btn-primary" style="float:right; margin-right:5px;" id="createProduct" name="createProduct">품목 생성</button>
             <button data-target="#" data-toggle="modal" class="btn btn-danger" style="float:right; margin-right:5px;" id="deleteProduct" name="deleteProduct">품목 삭제</button>
         </h3>
+        <!--Header-->
         <hr />
         <div class="row">
             <div class="col-12">
+                <!--Group-->
                 <h5 style="width:250px; display:inline-block">
                     Group : <select class="custom-select" style="width:120px;" id="GroupLst" name="GroupLst" onchange="bindSubData();">
                         <option style="padding-left:10px;" value="0">--전체--</option>
                     </select>
                     <button class="btn btn-primary" data-target="#GroupModal" data-toggle="modal"><i class="fa fa-database"></i></button>
                 </h5>
+                <!--Group-->
+                <!--SubGroup-->
                 <h5 style="width:290px; display:inline-block">
                     Sub Group : <select class="custom-select" style="width:120px;" id="SubGroupLst" name="SubGroupLst" onchange="DisplayProduct();" disabled>
                         <option style="padding-left:10px;" value="0">--전체--</option>
                     </select>
                     <button class="btn btn-primary" data-target="#SubGroupModal" data-toggle="modal" id="CreateSubGroupBtn" disabled><i class="fa fa-database"></i></button>
                 </h5>
+                <!--SubGroup-->
+                <!--Type-->
                 <h5 style="width:240px; display:inline-block">
                     Type : <select class="custom-select" style="width:120px;" id="TypeLst" name="TypeLst" onchange="DisplayProduct();">
                         <option style="text-align:center;" value="0">--전체--</option>
                     </select>
                     <button class="btn btn-primary" data-target="#TypeModal" data-toggle="modal"><i class="fa fa-database"></i></button>
                 </h5>
+                <!--Type-->
+                <!--Order-->
                 <h5 style="width:250px; display:inline-block">
                     Order : <select class="custom-select" style="width:120px;" id="OrderLst" name="OrderLst" onchange="DisplayProduct();">
                         <option style="text-align:center;" value="0">--전체--</option>
                     </select>
                     <button class="btn btn-warning" data-target="#Warning" data-toggle="modal"><i class="fa fa-plus"></i></button>
                 </h5>
+                <!--Order-->
             </div>
             <div class="col-3">
-
             </div>
             <div class="col-3">
-
             </div>
         </div>
         <hr />
-        <div class="row container-fluid" id="ProductContainer">
+        <div class="row container-fluid" id="ProductContainer" style="">
             <!--Product 리스트 테이블-->
-            <table class="table table-bordered table-striped table-hover" id="ProductLst" name="ProductLst" style="text-align:center; margin-left:10px;">
-                <tr>
-                    <th style="width:150px;">Number</th>
-                    <th style="width:200px;">Group</th>
-                    <th style="width:200px;">Sub Group</th>
-                    <th style="width:150px;">Type</th>
-                    <th>Description</th>
-                    <th style="width:100px;">User</th>
-                    <th>BOM</th>
-                    <th>Routing</th>
-                </tr>
-            </table>
-        </div>
+            <table class="table table-striped table-bordered table-hover header-fixed" id="ProductLst" name="ProductLst" style="text-align:center;">
+                <thead>
+                    <tr>
+                        <th width="10%">Number</th>
+                        <th width="10%">Group</th>
+                        <th width="15%">Sub Group</th>
+                        <th width="10%">Type</th>
+                        <th width="20%">Description</th>
+                        <th width="10%">User</th>
+                        <th width="10%">BOM</th>
+                        <th width="15%">Routing</th>
+                    </tr>
+                </thead>
+                <tbody>
 
+                </tbody>
+            </table>
+            <!--Product 리스트 테이블-->
+        </div>
     </div>
     <div class="col-md-2 col-lg-2"></div>
 </div>
@@ -115,7 +158,7 @@
         </div>
     </div>
 </div>
-
+<!--Order Rule 생성은 관리자에게 문의하세요-->
 <!--Group 관리-->
 <div class="modal fade" id="GroupModal" tabindex="-1" role="dialog" aria-labelledby="Warning-label">
     <div class="modal-dialog" role="document">
@@ -141,7 +184,6 @@
     </div>
 </div>
 <!--Group 관리-->
-
 <!--Sub Group 관리-->
 <div class="modal fade" id="SubGroupModal" tabindex="-1" role="dialog" aria-labelledby="Warning-label">
     <div class="modal-dialog" role="document">
@@ -167,7 +209,6 @@
     </div>
 </div>
 <!--Sub Group 관리-->
-
 <!--Type 관리-->
 <div class="modal fade" id="TypeModal" tabindex="-1" role="dialog" aria-labelledby="Warning-label">
     <div class="modal-dialog" role="document">
@@ -193,8 +234,6 @@
     </div>
 </div>
 <!--Type 관리-->
-
-
 <!--Modal(새 품목 생성)-->
 <div class="modal fade" draggable="true" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal-label">
     <div class="modal-dialog" role="document">
@@ -202,8 +241,8 @@
             <div class="modal-header">
                 <h4 class="modal-title" id="myModal-label">Create Product</h4>
             </div>
-
             <div class="modal-body">
+                <!--Create Product Form-->
                 <form id="form-createproductemodal">
                     <!--ProductNum-->
                     <div class="form-group">
@@ -246,11 +285,13 @@
                     </div>
                     <!-- Type-->
                 </form>
+                <!--Create Product Form-->
             </div>
-
             <div class="modal-footer">
+                <!--From Submit Button-->
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="modalClose" onclick="clearProduct();">Close</button>
                 <button type="button" class="btn btn-primary" onclick="return createProduct();">Create</button>
+                <!--From Submit Button-->
             </div>
         </div>
     </div>
@@ -259,8 +300,10 @@
 
 <script>
     $(document).ready(function () {
+       
 
-        // Create New Group Modal Validation
+
+        // New Group Modal Validation
         $('#form-groupmodal').validate({
             rules: {
                 CreateNewGroup: {
@@ -276,7 +319,8 @@
             }
         });
 
-        // Create New Sub Group Modal Validation
+
+        // New Sub Group Modal Validation
         $('#form-subgroupmodal').validate({
             rules: {
                 CreateNewSubGroup: {
@@ -292,7 +336,8 @@
             }
         });
 
-         // Create New Type Modal Validation
+
+         // New Type Modal Validation
         $('#form-typemodal').validate({
             rules: {
                 CreateNewType: {
@@ -353,46 +398,45 @@
             }
         });
 
-        /////////////////////////////////////////////////////////
-        // Group 모달 auto focus
+
+        // New Group Modal auto focus
         $('#GroupModal').on('shown.bs.modal', function () {
-          
             $('#CreateNewGroup').focus();
         });
 
-        //  Sub Group 모달 auto focus
+
+        // New Sub Group Modal auto focus
         $('#SubGroupModal').on('shown.bs.modal', function () {
-          
             $('#CreateNewSubGroup').focus();
         });
 
-        // Type 모달 auto focus
+
+        // New Type Modal auto focus
         $('#TypeModal').on('shown.bs.modal', function () {
-         
             $('#CreateNewType').focus();
         });
 
-        // Create 모달 auto focus
+
+        // Create New Product Modal auto focus
         $('#myModal').on('shown.bs.modal', function () {
-            
             $('#ProductNumber').focus();
             $('#ModalSubGroupLst').prop('disabled', true);
         });
-        /////////////////////////////////////////////////////////
 
 
-        // 윈도우 종료시 실행되는 메서드
+        // Trigger when window close
         $(window).on('beforeunload', function () {
-            saveMemoOrder();
 
-            // return '';
         });
 
 
-        // GroupList + Modal 데이터 바인드
-        // 회사명 리스트에 데이터 바인드
+        // Initial set Data
         var parentProductGroupID = 0;
         var groupUID = @Session["GroupUID"];
+
+
+        // GroupList + ModalGroupList Databind - GET API with (ProductGroup Controller)
+        // api/ProductGroup + "GET"
         $.ajax({
             type: "GET",
             url: "/api/ProductGroup/" + groupUID + "/" + parentProductGroupID,
@@ -400,7 +444,7 @@
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
                 $.each(response, function (key, value) {
-                    // GroupList 바인드
+                    // Option tag Data bind
                     var productGroup = "<option value=\"" + value.ProductGroupID + "\" >" + value.ProductGroupName + "</option>";
                     $('#GroupLst').append(productGroup);
                     $('#ModalGroupLst').append(productGroup);
@@ -408,7 +452,9 @@
             }
         });
 
-        // TypeList + Modal 데이터 바인드
+
+        // TypeList + ModalTypeList Databind - GET API with (ProductType Controller)
+        // api/ProductType + "GET"
         $.ajax({
             type: "GET",
             url: "/api/ProductType/" + groupUID,
@@ -416,7 +462,7 @@
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
                 $.each(response, function (key, value) {
-                    // TypeList 바인드
+                    // Option tag Data bind
                     var productType = "<option value=\"" + value.ProductTypeID + "\" >" + value.ProductTypeName + "</option>";
                     $('#TypeLst').append(productType);
                     $('#ModalTypeLst').append(productType);
@@ -425,11 +471,14 @@
         });
 
 
-        // ProductList 데이터 바인드
+        // Show All Product List
         DisplayProduct();
+
+
     });
 
 
+    // Clear Group Modal + Sub Group Modal Form
     function clearGroupModal() {
         $('#form-groupmodal').validate().resetForm();
         $('#form-subgroupmodal').validate().resetForm();
@@ -437,23 +486,25 @@
         $('#CreateNewSubGroup').val('');
     }
 
+
+    // Clear Type Modal
     function clearTypeModal() {
         $('#form-typemodal').validate().resetForm();
         $('#CreateNewType').val('');
     }
 
 
-    // Create New Group Function
+    // Create New Group API with (ProductGroup Controller)
     function createNewGroup() {
+        // check create New Group Form validation
         if ($('#CreateNewGroup').valid() == false) {
             return false;
+        } else {
+                var productGroupName = $('#CreateNewGroup').val();
+                var groupUID = @Session["GroupUID"];
+                var data = "{ProductGroupName : \"" + productGroupName + "\" , GroupUID : \"" + groupUID + "\"}";
         }
-
-        var productGroupName = $('#CreateNewGroup').val();
-        var groupUID = @Session["GroupUID"];
-
-        var data = "{ProductGroupName : \"" + productGroupName + "\" , GroupUID : \"" + groupUID + "\"}";
-
+        // api/ProductGroup + "POST"
         $.ajax({
             type: "POST",
             url: "/api/ProductGroup",
@@ -461,30 +512,28 @@
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
-                // GroupList 바인드
+                // Bind GroupList + Modal GroupList Data
                 var productGroup = "<option value=\"" + response.ProductGroupID + "\" >" + response.ProductGroupName + "</option>";
                 $('#GroupLst').append(productGroup);
                 $('#ModalGroupLst').append(productGroup);
-
                 $('#GroupModalClose').click();
             }
         });
     };
 
 
-    // 서브 구현 로직 필요
+    // Create New Sub Group API with (ProductGroup Controller)
     function createNewSubGroup() {
+         // check create New Sub Group Form validation
         if ($('#CreateNewSubGroup').valid() == false) {
             return false;
+        } else {
+              var productGroupName = $('#CreateNewSubGroup').val();
+              var parentProductGroupID = $('#GroupLst').val();
+              var groupUID = @Session["GroupUID"];
+              var data = "{ProductGroupName : \"" + productGroupName + "\" , GroupUID : \"" + groupUID + "\" , ParentProductGroupID : \"" + parentProductGroupID + "\"}";
         }
-
-
-        var productGroupName = $('#CreateNewSubGroup').val();
-        var parentProductGroupID = $('#GroupLst').val();
-        var groupUID = @Session["GroupUID"];
-
-        var data = "{ProductGroupName : \"" + productGroupName + "\" , GroupUID : \"" + groupUID + "\" , ParentProductGroupID : \"" + parentProductGroupID + "\"}";
-
+         // api/ProductGroup + "POST"
          $.ajax({
             type: "POST",
             url: "/api/ProductGroup",
@@ -492,25 +541,26 @@
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
-                // GroupList 바인드
+                // Bind Sub GroupList Data
                 var productGroup = "<option value=\"" + response.ProductGroupID + "\" >" + response.ProductGroupName + "</option>";
                 $('#SubGroupLst').append(productGroup);
-              
                 $('#SubGroupModalClose').click();
             }
-        });
+         });
     };
 
 
+    // Create New Typ API with (ProductType Controller)
     function createNewType() {
+         // check create New Type Form validation
         if ($('#CreateNewType').valid() == false) {
             return false;
+        } else {
+                var productTypeName = $('#CreateNewType').val();
+                var groupUID = @Session["GroupUID"];
+                var data = "{ProductTypeName : \"" + productTypeName + "\" , GroupUID : \"" + groupUID + "\"}";
         }
-
-        var productTypeName = $('#CreateNewType').val();
-        var groupUID = @Session["GroupUID"];
-        var data = "{ProductTypeName : \"" + productTypeName + "\" , GroupUID : \"" + groupUID + "\"}";
-
+        // api/ProductType + "POST"
         $.ajax({
             type: "POST",
             url: "/api/ProductType",
@@ -518,26 +568,26 @@
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
-                // GroupList 바인드
+                 // Bind TypeList Data
                 var productType = "<option value=\"" + response.ProductTypeID + "\" >" + response.ProductTypeName + "</option>";
                 $('#TypeLst').append(productType);
                 $('#ModalTypeLst').append(productType);
-
                 $('#TypeModalClose').click();
             }
         });
     };
 
 
-    // Product Lst 테이블에다가 선택된 select에 따라서 bind
+    // Display Product Lst By Selected Index API (Group / SubGroup / Type / Order) API with (Product Controller)
     function DisplayProduct() {
-
+        // Get All Selceted Index
         $('#ProductLst').find("tr:gt(0)").remove();
         var groupUID = @Session["GroupUID"];
         var productGroupID = $('#GroupLst').val();
         var productSubGroupID = $('#SubGroupLst').val();
         var productTypeID = $('#TypeLst').val();
         var UID = @Session["UID"];
+        // api/Product + "GET"
         $.ajax({
             type: "GET",
             url: "/api/Product/" + groupUID + "/" + productGroupID + "/" + productSubGroupID + "/" + productTypeID + "/" + UID,
@@ -545,25 +595,27 @@
             dataType: "json",
             success: function (response) {
                 $.each(response, function (key, value) {
-                    var data = "<tr><td>" + value.ProductNumber + "</td>";
-                    data += "<td>" + value.ProductGroupName + "</td>"
-                    data += "<td>" + value.ProductSubGroupName + "</td>"
-                    data += "<td>" + value.ProductTypeName + "</td>"
-                    data += "<td>" + value.Description + "</td>";
-                    data += "<td>" + value.CreateUserName + "</td>";
-                    data += "<td></td>";
-                    data += "<td></td>";
-                    data += "</th>";
-
+                    var data = "<tr><td width=\"10.2%\">" + value.ProductNumber + "</td>";
+                    data += "<td width=\"10.2%\">" + value.ProductGroupName + "</td>";
+                    data += "<td width=\"15.2%\"> " + value.ProductSubGroupName + "</td>";
+                    data += "<td width=\"10.2%\">" + value.ProductTypeName + "</td>";
+                    data += "<td width=\"20.2%\">" + value.Description + "</td>";
+                    data += "<td width=\"10.2%\"> " + value.CreateUserName + "</td >";
+                    data += "<td width=\"10.2%\">" + "BOM" + "</td>";
+                    data += "<td width=\"14%\">" + "&nbsp;&nbsp;&nbsp;"+"Routing" + "</td>";
+                    data += "</tr>";
                     $('#ProductLst').append(data);
                 })
             }
         });
     }
 
-    function bindSubData() {
-        var index = $('#GroupLst').val();
 
+    // Bind Sub GroupLst by selected Index of GroupLst API with (ProductGroup Controller)
+    function bindSubData() {
+        // get Selected index of GroupLst
+        var index = $('#GroupLst').val();
+        // if index = 0 -> then disable Sub GroupLst
         if (index == 0) {
             $('#SubGroupLst').prop('disabled', true);
             $('#SubGroupLst').val('0');
@@ -577,7 +629,7 @@
             var groupUID = @Session["GroupUID"];
             var initial = "<option value=\"" + 0 + "\" >" + "--전체--" + "</option>";
             $('#SubGroupLst').append(initial);
-
+            // api/ProductGroup + "GET"
             $.ajax({
                 type: "GET",
                 url: "/api/ProductGroup/" + groupUID + "/" + parentProductGroupID,
@@ -585,19 +637,21 @@
                 contentType: 'application/json; charset=utf-8',
                 success: function (response) {
                     $.each(response, function (key, value) {
-                        // GroupList 바인드
+                        // Bind Sub GroupLst Data
                         var productGroup = "<option value=\"" + value.ProductGroupID + "\" >" + value.ProductGroupName + "</option>";
                          $('#SubGroupLst').append(productGroup);
                      })
                  }
             });
         }
+        // Display Product by selected index of (GroupLst / Sub GroupLst / TypeLst / OrderLst)
         DisplayProduct();
-        // GroupId 주고 -> sub데이터 가져오기
     }
 
 
+    // Bind Modal Sub GroupLst by selected Index of Modal GroupLst API with (ProductGroup Controller)
     function bindModalSubData() {
+        // get Selected index of Modal GroupLst
         var index = $('#ModalGroupLst').val();
         if (index == "") {
             $('#ModalSubGroupLst').prop('disabled', true);
@@ -610,7 +664,7 @@
             var groupUID = @Session["GroupUID"];
             var initial = "<option value=\"\">" + "서브 그룹을 선택하세요" + "</option>";
             $('#ModalSubGroupLst').append(initial);
-
+            // api/ProductGroup + "GET"
             $.ajax({
                 type: "GET",
                 url: "/api/ProductGroup/" + groupUID + "/" + parentProductGroupID,
@@ -618,7 +672,7 @@
                 contentType: 'application/json; charset=utf-8',
                 success: function (response) {
                     $.each(response, function (key, value) {
-                        // GroupList 바인드
+                         // Bind Modal Sub GroupLst Data
                         var productGroup = "<option value=\"" + value.ProductGroupID + "\" >" + value.ProductGroupName + "</option>";
                         $('#ModalSubGroupLst').append(productGroup);
                      })
@@ -628,30 +682,28 @@
     }
 
 
-    // Modal 내용 Clear
+    // Clear Modal Create Product Form
     function clearProduct() {
         $('#form-createproductemodal').validate().resetForm();
-
-
         $('#ProductNumber').val('');
         $('#Description').val('');
         $('#ModalGroupLst').val('');
 
+        // For remove bug of jquery Validation
         $('#ModalSubGroupLst').html('');
         var initial = "<option value=\"\">" + "서브 그룹을 선택하세요" + "</option>";
         $('#ModalSubGroupLst').append(initial);
         $('#ModalSubGroupLst').val('');
-
         $('#ModalSubGroupLst').prop('disabled', false);
         $('#ModalSubGroupLst').validate().resetForm();
-    
+
         $('#ModalTypeLst').val('');
     };
 
 
-     // 새 품목 생성하기
+     // Create New Product API with (Product Controller)
     function createProduct() {
-
+        // check Modal Input From Validation
         var count = 0;
         if ($('#ProductNumber').valid() == false) {
             count++;
@@ -671,15 +723,14 @@
         if (count > 0) {
             return false;
         }
-
-
+        // Get New Prodct Data (Number / Description / Group / Sub Group / Type)
         var productNumber = $('#ProductNumber').val();
         var description = $('#Description').val();
         var productGroupID = $('#ModalGroupLst').val();
         var productSubGroupID = $('#ModalSubGroupLst').val();
         var productTypeID = $('#ModalTypeLst').val();
         var json = "{ ProductNumber : \"" + productNumber + "\", Description : \"" + description + "\", ProductGroupID : \"" + productGroupID + "\", ProductSubGroupID : \"" + productSubGroupID + "\", ProductTypeID : \"" + productTypeID + "\", GroupUID : \"" + @Session["GroupUID"] + "\", UID : \"" + @Session["UID"]  + "\"}";
-
+        // api/Product + "POST"
         $.ajax({
             type: "POST",
             url: "/api/Product/",
@@ -687,20 +738,21 @@
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
-                var data = "<tr><td>" + response.ProductNumber + "</td>";
-                data += "<td>" + response.ProductGroupName + "</td>";
-                data += "<td>" + response.ProductSubGroupName + "</td>";
-                data += "<td>" + response.ProductTypeName + "</td>";
-                data += "<td>" + response.Description + "</td>";
-                data += "<td>" + response.CreateUserName + "</td >";
-                data += "<td></td>";
-                data += "<td></td>";
-                data += "</th>";
-
+                var data = "<tr><td style=\"width:10%;\">" + response.ProductNumber + "</td>";
+                data += "<td style=\"width:10%; \">" + response.ProductGroupName + "</td>";
+                data += "<td style=\"width:15%; \"> " + response.ProductSubGroupName + "</td>";
+                data += "<td style=\"width:10%; \">" + response.ProductTypeName + "</td>";
+                data += "<td style=\"width:20%; \">" + response.Description + "</td>";
+                data += "<td style=\"width:10%; \"> " + response.CreateUserName + "</td >";
+                data += "<td style=\"width:10%; \">" + "" + "</td>";
+                data += "<td style=\"width:15%; \">" + "" + "</td>";
+                data += "</tr>";
                 $('#ProductLst').append(data);
                 $('#modalClose').click();
             }
         });
     };
+
+
 </script>
 

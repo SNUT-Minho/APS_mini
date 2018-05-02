@@ -55,7 +55,6 @@
 <body style="background-color:aqua">
     <div class="row" style="">
         <div class="col-lg-4">
-
         </div>
         <!--회원가입 폼 디자인-->
         <div class="col-lg-4" style="align-content:center;">
@@ -65,19 +64,22 @@
                     <div style="margin-left:auto; margin-right:auto; align-content:center; max-width:280px;">
                         <h3>회원 가입</h3>
                         <hr />
+                        <!--아이디 입력-->
                         <div class="form-group">
                             <label class="control-label" for="UserID">ID </label>
                             <input type="text" class="form-control" id="UserID" name="UserID" placeholder="아이디를 입력하시오." required>
                         </div>
+                        <!--아이디 입력-->
+                        <!--비밀번호 입력-->
                         <div class="form-group">
                             <label class="control-label" for="Password">Password </label>
                             <input type="password" class="form-control" id="Password" name="Password" placeholder="비밀번호를 입력하시오." style="margin-bottom:10px;" required>
                             <input type="password" class="form-control" id="PasswordConfirm" name="PasswordConfirm" placeholder="비밀번호 확인." required>
                         </div>
-
+                        <!--비밀번호 입력-->
+                        <!--회사 선택-->
                         <div class="form-group">
                             <label class="control-label" for="CompanyName">회사명 </label>
-
                             <div class="form-inline">
                                 <select class="form-control" id="SELECT_INDEX" name="SELECT_INDEX" style="width:75%; overflow-y:scroll;" required>
                                     <option value="0">-- 회사명 --</option>
@@ -85,28 +87,33 @@
                                 <input type="button" data-target="#myModal2" data-toggle="modal" style="margin-left:10px;" class="btn btn-dark" value="추가" />
                             </div>
                         </div>
-
+                        <!--회사 선택-->
+                        <!--회원명 입력-->
                         <div class="form-group">
                             <label class="control-label" for="UserName">회원 이름 </label>
                             <input type="text" class="form-control" id="UserName" name="UserName" placeholder="회원 이름을 입력하시오." required>
                         </div>
+                        <!--회원명 입력-->
+                        <!--가입코드 확인-->
                         <div class="form-group">
                             <label class="control-label" for="SecureCode" style="color:red;">가입 코드 </label>
                             <input type="text" class="form-control" id="SecureCode" name="SecureCode" placeholder="가입 코드를 입력해주세요" required>
                             <input type="hidden" id="hdn" name="hdn" value="getCode();" />
                         </div>
+                        <!--가입코드 확인-->
                     </div>
                 </div>
+                <!--가입 완료 버튼-->
                 <button class="btn btn-danger form-control" style="margin-top: 10px; height:50px;" onclick="return checkCode(); return false;">가입 완료</button>
+                <!--가입 완료 버튼-->
             </form>
         </div>
         <!--회원가입 폼 디자인-->
         <div class="col-lg-4">
-
         </div>
     </div>
 
-    <!--Modal(회사명 찾아보기)-->
+    <!--회사 추가 Modal-->
     <div class="modal fade" draggable="true" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModal-label">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -114,30 +121,36 @@
                     <h4 class="modal-title" id="myModal-label">회사명 추가</h4>
                 </div>
                 <div class="modal-body">
+                    <!-- 새 회사 입력-->
                     <form id="form-createcomapny">
                         <input type="text" name="newCompany" id="newCompany" value="" class="form-control" style="max-width:100%;" maxlength="115" autofocus />
                     </form>
+                    <!-- 새 회사 입력-->
                 </div>
                 <div class="modal-footer">
+                    <!--회사 추가 버튼-->
                     <button type="button" class="btn btn-default" data-dismiss="modal" id="modalClose" onclick="clearCompany();">Close</button>
                     <button type="button" class="btn btn-primary" onclick="return createCompany();">Save</button>
+                    <!--회사 추가 버튼-->
                 </div>
             </div>
         </div>
     </div>
-
+    <!--회사 추가 Modal-->
 
 </body>
 <script>
 
     $(document).ready(function () {
 
-        // 
+
+        // input tag autofocus
         $('#myModal2').on('shown.bs.modal', function () {
-           
             $('#newCompany').focus();
         });
 
+
+        // create company form validation
         $('#form-createcomapny').validate({
             rules: {
                 newCompany : {
@@ -155,7 +168,8 @@
             }
         });
 
-        // !! jQuery Validator
+
+        // register form validation
         $('form').validate({
             rules: {
                 UserID: {
@@ -212,15 +226,14 @@
                 },
                 SecureCode: {
                     required: "가입코드를 작성해주세요."
-
                 }
             }
         });
 
 
-        // 아이디 중복 체크
-        var timer;
+        // ID 중복 체크 with (USER Controller)
         $("#UserID").on('keyup', function () {
+            var timer;
             clearTimeout(timer);  //clear any running timeout on key up
             timer = setTimeout(function () {
                 var id = $('#UserID').val();
@@ -235,33 +248,36 @@
             }, 1000);
         });
 
-        // 회사명 리스트에 데이터 바인드
-        $.getJSON("/api/Company",
-            function (data, textStatus, jqXHR) {
-                $.each(data, function (key, value) {
 
-                    var company = "<option value=\"" + value.CID + "\" >" + value.CompanyName + "</option>";
-                    $('#SELECT_INDEX').append(company);
-                });
-            }
-        );
-
+        // ID 중복 체크 실패시 UserID Input Clear
         function clearUserID() {
             $('#UserID').val('');
         }
 
-        // 모달 auto focus
+
+        // 회사명 리스트 Data bind with (COMPANY Controller)
+        $.getJSON("/api/Company", function (data, textStatus, jqXHR) {
+                $.each(data, function (key, value) {
+                    var company = "<option value=\"" + value.CID + "\" >" + value.CompanyName + "</option>";
+                    $('#SELECT_INDEX').append(company);
+                });
+            });
+
+
+        // Modal onlaod 시 input tag autofocus
         $('#myModal2').on('shown.bs.modal', function () {
             $('#newCompany').focus();
         });
+
+
     });
 
-    // 새 회사 생성하기
+    // Create New company
     function createCompany() {
+        // 회사명 input 이 null 이면 return false
         if ($('#form-createcomapny').valid() == false) {
             return false;
         }
-
         var companyName = $('#newCompany').val();
         var json = "{ CompanyName : \"" + companyName + "\"}";
 
@@ -280,22 +296,21 @@
                 $('#modalClose').click();
             }
         });
-
         $('#SecureCode').attr("readonly", "true");
         $('#SELECT_INDEX').attr("readonly", "true");
     };
 
-    // 회사 추가창의 내용 Clear하기
+
+    // Create New company form clear
     function clearCompany() {
         $('#form-createcomapny').validate().resetForm();
         $('#newCompany').val('');
     };
 
 
-    // 실제 가입코드랑 같은지 확인
+    // 회사명과 가입코드 일치 확인 with (COMPANY Controller)
     function checkCode() {
         var result;
-
         $.ajax({
             type: "GET",
             async: false,
@@ -317,4 +332,5 @@
         });
         return result;
     };
+
 </script>

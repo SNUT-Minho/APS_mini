@@ -32,60 +32,76 @@
         }
 </style>
 
-
+<!--Memo Page-->
 <div class="row">
     <div class="col-md-2 col-lg-2"></div>
     <div class="col-md-8 col-lg-8 container-fluid">
-        <h3>Memo<button data-target="#myModal" data-toggle="modal" class="btn btn-primary" style="float:right;">메모 작성</button></h3>
-
+        <!--HEADER-->
+        <h3>
+            Memo
+            <!--Create Memo Button-->
+            <button data-target="#myModal" data-toggle="modal" class="btn btn-primary" style="float:right;">
+                메모 작성
+            </button>
+            <!--Create Memo Button-->
+        </h3>
+        <!--HEADER-->
         <hr />
+        <!--Memo Container-->
         <div class="row" id="memoContainer">
-            <!--메모 생성되는 Container-->
         </div>
+        <!--Memo Container-->
     </div>
     <div class="col-md-2 col-lg-2"></div>
 </div>
-
-
-<!--Modal(새 메모 작성)-->
+<!--Memo Page-->
+<!--Create Memo Modal-->
 <div class="modal fade" draggable="true" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal-label">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
+            <!--Header-->
             <div class="modal-header">
                 <h4 class="modal-title" id="myModal-label">Create Memo</h4>
             </div>
+            <!--Header-->
             <div class="modal-body">
+                <!--newMemo Input-->
                 <input type="text" name="name" id="newMemo" value="" class="form-control" style="max-width:100%;" maxlength="115" autofocus />
+                <!--newMemo Input-->
             </div>
             <div class="modal-footer">
+                <!--createMemo Button-->
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="modalClose" onclick="clearMemo();">Close</button>
                 <button type="button" class="btn btn-primary" onclick="createMemo();">Save</button>
+                <!--createMemo Button-->
             </div>
         </div>
     </div>
 </div>
+<!--Create Memo Modal-->
 
 
 <script>
-
     $(document).ready(function () {
 
-        // 모달 auto focus
+
+        // newMemo Modal auto focus
         $('#myModal').on('shown.bs.modal', function () {
             $('#newMemo').focus();
         });
 
-        // 윈도우 종료시 실행되는 메서드
+
+        // Trigger when window close
         $(window).on('beforeunload', function () {
             saveMemoOrder();
-
-            // return '';
         });
 
+
+        // Show ALL Data to Memo Container
         DisplayMemo();
 
-        // 메모 위치 이동
-        // 드래그앤 드롭후 위치 변경
+        
+        // Bind sortable attr to memoContainer
         $('#memoContainer').sortable({
             connectWith: '#memoContainer',
             update: function (e, ui) {
@@ -94,11 +110,10 @@
         $('#memoContainer').disableSelection();
 
 
-        // 메모 삭제
-        // 이벤트 관리 컨테이너
+        // Delete Memo Event Handler
         $('#memoContainer').on('click', '.fa', function (event) {
             var id = $(event.target).attr('id');
-            // Delete API 호출
+            // Memo Delete API wtih (MEMO Controller)
             $.ajax({
                 type: "DELETE",
                 url: "/api/Memo/" + id,
@@ -110,15 +125,18 @@
                 }
             });
         });
+
+
     });
 
 
-    // 메모장의 내용 Clear하기
+    // Clear newMemo input form
     function clearMemo() {
         $('#newMemo').val('');
     };
 
-    // 새 메모 생성하기
+
+    // Create newMemo API with (MEMO Controller)
     function createMemo() {
         var description = $('#newMemo').val();
         var title = '@Session["UserName"]';
@@ -144,7 +162,7 @@
     };
 
 
-    // 전체 메모 불러오기
+    // Get All Memo List API with (MEMO Controller)
     function DisplayMemo() {
         $.getJSON("/api/Memo/" + @Session["GroupUID"],
             function (data, textStatus, jqXHR) {
@@ -163,13 +181,16 @@
         );
     };
 
-    // 전체 메모 지우기
+
+    // Clear Memo Container
     function ClearMemo() {
         $('#memoContainer').html('');
     };
 
+
+    // Save Display Order of Memos
     function saveMemoOrder() {
-        // 메모 순서 저장
+        // Save sortable array data 
         var order = $('#memoContainer').sortable('toArray');
         var json = "{ Title : \"" + order + "\"}";
 
@@ -180,6 +201,7 @@
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
+                // Empty
             }
         });
     };

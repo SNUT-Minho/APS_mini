@@ -61,7 +61,8 @@
 
     $(document).ready(function () {
 
-        // !! jQuery Validator
+
+        // jQuery validation
         $('form').validate({
             rules: {
                 UserID: {
@@ -72,7 +73,6 @@
                 Password: {
                     minlength: 5,
                     maxlength: 15,
-
                 },
                 PasswordConfirm: {
                     equalTo: "#Password"
@@ -87,7 +87,6 @@
                     minlength: 3,
                     maxlength: 5
                 },
-            
             },
             messages: {
                 UserID: {
@@ -98,7 +97,6 @@
                 Password: {
                     minlength: "{0}자 이상 입력하시오",
                     maxlength: "{0}자 이하로 입력하시오"
-
                 },
                 PasswordConfirm: {
                     equalTo: "비밀번호가 동일하지 않습니다."
@@ -113,11 +111,11 @@
                     minlength: "{0}자 이상 입력하시오",
                     maxlength: "{0}자 이하로 입력하시오"
                 },
-              
             }
         });
 
 
+        // Clear UserID form
         function clearUserID() {
             $('#UserID').val('');
         }
@@ -130,51 +128,73 @@
 <body style="background-color:aqua">
     <div class="row" style="">
         <div class="col-lg-2">
-
         </div>
         <!--회원정보 폼 디자인-->
         <div class="col-lg-8" style="align-content:center;">
+            <!--회원정보 폼-->
             <form role="form" method="post" action="/Account/UserInfo">
+                <!--Link to DashBoard-->
                 <a href="/Board/Index"><h2 style="color: white; text-align:center; margin-bottom:30px;" id="brand">APS_mini</h2></a>
+                <!--Link to DashBoard-->
+                <!--UserInfo Container-->
                 <div class="container" id="mainForm" style=" align-content:center; padding-top:50px; padding-bottom:50px; border:1px solid black; background-color:white; ">
                     <div style="margin-left:auto; margin-right:auto; align-content:center; max-width:680px;">
                         <h3>회원 정보</h3>
                         <hr />
+                        <!--Form 1st Row-->
                         <div class="form-row">
+                            <!--UserID-->
                             <div class="form-group col-md-6">
                                 <label class="control-label" for="UserID">ID </label>
                                 <input type="text" class="form-control" id="UserID" name="UserID" required value="@Html.DisplayFor(model => model.UserID)" readonly>
                             </div>
+                            <!--UserID-->
+                            <!--Password-->
                             <div class="form-group col-md-6">
                                 <label class="control-label" for="Password">Password </label>
                                 <input type="password" class="form-control" id="Password" name="Password" placeholder="새 비밀번호를 입력하시오." style="margin-bottom:10px;" value="">
                                 <input type="password" class="form-control" id="PasswordConfirm" name="PasswordConfirm" placeholder="비밀번호 확인." value="">
                             </div>
+                            <!--Password-->
                         </div>
+                        <!--Form 1st Row-->
+                        <!--Form 2st Row-->
                         <div class="form-row">
+                            <!--CompanyName-->
                             <div class="form-group col-md-6">
                                 <label class="control-label" for="CompanyName">회사명</label>
                                 <input type="text" class="form-control" id="CompanyName" name="CompanyName" placeholder="회사명을 입력하시오." value="@Html.DisplayFor(model => model.CompanyName)" required readonly>
                             </div>
+                            <!--CompanyName-->
+                            <!--UserName-->
                             <div class="form-group col-md-6">
                                 <label class="control-label" for="UserName">회원 이름 </label>
                                 <input type="text" class="form-control" id="UserName" name="UserName" placeholder="회원 이름을 입력하시오." value="@Html.DisplayFor(model => model.UserName)" required>
                             </div>
+                            <!--UserName-->
                         </div>
-
-
+                        <!--Form 2st Row-->
+                        <!--Form 3st Row-->
                         <div class="form-row">
+                            <!--SecureCODE-->
                             <div class="form-group col-md-6">
                                 <label class="control-label" for="Industry" style="color:red;">가입 코드 </label>
                                 <input type="text" class="form-control" id="SecureCode" name="SecureCode" placeholder="가입 코드를 입력해주세요" required>
                             </div>
+                            <!--SecureCODE-->
+                            <!--Email-->
                             <div class="form-group col-md-6">
                                 <label class="control-label" for="Email">E-mail </label>
                                 <input type="email" class="form-control" id="Email" name="Email" placeholder="이메일을 입력하시오." value="@Html.DisplayFor(model => model.Email)">
                             </div>
+                            <!--Email-->
                         </div>
+                        <!--Form 3st Row-->
                         <br />
-                        <button type="submit" class="btn btn-primary">수정</button> <button type="button" class="btn btn-danger" onclick="location.href='@Url.Action("UserDelete", "Account")';return false;">탈퇴</button>
+                        <!--Submit Button-->
+                        <button type="submit" class="btn btn-primary">수정</button>
+                        <button type="button" class="btn btn-danger" onclick="location.href='@Url.Action("UserDelete", "Account")';return false;">탈퇴</button>
+                        <!--Submit Button-->
                         <hr />
                         @*<h3>회원 탈퇴</h3>
                             <hr />
@@ -190,7 +210,9 @@
                             <hr />*@
                     </div>
                 </div>
+                <!--UserInfo Container-->
             </form>
+            <!--회원정보 폼-->
         </div>
         <!--회원정보 폼 디자인-->
         <div class="col-lg-2">
@@ -202,9 +224,12 @@
 <script>
     $(document).ready(function () {
 
-        var groupUID = @Html.DisplayFor(model => model.GroupUID);
-        // Secure 코드 가져오기
 
+        // groupUID get MVC model
+        var groupUID = @Html.DisplayFor(model => model.GroupUID);
+
+
+        // Get Secure code and bind
         $.ajax({
             type: "GET",
             async: false,
@@ -216,6 +241,6 @@
                 $('#SecureCode').val(response);
                 $('#SecureCode').attr("readonly", "true");
             }
-        });   
+        });
     });
 </script>
