@@ -2,7 +2,35 @@
 @{
     ViewBag.Title = "Product";
 }
+<style>
+    label.error {
+        color: red;
+    }
 
+    input.error {
+        border-color: #ff0000;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    }
+
+    select.error {
+        border-color: #ff0000;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    }
+
+    input.error:focus {
+        border-color: #ff0000;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
+    }
+
+    select.error:focus {
+        border-color: #ff0000;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
+    }
+</style>
 <div class="row">
     <div class="col-md-2 col-lg-2"></div>
     <div class="col-md-8 col-lg-8 container-fluid">
@@ -60,7 +88,8 @@
                     <th style="width:150px;">Type</th>
                     <th>Description</th>
                     <th style="width:100px;">User</th>
-                    <th style="width:150px;">Created Date</th>
+                    <th>BOM</th>
+                    <th>Routing</th>
                 </tr>
             </table>
         </div>
@@ -95,21 +124,24 @@
                 <h4>Group Management</h4>
             </div>
             <div class="modal-body">
-                <div class="form-group" style="padding-top:10px;">
-                    <div class="form-inline" style="margin-top: auto; margin-bottom:auto;">
-                        <label class="control-label" for="CreateNewGroup">Create New Group : </label>
-                        <input type="text" name="CreateNewGroup" id="CreateNewGroup" value="" class="form-control" style="max-width:70%; margin-left:10px;" maxlength="115" autofocus placeholder="그룹 속성을 입력하세요." required />
+                <form id="form-groupmodal">
+                    <div class="form-group" style="padding-top:10px;">
+                        <div class="form-inline" style="margin-top: auto; margin-bottom:auto;">
+                            <label class="control-label" for="CreateNewGroup">Create New Group : </label>
+                            <input type="text" name="CreateNewGroup" id="CreateNewGroup" value="" class="form-control" style="max-width:70%; margin-left:10px;" maxlength="115" autofocus placeholder="그룹 속성을 입력하세요." required />
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="GroupModalClose" onclick="clearGroupModal();">Close</button>
-                <button type="button" class="btn btn-primary" onclick="createNewGroup();">Create</button>
+                <button type="button" class="btn btn-primary" onclick="return createNewGroup();" id="createNewGroupBtn">Create</button>
             </div>
         </div>
     </div>
 </div>
 <!--Group 관리-->
+
 <!--Sub Group 관리-->
 <div class="modal fade" id="SubGroupModal" tabindex="-1" role="dialog" aria-labelledby="Warning-label">
     <div class="modal-dialog" role="document">
@@ -118,21 +150,24 @@
                 <h4>Sub Group Management</h4>
             </div>
             <div class="modal-body">
-                <div class="form-group" style="padding-top:10px;">
-                    <div class="form-inline" style="margin-top: auto; margin-bottom:auto;">
-                        <label class="control-label" for="CreateNewSubGroup">Create New Sub Group : </label>
-                        <input type="text" name="CreateNewSubGroup" id="CreateNewSubGroup" value="" class="form-control" style="max-width:70%; margin-left:10px;" maxlength="115" autofocus placeholder="서브그룹 속성을 입력하세요." required />
+                <form id="form-subgroupmodal">
+                    <div class="form-group" style="padding-top:10px;">
+                        <div class="form-inline" style="margin-top: auto; margin-bottom:auto;">
+                            <label class="control-label" for="CreateNewSubGroup">Create New Sub Group : </label>
+                            <input type="text" name="CreateNewSubGroup" id="CreateNewSubGroup" value="" class="form-control" style="max-width:70%; margin-left:10px;" maxlength="115" autofocus placeholder="서브그룹 속성을 입력하세요." required />
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"  id="SubGroupModalClose" onclick="clearGroupModal();">Close</button>
-                <button type="button" class="btn btn-primary" onclick="createNewSubGroup();">Create</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="SubGroupModalClose" onclick="clearGroupModal();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="return createNewSubGroup();">Create</button>
             </div>
         </div>
     </div>
 </div>
 <!--Sub Group 관리-->
+
 <!--Type 관리-->
 <div class="modal fade" id="TypeModal" tabindex="-1" role="dialog" aria-labelledby="Warning-label">
     <div class="modal-dialog" role="document">
@@ -141,21 +176,25 @@
                 <h4>Type Management</h4>
             </div>
             <div class="modal-body">
-                <div class="form-group" style="padding-top:10px;">
-                    <div class="form-inline" style="margin-top: auto; margin-bottom:auto;">
-                        <label class="control-label" for="CreateNewType">Create New Type : </label>
-                        <input type="text" name="CreateNewType" id="CreateNewType" value="" class="form-control" style="max-width:70%; margin-left:10px;" maxlength="115" autofocus placeholder="타입 속성을 입력하세요." required />
+                <form id="form-typemodal">
+                    <div class="form-group" style="padding-top:10px;">
+                        <div class="form-inline" style="margin-top: auto; margin-bottom:auto;">
+                            <label class="control-label" for="CreateNewType">Create New Type : </label>
+                            <input type="text" name="CreateNewType" id="CreateNewType" value="" class="form-control" style="max-width:70%; margin-left:10px;" maxlength="115" autofocus placeholder="타입 속성을 입력하세요." required />
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"  id="TypeModalClose" onclick="clearTypeModal();">Close</button>
-                <button type="button" class="btn btn-primary" onclick="createNewType();">Create</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="TypeModalClose" onclick="clearTypeModal();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="return createNewType();">Create</button>
             </div>
         </div>
     </div>
 </div>
 <!--Type 관리-->
+
+
 <!--Modal(새 품목 생성)-->
 <div class="modal fade" draggable="true" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal-label">
     <div class="modal-dialog" role="document">
@@ -163,51 +202,55 @@
             <div class="modal-header">
                 <h4 class="modal-title" id="myModal-label">Create Product</h4>
             </div>
+
             <div class="modal-body">
-                <!--ProductNum-->
-                <div class="form-group">
-                    <div class="form-inline">
-                        <label class="control-label" for="ProductNumber">Product Num : </label>
-                        <input type="text" name="ProductNumber" id="ProductNumber" value="" class="form-control" style="max-width:70%; margin-left:10px;" maxlength="115" autofocus placeholder="품번을 입력하세요" required />
+                <form id="form-createproductemodal">
+                    <!--ProductNum-->
+                    <div class="form-group">
+                        <div class="form-inline">
+                            <label class="control-label" for="ProductNumber">Product Num : </label>
+                            <input type="text" name="ProductNumber" id="ProductNumber" value="" class="form-control" style="max-width:70%; margin-left:10px;" maxlength="115" autofocus placeholder="품번을 입력하세요" required />
+                        </div>
                     </div>
-                </div>
-                <!--ProductNum-->
-                <!--Description-->
-                <div class="form-group">
-                    <div class="form-inline">
-                        <label class="control-label" for="Description">Description &nbsp;&nbsp; : </label>
-                        <input type="text" name="Description" id="Description" value="" class="form-control" style="max-width:70%; margin-left:10px;" maxlength="115" autofocus placeholder="제품 설명을 입력하세요" required />
+                    <!--ProductNum-->
+                    <!--Description-->
+                    <div class="form-group">
+                        <div class="form-inline">
+                            <label class="control-label" for="Description">Description &nbsp;&nbsp; : </label>
+                            <input type="text" name="Description" id="Description" value="" class="form-control" style="max-width:70%; margin-left:10px;" maxlength="115" autofocus placeholder="제품 설명을 입력하세요" required />
+                        </div>
                     </div>
-                </div>
-                <!--Description-->
-                <!-- Group-->
-                <div class="form-group">
-                    <label class="control-label" for="ModalGroupLst">Group &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : </label>
-                    <select class="custom-select" id="ModalGroupLst" name="ModalGroupLst" style="max-width:50%; margin-left:7px;" onchange="bindModalSubData();" maxlength="115" autofocus>
-                        <option style="padding-left:10px;" value="">제품 그룹을 선택하세요</option>
-                    </select>
-                </div>
-                <!-- Group-->
-                <!-- Sub Group-->
-                <div class="form-group">
-                    <label class="control-label" for="ModalSubGroupLst">Sub Group &nbsp;&nbsp;&nbsp; : </label>
-                    <select class="custom-select" id="ModalSubGroupLst" name="ModalSubGroupLst" style="max-width:50%; margin-left:7px;" maxlength="115" autofocus disabled>
-                        <option style="padding-left:10px;" value="">서브그룹을 선택하세요</option>
-                    </select>
-                </div>
-                <!-- Sub Group-->
-                <!-- Type-->
-                <div class="form-group">
-                    <label class="control-label" for="ModalTypeLst">Type &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : </label>
-                    <select class="custom-select" id="ModalTypeLst" name="ModalTypeLst" style="max-width:50%; margin-left:7px;" maxlength="115" autofocus>
-                        <option style="padding-left:10px;" value="">제품 타입을 선택하세요</option>
-                    </select>
-                </div>
-                <!-- Type-->
+                    <!--Description-->
+                    <!-- Group-->
+                    <div class="form-group">
+                        <label class="control-label" for="ModalGroupLst">Group &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : </label>
+                        <select class="custom-select" id="ModalGroupLst" name="ModalGroupLst" style="max-width:50%; margin-left:7px;" onchange="bindModalSubData();" maxlength="115" autofocus>
+                            <option style="padding-left:10px;" value="">제품 그룹을 선택하세요</option>
+                        </select>
+                    </div>
+                    <!-- Group-->
+                    <!-- Sub Group-->
+                    <div class="form-group">
+                        <label class="control-label" for="ModalSubGroupLst">Sub Group &nbsp;&nbsp;&nbsp; : </label>
+                        <select class="custom-select" id="ModalSubGroupLst" name="ModalSubGroupLst" style="max-width:50%; margin-left:7px;" maxlength="115" disabled>
+                            <option style="padding-left:10px;" value="">서브그룹을 선택하세요</option>
+                        </select>
+                    </div>
+                    <!-- Sub Group-->
+                    <!-- Type-->
+                    <div class="form-group">
+                        <label class="control-label" for="ModalTypeLst">Type &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : </label>
+                        <select class="custom-select" id="ModalTypeLst" name="ModalTypeLst" style="max-width:50%; margin-left:7px;" maxlength="115" autofocus>
+                            <option style="padding-left:10px;" value="">제품 타입을 선택하세요</option>
+                        </select>
+                    </div>
+                    <!-- Type-->
+                </form>
             </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="modalClose" onclick="clearProduct();">Close</button>
-                <button type="button" class="btn btn-primary" onclick="createProduct();">Create</button>
+                <button type="button" class="btn btn-primary" onclick="return createProduct();">Create</button>
             </div>
         </div>
     </div>
@@ -217,10 +260,126 @@
 <script>
     $(document).ready(function () {
 
-        // 모달 auto focus
-        $('#myModal').on('shown.bs.modal', function () {
-            $('#newMemo').focus();
+        // Create New Group Modal Validation
+        $('#form-groupmodal').validate({
+            rules: {
+                CreateNewGroup: {
+                    required: true,
+                    minlength: 3
+                }
+            },
+            messages: {
+                CreateNewGroup: {
+                    required: "",
+                    minlength: ""
+                }
+            }
         });
+
+        // Create New Sub Group Modal Validation
+        $('#form-subgroupmodal').validate({
+            rules: {
+                CreateNewSubGroup: {
+                    required: true,
+                    minlength: 3
+                }
+            },
+            messages: {
+                CreateNewSubGroup: {
+                    required: "",
+                    minlength: ""
+                }
+            }
+        });
+
+         // Create New Type Modal Validation
+        $('#form-typemodal').validate({
+            rules: {
+                CreateNewType: {
+                    required: true,
+                    minlength: 3
+                }
+            },
+            messages: {
+                CreateNewType: {
+                    required: "",
+                    minlength: ""
+                }
+            }
+        });
+
+
+        // Create New Product Modal Validation
+        $('#form-createproductemodal').validate({
+            rules: {
+                ProductNumber: {
+                    required: true,
+                    digits: true,
+                    minlength: 3
+                },
+                Description: {
+                    required: true,
+                    minlength: 3
+                },
+                ModalGroupLst: {
+                    required: true
+                },
+                ModalSubGroupLst: {
+                    required: true
+                },
+                ModalTypeLst: {
+                    required: true
+                }
+            },
+            messages: {
+                ProductNumber: {
+                    required: "",
+                    digits: "",
+                    minlength: ""
+                },
+                Description: {
+                    required: "",
+                    minlength: ""
+                },
+                ModalGroupLst: {
+                    required: ""
+                },
+                ModalSubGroupLst: {
+                    required: ""
+                },
+                ModalTypeLst: {
+                    required: ""
+                }
+            }
+        });
+
+        /////////////////////////////////////////////////////////
+        // Group 모달 auto focus
+        $('#GroupModal').on('shown.bs.modal', function () {
+          
+            $('#CreateNewGroup').focus();
+        });
+
+        //  Sub Group 모달 auto focus
+        $('#SubGroupModal').on('shown.bs.modal', function () {
+          
+            $('#CreateNewSubGroup').focus();
+        });
+
+        // Type 모달 auto focus
+        $('#TypeModal').on('shown.bs.modal', function () {
+         
+            $('#CreateNewType').focus();
+        });
+
+        // Create 모달 auto focus
+        $('#myModal').on('shown.bs.modal', function () {
+            
+            $('#ProductNumber').focus();
+            $('#ModalSubGroupLst').prop('disabled', true);
+        });
+        /////////////////////////////////////////////////////////
+
 
         // 윈도우 종료시 실행되는 메서드
         $(window).on('beforeunload', function () {
@@ -265,17 +424,34 @@
             }
         });
 
-        // OrderList 데이터 바인드
-
 
         // ProductList 데이터 바인드
         DisplayProduct();
     });
 
+
+    function clearGroupModal() {
+        $('#form-groupmodal').validate().resetForm();
+        $('#form-subgroupmodal').validate().resetForm();
+        $('#CreateNewGroup').val('');
+        $('#CreateNewSubGroup').val('');
+    }
+
+    function clearTypeModal() {
+        $('#form-typemodal').validate().resetForm();
+        $('#CreateNewType').val('');
+    }
+
+
+    // Create New Group Function
     function createNewGroup() {
+        if ($('#CreateNewGroup').valid() == false) {
+            return false;
+        }
+
         var productGroupName = $('#CreateNewGroup').val();
         var groupUID = @Session["GroupUID"];
-     
+
         var data = "{ProductGroupName : \"" + productGroupName + "\" , GroupUID : \"" + groupUID + "\"}";
 
         $.ajax({
@@ -295,27 +471,21 @@
         });
     };
 
-    function clearGroupModal() {
-        $('#CreateNewGroup').val('');
-        $('#CreateNewSubGroup').val('');
-    }   
-
-    function clearTypeModal() {
-        $('#CreateNewType').val('');
-    }
-
-
 
     // 서브 구현 로직 필요
     function createNewSubGroup() {
+        if ($('#CreateNewSubGroup').valid() == false) {
+            return false;
+        }
+
 
         var productGroupName = $('#CreateNewSubGroup').val();
         var parentProductGroupID = $('#GroupLst').val();
         var groupUID = @Session["GroupUID"];
-     
+
         var data = "{ProductGroupName : \"" + productGroupName + "\" , GroupUID : \"" + groupUID + "\" , ParentProductGroupID : \"" + parentProductGroupID + "\"}";
 
-    $.ajax({
+         $.ajax({
             type: "POST",
             url: "/api/ProductGroup",
             data: data,
@@ -325,13 +495,18 @@
                 // GroupList 바인드
                 var productGroup = "<option value=\"" + response.ProductGroupID + "\" >" + response.ProductGroupName + "</option>";
                 $('#SubGroupLst').append(productGroup);
-                $('#ModalSubGroupLst').append(productGroup);
+              
                 $('#SubGroupModalClose').click();
             }
         });
     };
 
+
     function createNewType() {
+        if ($('#CreateNewType').valid() == false) {
+            return false;
+        }
+
         var productTypeName = $('#CreateNewType').val();
         var groupUID = @Session["GroupUID"];
         var data = "{ProductTypeName : \"" + productTypeName + "\" , GroupUID : \"" + groupUID + "\"}";
@@ -376,6 +551,7 @@
                     data += "<td>" + value.ProductTypeName + "</td>"
                     data += "<td>" + value.Description + "</td>";
                     data += "<td>" + value.CreateUserName + "</td>";
+                    data += "<td></td>";
                     data += "<td></td>";
                     data += "</th>";
 
@@ -422,16 +598,17 @@
 
 
     function bindModalSubData() {
-        var index = $('#ModalGroupLst').find(":selected").index();
-        if (index == 0) {
+        var index = $('#ModalGroupLst').val();
+        if (index == "") {
             $('#ModalSubGroupLst').prop('disabled', true);
-            $('#ModalSubGroupLst').val('0');
+            $('#ModalTypeLst').val('');
+            $('#ModalSubGroupLst').val('');
         } else {
             $('#ModalSubGroupLst').prop('disabled', false);
             $('#ModalSubGroupLst').html('');
             var parentProductGroupID = index;
             var groupUID = @Session["GroupUID"];
-            var initial = "<option value=\"" + 0 + "\" >" + "--전체--" + "</option>";
+            var initial = "<option value=\"\">" + "서브 그룹을 선택하세요" + "</option>";
             $('#ModalSubGroupLst').append(initial);
 
             $.ajax({
@@ -453,20 +630,51 @@
 
     // Modal 내용 Clear
     function clearProduct() {
+        $('#form-createproductemodal').validate().resetForm();
+
+
         $('#ProductNumber').val('');
         $('#Description').val('');
         $('#ModalGroupLst').val('');
-        $('#ModalSubGroupLst').val('0');
-        $('#ModalSubGroupLst').prop('disabled',true);
+
+        $('#ModalSubGroupLst').html('');
+        var initial = "<option value=\"\">" + "서브 그룹을 선택하세요" + "</option>";
+        $('#ModalSubGroupLst').append(initial);
+        $('#ModalSubGroupLst').val('');
+
+        $('#ModalSubGroupLst').prop('disabled', false);
+        $('#ModalSubGroupLst').validate().resetForm();
+    
         $('#ModalTypeLst').val('');
     };
 
 
      // 새 품목 생성하기
     function createProduct() {
+
+        var count = 0;
+        if ($('#ProductNumber').valid() == false) {
+            count++;
+        }
+        if ($('#Description').valid() == false) {
+            count++;
+        }
+        if ($('#ModalGroupLst').valid() == false) {
+            count++;
+        }
+        if ($('#ModalSubGroupLst').valid() == false ) {
+            count++;
+        }
+        if ($('#ModalTypeLst').valid() == false ) {
+            count++;
+        }
+        if (count > 0) {
+            return false;
+        }
+
+
         var productNumber = $('#ProductNumber').val();
         var description = $('#Description').val();
-
         var productGroupID = $('#ModalGroupLst').val();
         var productSubGroupID = $('#ModalSubGroupLst').val();
         var productTypeID = $('#ModalTypeLst').val();
@@ -485,6 +693,7 @@
                 data += "<td>" + response.ProductTypeName + "</td>";
                 data += "<td>" + response.Description + "</td>";
                 data += "<td>" + response.CreateUserName + "</td >";
+                data += "<td></td>";
                 data += "<td></td>";
                 data += "</th>";
 

@@ -47,6 +47,12 @@ AS
 			From Product
 			Where ProductGroupID = @ProductGroupID And ProductSubGroupID = @ProductSubGroupID
 		END
+	ELSE 
+		Begin
+			select *
+			From Product
+			Where ProductGroupID = @ProductGroupID And ProductSubGroupID = @ProductSubGroupID And ProductTypeID = @ProductTypeID
+		END
 Go
 
 

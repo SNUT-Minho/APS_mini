@@ -114,11 +114,13 @@
                     <h4 class="modal-title" id="myModal-label">회사명 추가</h4>
                 </div>
                 <div class="modal-body">
-                    <input type="text" name="newCompany" id="newCompany" value="" class="form-control" style="max-width:100%;" maxlength="115" autofocus />
+                    <form id="form-createcomapny">
+                        <input type="text" name="newCompany" id="newCompany" value="" class="form-control" style="max-width:100%;" maxlength="115" autofocus />
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal" id="modalClose" onclick="clearCompany();">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="createCompany();">Save</button>
+                    <button type="button" class="btn btn-primary" onclick="return createCompany();">Save</button>
                 </div>
             </div>
         </div>
@@ -129,6 +131,29 @@
 <script>
 
     $(document).ready(function () {
+
+        // 
+        $('#myModal2').on('shown.bs.modal', function () {
+           
+            $('#newCompany').focus();
+        });
+
+        $('#form-createcomapny').validate({
+            rules: {
+                newCompany : {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 15
+                }
+            },
+            messages: {
+                newCompany: {
+                    required: "",
+                    minlength: "",
+                    maxlength: ""
+                }
+            }
+        });
 
         // !! jQuery Validator
         $('form').validate({
@@ -214,7 +239,7 @@
         $.getJSON("/api/Company",
             function (data, textStatus, jqXHR) {
                 $.each(data, function (key, value) {
-               
+
                     var company = "<option value=\"" + value.CID + "\" >" + value.CompanyName + "</option>";
                     $('#SELECT_INDEX').append(company);
                 });
@@ -233,6 +258,10 @@
 
     // 새 회사 생성하기
     function createCompany() {
+        if ($('#form-createcomapny').valid() == false) {
+            return false;
+        }
+
         var companyName = $('#newCompany').val();
         var json = "{ CompanyName : \"" + companyName + "\"}";
 
@@ -258,10 +287,11 @@
 
     // 회사 추가창의 내용 Clear하기
     function clearCompany() {
+        $('#form-createcomapny').validate().resetForm();
         $('#newCompany').val('');
     };
 
-  
+
     // 실제 가입코드랑 같은지 확인
     function checkCode() {
         var result;
