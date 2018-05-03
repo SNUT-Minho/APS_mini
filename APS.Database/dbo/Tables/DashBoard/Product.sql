@@ -9,6 +9,10 @@
 	[Description] NVarChar(255) NOT NULL,				-- 품목 설명
 	[ProductTypeID] Int NULL Default(0),								-- 완제품 1 / 반제품 2 / 원자재 3
 	
+	--
+	[BOM] Int NULL Default(0),							-- BOM 등록여부 판단 (0: 미등록 / 1: 등록)
+	[RoutingNumber] Int NULL Default(0),				-- Routing 등록번호 (0: 미등록)
+	
 	-- ** 
 	[GroupUID] INT NOT NULL,							-- 해당 그룹(삼성 SDS)
 	[UID] INT NOT NULL									-- 작성자 일련번호

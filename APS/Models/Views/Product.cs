@@ -33,5 +33,11 @@ namespace APS.Models.Views
         // BOM
         public int ParentNumber { get; set; } = 0;                   // 부모 품목 번호 ( 완 <- 반 <- 원)
         public int ProductOrder { get; set; }                        // 보여지는 순서
+
+        // BOM Check
+        public int BOM { get; set; }
+
+        // Routing 
+        public int RoutingNumber { get; set; }
     }
 }

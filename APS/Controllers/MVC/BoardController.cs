@@ -1,4 +1,5 @@
-﻿using System;
+﻿using APS.Models.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,6 +9,8 @@ namespace APS.Controllers
 {
     public class BoardController : Controller
     {
+        ProductRepository productRepo = new ProductRepository();
+
         // GET: Board
         public ActionResult Index()
         {
@@ -105,7 +108,8 @@ namespace APS.Controllers
             return View();
         }
 
-        public ActionResult BOM()
+        [HttpGet]
+        public ActionResult BOM(int? productNumber)
         {
             // 로그인 안한 사용자 Redirect 
             if (Session["UserID"].ToString() == "Anonymous" || Session["UserID"] == null)
@@ -113,7 +117,7 @@ namespace APS.Controllers
                 TempData["msg"] = "<script>alert('잘못된 접근경로입니다. 로그인 후 이용하세요.');</script>";
                 return RedirectPermanent("~/");
             }
-
+            
             return View();
         }
 

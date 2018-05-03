@@ -1,18 +1,18 @@
 ﻿
 @{
-    ViewBag.Title = "Product";
+    ViewBag.Title = "APSmini";
 }
 <style>
 
     @@media (min-width: 400px) and (max-width: 1800px) {
-       tbody{
-
-       }
+        table tbody {
+            max-height: 500px;
+        }
     }
 
     @@media (min-width: 1800px) and (max-width: 2400px) {
         table tbody {
-            max-height: 650px;
+            max-height: 700px;
         }
     }
 
@@ -296,7 +296,6 @@
         </div>
     </div>
 </div>
-
 
 <script>
     $(document).ready(function () {
@@ -601,8 +600,24 @@
                     data += "<td width=\"10.2%\">" + value.ProductTypeName + "</td>";
                     data += "<td width=\"20.2%\">" + value.Description + "</td>";
                     data += "<td width=\"10.2%\"> " + value.CreateUserName + "</td >";
-                    data += "<td width=\"10.2%\">" + "BOM" + "</td>";
-                    data += "<td width=\"14%\">" + "&nbsp;&nbsp;&nbsp;"+"Routing" + "</td>";
+
+                    productNumber = value.ProductNumber;
+                    if (value.ProductTypeID != 3) {
+                        if (value.BOM == 0) {
+                            data += "<td width=\"10.2%\">" + "<a href=\"#\" onclick=\"redirectToBom(" + productNumber + ")\"><i class=\"fa fa-lock\" style=\"color: red;\"></i></a>" + "</td>";
+                        } else {
+                            data += "<td width=\"10.2%\">" + "<a href=\"#\" onclick=\"redirectToBom(" + productNumber + ")\"><i class=\"fa fa-check\" style=\"color: green;\"></i></a>" + "</td>";
+                        }
+                        if (value.RoutingNumber == 0 && value.ProductTypeID != 3) {
+                            data += "<td width=\"14%\">" + "&nbsp;&nbsp;&nbsp;" + "<a href=\"#\"><i class=\"fa fa-lock\" style=\"color: red;\"></i></a>" + "</td>";
+                        } else {
+                            data += "<td width=\"14%\">" + "&nbsp;&nbsp;&nbsp;" + "<a><i class=\"fa fa-check\" style=\"color: green;\"></i></a>" + "</td>";
+                        }
+                    } else {
+                        data += "<td width=\"10.2%\">" + "<a><i class=\"fa fa-minus\" style=\"color: orange;\"></i></a>" + "</td>";
+                        data += "<td width=\"14%\">" + "&nbsp;&nbsp;&nbsp;" + "<a><i class=\"fa fa-minus\" style=\"color: orange;\"></i></a>" + "</td>";
+                    }
+                   
                     data += "</tr>";
                     $('#ProductLst').append(data);
                 })
@@ -610,6 +625,9 @@
         });
     }
 
+    function redirectToBom(productNumber) {
+        window.location = '/Board/BOM/' + productNumber;
+    }
 
     // Bind Sub GroupLst by selected Index of GroupLst API with (ProductGroup Controller)
     function bindSubData() {
@@ -737,15 +755,30 @@
             data: json,
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
-            success: function (response) {
-                var data = "<tr><td style=\"width:10%;\">" + response.ProductNumber + "</td>";
-                data += "<td style=\"width:10%; \">" + response.ProductGroupName + "</td>";
-                data += "<td style=\"width:15%; \"> " + response.ProductSubGroupName + "</td>";
-                data += "<td style=\"width:10%; \">" + response.ProductTypeName + "</td>";
-                data += "<td style=\"width:20%; \">" + response.Description + "</td>";
-                data += "<td style=\"width:10%; \"> " + response.CreateUserName + "</td >";
-                data += "<td style=\"width:10%; \">" + "" + "</td>";
-                data += "<td style=\"width:15%; \">" + "" + "</td>";
+            success: function (value) {
+                var data = "<tr><td width=\"10.2%\">" + value.ProductNumber + "</td>";
+                data += "<td width=\"10.2%\">" + value.ProductGroupName + "</td>";
+                data += "<td width=\"15.2%\"> " + value.ProductSubGroupName + "</td>";
+                data += "<td width=\"10.2%\">" + value.ProductTypeName + "</td>";
+                data += "<td width=\"20.2%\">" + value.Description + "</td>";
+                data += "<td width=\"10.2%\"> " + value.CreateUserName + "</td >";
+
+                if (value.ProductTypeID != 3) {
+                    if (value.BOM == 0) {
+                        data += "<td width=\"10.2%\">" + "<a href=\"#\" onclick=\"redirectToBom(" + productNumber + ")\"><i class=\"fa fa-lock\" style=\"color: red;\"></i></a>" + "</td>";
+                    } else {
+                        data += "<td width=\"10.2%\">" + "<a href=\"#\" onclick=\"redirectToBom(" + productNumber + ")\"><i class=\"fa fa-check\" style=\"color: green;\"></i></a>" + "</td>";
+                    }
+                    if (value.RoutingNumber == 0 && value.ProductTypeID != 3) {
+                        data += "<td width=\"14%\">" + "&nbsp;&nbsp;&nbsp;" + "<a href=\"#\"><i class=\"fa fa-lock\" style=\"color: red;\"></i></a>" + "</td>";
+                    } else {
+                        data += "<td width=\"14%\">" + "&nbsp;&nbsp;&nbsp;" + "<a><i class=\"fa fa-check\" style=\"color: green;\"></i></a>" + "</td>";
+                    }
+                } else {
+                    data += "<td width=\"10.2%\">" + "<a><i class=\"fa fa-minus\" style=\"color: orange;\"></i></a>" + "</td>";
+                    data += "<td width=\"14%\">" + "&nbsp;&nbsp;&nbsp;" + "<a><i class=\"fa fa-minus\" style=\"color: orange;\"></i></a>" + "</td>";
+                }
+
                 data += "</tr>";
                 $('#ProductLst').append(data);
                 $('#modalClose').click();
