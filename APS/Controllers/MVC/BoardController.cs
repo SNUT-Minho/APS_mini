@@ -1,4 +1,5 @@
 ﻿using APS.Models.Repositories;
+using APS.Models.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -111,14 +112,25 @@ namespace APS.Controllers
         [HttpGet]
         public ActionResult BOM(int? productNumber)
         {
+            Product result;
             // 로그인 안한 사용자 Redirect 
             if (Session["UserID"].ToString() == "Anonymous" || Session["UserID"] == null)
             {
                 TempData["msg"] = "<script>alert('잘못된 접근경로입니다. 로그인 후 이용하세요.');</script>";
                 return RedirectPermanent("~/");
             }
-            
-            return View();
+            if(productNumber == null)
+            {
+                result  = new Product();
+            }
+            else
+            {
+                int ProductNumber = (int) productNumber;
+                Product p = productRepo.GetProductByProductNumber(ProductNumber);
+                result = productRepo.GetProductData(p);
+            }
+
+            return View(result);
         }
 
         public ActionResult Memo()

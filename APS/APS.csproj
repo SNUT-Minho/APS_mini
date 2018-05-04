@@ -183,6 +183,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\API\BOMController.cs" />
     <Compile Include="Controllers\API\CompanyController.cs" />
     <Compile Include="Controllers\API\MemoController.cs" />
     <Compile Include="Controllers\API\ProductController.cs" />
@@ -199,6 +200,7 @@
     <Compile Include="Models\Repositories\MemoRepository.cs" />
     <Compile Include="Models\Repositories\ProductRepository.cs" />
     <Compile Include="Models\Repositories\UserRepository.cs" />
+    <Compile Include="Models\Views\BOM.cs" />
     <Compile Include="Models\Views\Company.cs" />
     <Compile Include="Models\Views\Memo.cs" />
     <Compile Include="Models\Views\Product.cs" />

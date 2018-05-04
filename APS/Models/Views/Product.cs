@@ -25,10 +25,10 @@ namespace APS.Models.Views
 
         public int GroupUID { get; set; }                           // 사용자 그룹(삼성 sds) 일련번호
         public int UID { get; set; }                                // 사용자 아이디 일련번호
+        public string CreateUserName { get; set; }                  // 이품목을 누가 생성햇는지?
 
         // DB에는 없음
         public List<Product> Products { get; set; }                 // 자식품목 리스트
-        public string CreateUserName { get; set; }                  // 이품목을 누가 생성햇는지?
 
         // BOM
         public int ParentNumber { get; set; } = 0;                   // 부모 품목 번호 ( 완 <- 반 <- 원)

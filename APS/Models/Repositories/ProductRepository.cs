@@ -14,6 +14,61 @@ namespace APS.Models.Repositories
     {
         private IDbConnection db = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
 
+        public int RemoveProduct(int productNumber) {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@ProductNumber", productNumber);
+            var result = db.Query<int>("RemoveProduct", parameters, commandType: CommandType.StoredProcedure).SingleOrDefault();
+
+            return result;
+        }
+
+        public IEnumerable<BOM> GetAllBOM(int parentProductNumber)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@ParentProductNumber", parentProductNumber);
+            var result =  db.Query<BOM>("GetAllBOM", parameters, commandType: CommandType.StoredProcedure);
+
+            return result;
+        }
+
+        public void DeletBOM(BOM bom)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@ParentProductNumber", bom.ParentProductNumber);
+            db.Execute("DeleteBOM", parameters, commandType: CommandType.StoredProcedure);
+        }
+
+        public void CreateBOM(BOM bom)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@ParentProductNumber", bom.ParentProductNumber);
+            parameters.Add("@ChildProductNumber", bom.ChildProductNumber);
+            parameters.Add("@Count", bom.Count);
+
+            db.Execute("CreateBOM", parameters , commandType: CommandType.StoredProcedure);
+        }
+
+        public Product GetProductData(Product p)
+        {
+            p.ProductGroupName = db.Query<String>(@"Select ProductGroupName From ProductGroup Where ProductGroupID = @ProductGroupID ;", p).SingleOrDefault();
+            p.ProductSubGroupName = db.Query<String>(@"Select ProductGroupName From ProductGroup Where ProductGroupID = @ProductSubGroupID ;", p).SingleOrDefault();
+            p.ProductTypeName = db.Query<String>(@"Select ProductTypeName From ProductType Where ProductTypeID = @ProductTypeID ;", p).SingleOrDefault();
+            p.CreateUserName = db.Query<String>(@"Select UserName From Domains Where UID = @UID ;", p).SingleOrDefault();
+
+            return p;
+        }
+
+
+        public Product GetProductByProductNumber(int productNumber)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@ProductNumber", productNumber);
+            var result = db.Query<Product>("GetProductByProductNumber", parameters, commandType: CommandType.StoredProcedure).SingleOrDefault();
+
+            return result;
+        }
+
+
         public IEnumerable<ProductGroup> GetAllProductGroup(ProductGroup productGroup)
         {
 
@@ -38,10 +93,7 @@ namespace APS.Models.Repositories
             var result = db.Query<Product>("GetAllProduct", parameters, commandType: CommandType.StoredProcedure);
             foreach (var p in result)
             {
-                p.ProductGroupName = db.Query<String>(@"Select ProductGroupName From ProductGroup Where ProductGroupID = @ProductGroupID ;", p ).SingleOrDefault();
-                p.ProductSubGroupName = db.Query<String>(@"Select ProductGroupName From ProductGroup Where ProductGroupID = @ProductSubGroupID ;", p).SingleOrDefault();
-                p.ProductTypeName = db.Query<String>(@"Select ProductTypeName From ProductType Where ProductTypeID = @ProductTypeID ;", p).SingleOrDefault();
-                p.CreateUserName  = db.Query<String>(@"Select UserName From Domains Where UID = @UID ;", p).SingleOrDefault();
+                GetProductData(p);
             }
 
             return result;

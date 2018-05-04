@@ -71,7 +71,7 @@
                 <i class="fa fa-file-excel-o"></i>
             </button>
             <button data-target="#myModal" data-toggle="modal" class="btn btn-primary" style="float:right; margin-right:5px;" id="createProduct" name="createProduct">품목 생성</button>
-            <button data-target="#" data-toggle="modal" class="btn btn-danger" style="float:right; margin-right:5px;" id="deleteProduct" name="deleteProduct">품목 삭제</button>
+            <button data-target="#" data-toggle="modal" class="btn btn-danger" style="float:right; margin-right:5px;" id="deleteProduct" name="deleteProduct" onclick="removeProduct();">품목 삭제</button>
         </h3>
         <!--Header-->
         <hr />
@@ -106,7 +106,7 @@
                     Order : <select class="custom-select" style="width:120px;" id="OrderLst" name="OrderLst" onchange="DisplayProduct();">
                         <option style="text-align:center;" value="0">--전체--</option>
                     </select>
-                    <button class="btn btn-warning" data-target="#Warning" data-toggle="modal"><i class="fa fa-plus"></i></button>
+                    <button class="btn btn-success" data-target="#Warning" data-toggle="modal"><i class="fa fa-plus"></i></button>
                 </h5>
                 <!--Order-->
             </div>
@@ -474,6 +474,9 @@
         DisplayProduct();
 
 
+        $('#ProductLst').bind('click', function (e) {
+            $(e.target).closest('tbody > tr').children('td,th').toggleClass('table-danger');
+        })
     });
 
 
@@ -594,7 +597,7 @@
             dataType: "json",
             success: function (response) {
                 $.each(response, function (key, value) {
-                    var data = "<tr><td width=\"10.2%\">" + value.ProductNumber + "</td>";
+                    var data = "<tr><td width=\"10.2%\"  id=\"" + value.ProductNumber + "\">" + value.ProductNumber + "</td>";
                     data += "<td width=\"10.2%\">" + value.ProductGroupName + "</td>";
                     data += "<td width=\"15.2%\"> " + value.ProductSubGroupName + "</td>";
                     data += "<td width=\"10.2%\">" + value.ProductTypeName + "</td>";
@@ -617,7 +620,6 @@
                         data += "<td width=\"10.2%\">" + "<a><i class=\"fa fa-minus\" style=\"color: orange;\"></i></a>" + "</td>";
                         data += "<td width=\"14%\">" + "&nbsp;&nbsp;&nbsp;" + "<a><i class=\"fa fa-minus\" style=\"color: orange;\"></i></a>" + "</td>";
                     }
-                   
                     data += "</tr>";
                     $('#ProductLst').append(data);
                 })
@@ -626,7 +628,7 @@
     }
 
     function redirectToBom(productNumber) {
-        window.location = '/Board/BOM/' + productNumber;
+        window.location.href = '/Board/BOM?productNumber=' + productNumber;
     }
 
     // Bind Sub GroupLst by selected Index of GroupLst API with (ProductGroup Controller)
@@ -756,7 +758,7 @@
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
             success: function (value) {
-                var data = "<tr><td width=\"10.2%\">" + value.ProductNumber + "</td>";
+                var data = "<tr onclick=\"SelectTR();\"><td width=\"10.2%\" id=\"" + value.ProductNumber + "\">" + value.ProductNumber + "</td>";
                 data += "<td width=\"10.2%\">" + value.ProductGroupName + "</td>";
                 data += "<td width=\"15.2%\"> " + value.ProductSubGroupName + "</td>";
                 data += "<td width=\"10.2%\">" + value.ProductTypeName + "</td>";
@@ -786,6 +788,28 @@
         });
     };
 
+    function removeProduct() {
+
+        $('#ProductLst').find('tbody > tr > td:first-child.table-danger').each(function () {
+  
+            var id = $(this).attr('id');
+            $.ajax({
+                type: "DELETE",
+                url: "/api/Product/" + id,
+                data: "name=John&location=Boston",
+                dataType: "json",
+                success: function (data, statusText) {
+                  
+                },
+                error: function (request, textStatus, error) {
+                  
+                }
+            });
+        });
+        DisplayProduct();
+    }
+ 
+  
 
 </script>
 

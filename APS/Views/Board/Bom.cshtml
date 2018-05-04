@@ -1,4 +1,29 @@
-﻿
+﻿@model APS.Models.Views.Product
+<style>
+    @@media (min-width: 400px) and (max-width: 1800px) {
+        table tbody {
+            max-height: 400px;
+        }
+    }
+
+    @@media (min-width: 1800px) and (max-width: 2400px) {
+        table tbody {
+            max-height: 580px;
+        }
+    }
+
+    table tbody {
+        display: block;
+        overflow-y: scroll;
+    }
+
+        table thead, table tbody tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+</style>
+
 @{
     ViewBag.Title = "APSmini";
 }
@@ -6,18 +31,206 @@
 <div class="row">
     <div class="col-md-2 col-lg-2"></div>
     <div class="col-md-8 col-lg-8 container-fluid">
-        <h3>BOM<button class="btn btn-primary" style="float:right; border-radius:0px; margin-left:3px;">Search</button><input type="text" class="form form-control" id="searchBOM" name="serachBOM" style="float:right; width:150px; border-radius:0px;" /></h3>
-      
+        <h3>BOM<button class="btn btn-primary" onclick="DisplayBOM();" style="float:right; border-radius:0px; margin-left:3px;">Search</button><input type="text" class="form form-control" id="searchBOM" name="serachBOM" style="float:right; width:150px; border-radius:0px;" /></h3>
         <hr />
-        <div class="row" id="BomContainer">
-            <!--내용 Container-->
+        <div class="row" id="ProductInfoContainer" style="height:200px; margin-left:1%; margin-right:1%;">
+            <div class="col-md-12" id="">
+                <div class="form-group row" style="padding-left:20px; padding-top:20px; border:1px solid gray; background-color:white; height:130px;">
+                    <label for="productNumber" class="col-1 col-form-label">Number : </label>
+                    <div class="col-3">
+                        <input type="text" readonly class="form-control" id="productNumber" name="productNumber" style="width:100%;" value="">
+                    </div>
+                    <label for="productGroup" class="col-1 col-form-label">Group : </label>
+                    <div class="col-3">
+                        <input type="text" readonly class="form-control" id="productGroup" name="productGroup" value="">
+                    </div>
+                    <label for="productSubGroup" class="col-1 col-form-label" style="font-size:14px;"> Sub Group : </label>
+                    <div class="col-3">
+                        <input type="text" readonly class="form-control" id="productSubGroup" name="productSubGroup" value="">
+                    </div>
+                    <label for="productType" class="col-1 col-form-label">Type :</label>
+                    <div class="col-3">
+                        <input type="text" readonly class="form-control" id="productType" name="productType" style="width:100%;" value="">
+                    </div>
+                    <label for="createUser" class="col-1 col-form-label">User : </label>
+                    <div class="col-3">
+                        <input type="text" readonly class="form-control" id="createUser" name="createUser" value="">
+                    </div>
+                    <label for="description" class="col-1 col-form-label">Description : </label>
+                    <div class="col-3">
+                        <input type="text" readonly class="form-control" id="description" name="description" value="">
+                    </div>
+                </div>
+                <div class="row" style="float:right; margin-top: 5px;">
+                    <label id="minusBtn" class="btn btn-danger" style="float:right; border-radius:0px; margin-right:5px;" onclick="minusStructure();"><i class="fa fa-minus"></i></label>
+                    <label id="plusBtn" class="btn btn-warning" style="float:right; border-radius:0px; margin-right:5px;" onclick="plusStructure();"><i class="fa fa-plus"></i></label>
+                    <label id="plusBtn" class="btn btn-info" style="float:right; border-radius:0px; margin-right:0px;" onclick="saveBOM();"><i class="fa fa-save"></i></label>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="BomContainer" style="margin-top:5px;">
+            <table class="table table-striped table-bordered table-hover header-fixed" id="BOMLst" name="BOMLst" style="text-align:center; width:90%; margin-left:5%;">
+                <thead>
+                    <tr>
+                        <th width="10%">Number</th>
+                        <th width="10%">Count</th>
+                        <th width="10%">Group</th>
+                        <th width="15%">Sub Group</th>
+                        <th width="10%">Type</th>
+                        <th width="20%">Description</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
     </div>
     <div class="col-md-2 col-lg-2"></div>
 </div>
 
 <script>
+
     $(document).ready(function () {
-           
+
+
+        $(".btn").mousedown(function (e) {
+            e.preventDefault();
+        })
+
+
+        if (@Model.ProductNumber!= 0) {
+            $('#searchBOM').val(@Model.ProductNumber);
+            DisplayProductInfo();
+            DisplayBOM();
+        }
+
     });
+
+
+
+    function saveBOM() {
+        var bomLst = [];
+        var parentProductNumber = $('#productNumber').val();
+        $('#BOMLst > tbody > tr').each(function () {
+            var count = $(this).find('td:eq(1) > input').val();
+            var childProductNumber = $(this).find('td:eq(0) >input').val();
+            bomLst.push({ "ParentProductNumber" : parentProductNumber, "ChildProductNumber" : childProductNumber, "Count" : count });
+        })
+       
+        $.ajax({
+            type: "POST",
+            url: "/api/BOM/",
+            data: "name=John&location=Boston",
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            data: JSON.stringify(bomLst),
+            success: function (response) {
+
+            }
+        });
+    }
+  
+
+    function DisplayProductInfo() {
+        $('#createUser').val('@Model.CreateUserName');
+        $('#productNumber').val(@Model.ProductNumber);
+        $('#productGroup').val('@Model.ProductGroupName');
+        $('#productSubGroup').val('@Model.ProductSubGroupName');
+        $('#productType').val('@Model.ProductTypeName');
+        $('#description').val('@Model.Description');
+    }
+
+    var index = 1;
+    function plusStructure() {
+        $(this).keyup();
+        var data = "<tr><td width=\"10.2%\">" + "<input type='text' class='form-control' id='" + index + "'>" + "</td>";
+        data += "<td width=\"10.2%\">" + "<input type='text' class='form-control'>" + "</td>";
+        data += "<td width=\"10.2%\"> " + "<input type='text' class='form-control' readonly>" + "</td >";
+        data += "<td width=\"15.3%\"> " + "<input type='text' class='form-control' readonly>" + "</td>";
+        data += "<td width=\"10.2%\">" + "<input type='text' class='form-control' readonly>" + "</td>";
+        data += "<td width=\"19.5%\">" + "<input type='text' class='form-control' readonly>" + "</td>";
+        data += "</tr>";
+        $('#BOMLst').append(data);
+        $('#BOMLst > tbody > tr').find('td:first #'+index).focusout(function () {
+            var $this = $(this);
+            var productNumber = $(this).val();
+            $.ajax({
+                type: "GET",
+                url: "/api/Product/" + productNumber,
+                contentType: 'application/json; charset=utf-8',
+                dataType: "json",
+                success: function (response) {
+                    $this.parent().parent().find('td:eq(2) > input').val(response.ProductGroupName);
+                    $this.parent().parent().find('td:eq(3) > input').val(response.ProductSubGroupName);
+                    $this.parent().parent().find('td:eq(4) > input').val(response.ProductTypeName);
+                    $this.parent().parent().find('td:eq(5) > input').val(response.Description);
+                }
+            });
+        })
+        index++;
+    }
+
+
+    function minusStructure() {
+        $('#BOMLst > tbody > tr:last').remove();
+    }
+
+    function DisplayBOM() {
+        $('#BOMLst > tbody').html('');
+        var productNumber = $('#searchBOM').val();
+        $.ajax({
+            type: "GET",
+            url: "/api/Product/" + productNumber,
+            contentType: 'application/json; charset=utf-8',
+            dataType: "json",
+            success: function (response) {
+                 $('#createUser').val(response.CreateUserName);
+                 $('#productNumber').val(response.ProductNumber);
+                 $('#productGroup').val(response.ProductGroupName);
+                 $('#productSubGroup').val(response.ProductSubGroupName);
+                 $('#productType').val(response.ProductTypeName);
+                 $('#description').val(response.Description);
+
+                // 전체 BOM 출력 구문
+            },
+            error: function (xhr, ajaxOptions, thrownErorr) {
+                window.location.href = '/Board/BOM?productNumber=' + null;
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "/api/BOM/" + productNumber,
+            contentType: 'application/json; charset=utf-8',
+            data: "name=John&location=Boston",
+            dataType: "json",
+            async: false,
+            success: function (response) {
+                $.each(response, function (key, value) {
+                    var count = value.Count;
+                    var productNumber = value.ChildProductNumber; 
+
+                    $.ajax({
+                        type: "GET",
+                        url: "/api/Product/" + productNumber,
+                        contentType: 'application/json; charset=utf-8',
+                        data: "name=John&location=Boston",
+                        dataType: "json",
+                        async: false,
+                        success: function (response) {
+                            var data = "<tr><td width=\"10.2%\"><input type='text' class='form-control' value=\"" + productNumber +  "\">" + "</td>";
+                            data += "<td width=\"10.2%\"><input type='text' class='form-control' value=\"" + count + "\">" + "</td>";
+                            data += "<td width=\"10.2%\"><input type='text' class='form-control' readonly value=\"" + response.ProductGroupName + "\">" + "</td >";
+                            data += "<td width=\"15.3%\"><input type='text' class='form-control' readonly value=\"" + response.ProductSubGroupName + "\">" + "</td>";
+                            data += "<td width=\"10.2%\"><input type='text' class='form-control' readonly value=\"" + response.ProductTypeName + "\">" + "</td>";
+                            data += "<td width=\"19.5%\"><input type='text' class='form-control' readonly value=\"" + response.Description + "\">" + "</td>";
+                            data += "</tr>";
+                            $('#BOMLst').append(data);
+                        }
+                    });
+                }) 
+            }
+        });
+    }
+
+  
 </script>

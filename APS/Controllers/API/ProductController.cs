@@ -14,9 +14,13 @@ namespace APS.Controllers.API
         ProductRepository productRepo = new ProductRepository();
 
         // GET: api/Product
-        public void Get()
+        [Route("api/Product/{productNumber}")]
+        public Product Get(int productNumber)
         {
-            return;
+            Product p = productRepo.GetProductByProductNumber(productNumber);
+            var result = productRepo.GetProductData(p);
+
+            return result;
         }
 
         // GET: api/Product/5
@@ -49,8 +53,12 @@ namespace APS.Controllers.API
         }
 
         // DELETE: api/Product/5
-        public void Delete(int id)
+        [Route("api/Product/{id}")]
+        public int Delete(int id)
         {
+            var result = productRepo.RemoveProduct(id);
+
+            return result;
         }
     }
 }
