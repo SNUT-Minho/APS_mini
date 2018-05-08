@@ -107,6 +107,7 @@
     <Build Include="dbo\Stored Procedures\BOM\DeleteBOM.sql" />
     <Build Include="dbo\Stored Procedures\BOM\GetAllBOM.sql" />
     <Build Include="dbo\Stored Procedures\Product\RemoveProduct.sql" />
+    <Build Include="dbo\Stored Procedures\Product\CheckProductNumer.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="APS.Database.publish.Test.xml" />

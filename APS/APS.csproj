@@ -185,6 +185,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\API\BOMController.cs" />
     <Compile Include="Controllers\API\CompanyController.cs" />
+    <Compile Include="Controllers\API\ExcelController.cs" />
     <Compile Include="Controllers\API\MemoController.cs" />
     <Compile Include="Controllers\API\ProductController.cs" />
     <Compile Include="Controllers\API\ProductGroupController.cs" />

@@ -2,6 +2,9 @@
 @{
     ViewBag.Title = "APSmini";
 }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.7.7/xlsx.core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xls/0.7.4-a/xls.core.min.js"></script>
+
 <style>
 
     @@media (min-width: 400px) and (max-width: 1800px) {
@@ -20,7 +23,7 @@
         width: 100%;
     }
 
-    
+
     label.error {
         color: red;
     }
@@ -51,7 +54,6 @@
 
     table tbody {
         display: block;
-
         overflow-y: scroll;
     }
 
@@ -67,9 +69,7 @@
         <!--Header-->
         <h3>
             Product
-            <button data-target="#" data-toggle="modal" class="btn btn-info" style="float:right;" id="uploadExcel" name="uploadExcel">
-                <i class="fa fa-file-excel-o"></i>
-            </button>
+            <button data-target="#excelModal" data-toggle="modal" class="btn btn-info" style="float:right;" id="uploadExcel" name="uploadExcel"><i class="fa fa-file-excel-o"></i></button>
             <button data-target="#myModal" data-toggle="modal" class="btn btn-primary" style="float:right; margin-right:5px;" id="createProduct" name="createProduct">품목 생성</button>
             <button data-target="#" data-toggle="modal" class="btn btn-danger" style="float:right; margin-right:5px;" id="deleteProduct" name="deleteProduct" onclick="removeProduct();">품목 삭제</button>
         </h3>
@@ -131,16 +131,14 @@
                         <th width="15%">Routing</th>
                     </tr>
                 </thead>
-                <tbody>
-
-                </tbody>
+                <tbody></tbody>
             </table>
             <!--Product 리스트 테이블-->
         </div>
     </div>
     <div class="col-md-2 col-lg-2"></div>
 </div>
-
+<table id="exceltable"></table>
 <!--Order Rule 생성은 관리자에게 문의하세요-->
 <div class="modal fade" id="Warning" tabindex="-1" role="dialog" aria-labelledby="Warning-label">
     <div class="modal-dialog" role="document">
@@ -234,6 +232,54 @@
     </div>
 </div>
 <!--Type 관리-->
+<!--Excel Upload-->
+<div class="modal fade" id="excelModal" tabindex="-1" role="dialog" aria-labelledby="uploadExcel-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="uploadExcel-label">Upload Product List</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-excelmodal">
+                    <!--upload File-->
+                    <input type="file" name="excelfile" id="excelfile" value="" />
+                    <!--upload File-->
+                    <hr />
+                    <!-- Group-->
+                    <div class="form-group">
+                        <label class="control-label" for="ExcelGroupLst">Group &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : </label>
+                        <select class="custom-select" id="ExcelGroupLst" name="ExcelGroupLst" style="max-width:50%; margin-left:7px;" onchange="bindExcelSubData();" maxlength="115" autofocus>
+                            <option style="padding-left:10px;" value="">제품 그룹을 선택하세요</option>
+                        </select>
+                    </div>
+                    <!-- Group-->
+                    <!-- Sub Group-->
+                    <div class="form-group">
+                        <label class="control-label" for="ExcelSubGroupLst">Sub Group &nbsp;&nbsp;&nbsp; : </label>
+                        <select class="custom-select" id="ExcelSubGroupLst" name="ExcelSubGroupLst" style="max-width:50%; margin-left:7px;" maxlength="115" disabled>
+                            <option style="padding-left:10px;" value="">서브그룹을 선택하세요</option>
+                        </select>
+                    </div>
+                    <!-- Sub Group-->
+                    <!-- Type-->
+                    <div class="form-group">
+                        <label class="control-label" for="ExcelTypeLst">Type &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : </label>
+                        <select class="custom-select" id="ExcelTypeLst" name="ExcelTypeLst" style="max-width:50%; margin-left:7px;" maxlength="115" autofocus>
+                            <option style="padding-left:10px;" value="">제품 타입을 선택하세요</option>
+                        </select>
+                    </div>
+                    <!-- Type-->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="excelClose" onclick="clearProduct();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="exportToTable();">Save</button>
+                <table id="exceltable"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Excel Upload-->
 <!--Modal(새 품목 생성)-->
 <div class="modal fade" draggable="true" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal-label">
     <div class="modal-dialog" role="document">
@@ -299,8 +345,34 @@
 
 <script>
     $(document).ready(function () {
-       
 
+
+
+            // New Group Modal Validation
+        $('#form-excelmodal').validate({
+            rules: {
+                ExcelGroupLst: {
+                    required: true
+                },
+                ExcelSubGroupLst: {
+                    required: true
+                },
+                ExcelTypeLst: {
+                    required: true
+                }
+            },
+             messages: {
+                 ExcelGroupLst: {
+                     required: ""
+                 },
+                 ExcelSubGroupLst: {
+                     required: ""
+                 },
+                 ExcelTypeLst: {
+                     required: ""
+                 }
+            }
+        });
 
         // New Group Modal Validation
         $('#form-groupmodal').validate({
@@ -422,6 +494,11 @@
             $('#ModalSubGroupLst').prop('disabled', true);
         });
 
+        // Excel Import Modal auto focus
+        $('#excelModal').on('shown.bs.modal', function () {
+            $('#ExcelSubGroupLst').prop('disabled', true);
+        });
+
 
         // Trigger when window close
         $(window).on('beforeunload', function () {
@@ -447,6 +524,7 @@
                     var productGroup = "<option value=\"" + value.ProductGroupID + "\" >" + value.ProductGroupName + "</option>";
                     $('#GroupLst').append(productGroup);
                     $('#ModalGroupLst').append(productGroup);
+                    $('#ExcelGroupLst').append(productGroup);
                 })
             }
         });
@@ -465,6 +543,7 @@
                     var productType = "<option value=\"" + value.ProductTypeID + "\" >" + value.ProductTypeName + "</option>";
                     $('#TypeLst').append(productType);
                     $('#ModalTypeLst').append(productType);
+                    $('#ExcelTypeLst').append(productType);
                 })
             }
         });
@@ -518,10 +597,137 @@
                 var productGroup = "<option value=\"" + response.ProductGroupID + "\" >" + response.ProductGroupName + "</option>";
                 $('#GroupLst').append(productGroup);
                 $('#ModalGroupLst').append(productGroup);
+                $('#ExcelGroupLst').append(productGroup);
                 $('#GroupModalClose').click();
             }
         });
     };
+
+
+    function exportToTable() {
+        var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/;
+        /*Checks whether the file is a valid excel file*/
+        if (regex.test($("#excelfile").val().toLowerCase())) {
+            var xlsxflag = false; /*Flag for checking whether excel is .xls format or .xlsx format*/
+            if ($("#excelfile").val().toLowerCase().indexOf(".xlsx") > 0) {
+                xlsxflag = true;
+            }
+            /*Checks whether the browser supports HTML5*/
+            if (typeof (FileReader) != "undefined") {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var data = e.target.result;
+                    /*Converts the excel data in to object*/
+                    if (xlsxflag) {
+                        var workbook = XLSX.read(data, { type: 'binary' });
+                    }
+                    else {
+                        var workbook = XLS.read(data, { type: 'binary' });
+                    }
+                    /*Gets all the sheetnames of excel in to a variable*/
+                    var sheet_name_list = workbook.SheetNames;
+                    var cnt = 0; /*This is used for restricting the script to consider only first sheet of excel*/
+                    sheet_name_list.forEach(function (x) { /*Iterate through all sheets*/
+                        /*Convert the cell value to Json*/
+                        if (xlsxflag) {
+                            var exceljson = XLSX.utils.sheet_to_json(workbook.Sheets[x]);
+                        }
+                        else {
+                            var exceljson = XLS.utils.sheet_to_row_object_array(workbook.Sheets[x]);
+                        }
+                        if (exceljson.length > 0 && cnt == 0) {
+                            BindTable(exceljson, '#exceltable');
+                            cnt++;
+                        }
+                    });
+                    $('#exceltable').show();
+                }
+                if (xlsxflag) {/*If excel file is .xlsx extension than creates a Array Buffer from excel*/
+                    reader.readAsArrayBuffer($("#excelfile")[0].files[0]);
+                }
+                else {
+                    reader.readAsBinaryString($("#excelfile")[0].files[0]);
+                }
+            }
+            else {
+                alert("Sorry! Your browser does not support HTML5!");
+            }
+        }
+        else {
+            alert("Please upload a valid Excel file!");
+        }
+    }
+
+    function BindTable(jsondata, tableid) {/*Function used to convert the JSON array to Html Table*/
+        var columns = BindTableHeader(jsondata, tableid); /*Gets all the column headings of Excel*/
+        var productGroupID = $('#ExcelGroupLst').val();
+        var productSubGroupID = $('#ExcelSubGroupLst').val();
+        var productTypeID = $('#ExcelTypeLst').val();
+        var productLst = [];
+        for (var i = 0; i < jsondata.length; i++) {
+            // push to productLst (Excel to array)
+            var productNumber;
+            var description;
+            for (var colIndex = 0; colIndex < columns.length; colIndex++) {
+                var cellValue = jsondata[i][columns[colIndex]];
+                if (cellValue == null) {
+                    cellValue = "";
+                }
+                if (colIndex == 0) {
+                    productNumber = cellValue;
+                } else {
+                    description = cellValue;
+                }
+            }
+             productLst.push( { "ProductNumber" :  productNumber , "Description" : description , "ProductGroupID" : productGroupID , "ProductSubGroupID" : productSubGroupID , "ProductTypeID" : productTypeID , "GroupUID" :  @Session["GroupUID"] , "UID" :  @Session["UID"]});
+        }
+        // check validation of excel selectors
+        var count = 0;
+        if ($('#ExcelGroupLst').valid() == false) {
+            count++;
+        }
+        if ($('#ExcelSubGroupLst').valid() == false) {
+            count++;
+        }
+        if ($('#ExcelTypeLst').valid() == false) {
+            count++;
+        }
+        if (count > 0) {
+            return false;
+        }
+        // api/Excel + "POST"
+        $.ajax({
+            type: "POST",
+            url: "/api/Excel/",
+            dataType: "json",
+            data: JSON.stringify(productLst),
+            contentType: 'application/json; charset=utf-8',
+            success: function (value) {
+                if (value == false) {
+                    alert('중복된 품목번호가 있습니다. 품목 리스트를 확인해주시기 바랍니다.');
+                    return false;
+                } else { 
+                    $('#excelClose').click();
+                    window.location.href = '/Board/Product/';
+                }
+            }
+        });
+    }
+
+    function BindTableHeader(jsondata, tableid) {/*Function used to get all column names from JSON and bind the html table header*/
+        var columnSet = [];
+        for (var i = 0; i < jsondata.length; i++) {
+            var rowHash = jsondata[i];
+            for (var key in rowHash) {
+                if (rowHash.hasOwnProperty(key)) {
+                    if ($.inArray(key, columnSet) == -1) {/*Adding each unique column names to a variable array*/
+                        columnSet.push(key);
+                    }
+                }
+            }
+        }
+        return columnSet;
+    }
 
 
     // Create New Sub Group API with (ProductGroup Controller)
@@ -701,16 +907,52 @@
         }
     }
 
+    // Bind Excel Sub GroupLst by selected Index of Modal GroupLst API with (ProductGroup Controller)
+    function bindExcelSubData() {
+        // get Selected index of Modal GroupLst
+        var index = $('#ExcelGroupLst').val();
+        if (index == "") {
+            $('#ExcelSubGroupLst').prop('disabled', true);
+            $('#ExcelTypeLst').val('');
+            $('#ExcelSubGroupLst').val('');
+        } else {
+            $('#ExcelSubGroupLst').prop('disabled', false);
+            $('#ExcelSubGroupLst').html('');
+            var parentProductGroupID = index;
+            var groupUID = @Session["GroupUID"];
+            var initial = "<option value=\"\">" + "서브 그룹을 선택하세요" + "</option>";
+            $('#ExcelSubGroupLst').append(initial);
+            // api/ProductGroup + "GET"
+            $.ajax({
+                type: "GET",
+                url: "/api/ProductGroup/" + groupUID + "/" + parentProductGroupID,
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    $.each(response, function (key, value) {
+                         // Bind Modal Sub GroupLst Data
+                        var productGroup = "<option value=\"" + value.ProductGroupID + "\" >" + value.ProductGroupName + "</option>";
+                        $('#ExcelSubGroupLst').append(productGroup);
+                     })
+                 }
+            });
+        }
+    }
 
     // Clear Modal Create Product Form
     function clearProduct() {
+        $('#excelfile').val('');
+
+        $('#form-excelmodal').validate().resetForm();
         $('#form-createproductemodal').validate().resetForm();
         $('#ProductNumber').val('');
         $('#Description').val('');
         $('#ModalGroupLst').val('');
+        $('#ExcelGroupLst').val('');
 
         // For remove bug of jquery Validation
         $('#ModalSubGroupLst').html('');
+        $('#ExcelSubGroupLst').val('');
         var initial = "<option value=\"\">" + "서브 그룹을 선택하세요" + "</option>";
         $('#ModalSubGroupLst').append(initial);
         $('#ModalSubGroupLst').val('');
@@ -718,11 +960,33 @@
         $('#ModalSubGroupLst').validate().resetForm();
 
         $('#ModalTypeLst').val('');
+        $('#ExcelTypeLst').val('');
     };
 
 
      // Create New Product API with (Product Controller)
     function createProduct() {
+        var productNumber = $('#ProductNumber').val();
+        var flag = false;
+        // check ProductNumber is valid
+        $.ajax({
+            type: "GET",
+            async: false,
+            url: "/api/Product/" + productNumber,
+            contentType: 'application/json; charset=utf-8',
+            dataType: "json",
+            success: function (response) {
+                if (response != null) {
+                    alert('이미 존재하는 번호입니다. 품번을 확인해주세요.');
+                    flag = true;
+                }
+            }
+        });
+
+        if (flag) {
+            return false;
+        }
+
         // check Modal Input From Validation
         var count = 0;
         if ($('#ProductNumber').valid() == false) {
@@ -744,7 +1008,7 @@
             return false;
         }
         // Get New Prodct Data (Number / Description / Group / Sub Group / Type)
-        var productNumber = $('#ProductNumber').val();
+       
         var description = $('#Description').val();
         var productGroupID = $('#ModalGroupLst').val();
         var productSubGroupID = $('#ModalSubGroupLst').val();
@@ -758,7 +1022,7 @@
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
             success: function (value) {
-                var data = "<tr onclick=\"SelectTR();\"><td width=\"10.2%\" id=\"" + value.ProductNumber + "\">" + value.ProductNumber + "</td>";
+                var data = "<tr><td width=\"10.2%\" id=\"" + value.ProductNumber + "\">" + value.ProductNumber + "</td>";
                 data += "<td width=\"10.2%\">" + value.ProductGroupName + "</td>";
                 data += "<td width=\"15.2%\"> " + value.ProductSubGroupName + "</td>";
                 data += "<td width=\"10.2%\">" + value.ProductTypeName + "</td>";
@@ -791,7 +1055,7 @@
     function removeProduct() {
 
         $('#ProductLst').find('tbody > tr > td:first-child.table-danger').each(function () {
-  
+
             var id = $(this).attr('id');
             $.ajax({
                 type: "DELETE",
@@ -799,17 +1063,17 @@
                 data: "name=John&location=Boston",
                 dataType: "json",
                 success: function (data, statusText) {
-                  
+
                 },
                 error: function (request, textStatus, error) {
-                  
+
                 }
             });
         });
         DisplayProduct();
     }
- 
-  
+
+
 
 </script>
 

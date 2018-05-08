@@ -110,6 +110,18 @@ namespace APS.Models.Repositories
             return result;
         }
 
+        public int checkProductNumber(Product product)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@GroupUID", product.GroupUID);
+            parameters.Add("@ProductNumber", product.ProductNumber);
+            parameters.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+            db.Execute("CheckProductNumer", parameters, commandType: CommandType.StoredProcedure);
+
+            return parameters.Get<int>("@Result");
+        }
+
         public Product CreateProduct(Product product)
         {
             DynamicParameters parameters = new DynamicParameters();
