@@ -1,4 +1,7 @@
 ﻿@model APS.Models.Views.Product
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.7.7/xlsx.core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xls/0.7.4-a/xls.core.min.js"></script>
+
 <style>
     @@media (min-width: 400px) and (max-width: 1800px) {
         table tbody {
@@ -64,7 +67,8 @@
                 <div class="row" style="float:right; margin-top: 5px;">
                     <label id="minusBtn" class="btn btn-danger" style="float:right; border-radius:0px; margin-right:5px;" onclick="minusStructure();"><i class="fa fa-minus"></i></label>
                     <label id="plusBtn" class="btn btn-warning" style="float:right; border-radius:0px; margin-right:5px;" onclick="plusStructure();"><i class="fa fa-plus"></i></label>
-                    <label id="plusBtn" class="btn btn-info" style="float:right; border-radius:0px; margin-right:0px;" onclick="saveBOM();"><i class="fa fa-save"></i></label>
+                    <label id="plusBtn" class="btn btn-success" style="float:right; border-radius:0px; margin-right:5px;" onclick="saveBOM();"><i class="fa fa-save"></i></label>
+                    <label data-target="#excelModal" data-toggle="modal" class="btn btn-info" style="float:right; border-radius:0px;" id="uploadExcel" name="uploadExcel"><i class="fa fa-file-excel-o"></i></label>
                 </div>
             </div>
         </div>
@@ -86,16 +90,37 @@
     </div>
     <div class="col-md-2 col-lg-2"></div>
 </div>
-
+<!--Excel Upload-->
+<div class="modal fade" id="excelModal" tabindex="-1" role="dialog" aria-labelledby="uploadExcel-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="uploadExcel-label">Upload BOM Lst</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-excelmodal">
+                    <!--upload File-->
+                    <input type="file" name="excelfile" id="excelfile" value="" />
+                    <!--upload File-->
+                    <hr />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="excelClose" onclick="">Close</button>
+                <button type="button" class="btn btn-primary" onclick="exportToBOM();">Save</button>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<!--Excel Upload-->
 <script>
 
     $(document).ready(function () {
 
-
         $(".btn").mousedown(function (e) {
             e.preventDefault();
         })
-
 
         if (@Model.ProductNumber!= 0) {
             $('#searchBOM').val(@Model.ProductNumber);
@@ -106,6 +131,118 @@
     });
 
 
+    function exportToBOM() {
+        var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/;
+        /*Checks whether the file is a valid excel file*/
+        if (regex.test($("#excelfile").val().toLowerCase())) {
+            var xlsxflag = false; /*Flag for checking whether excel is .xls format or .xlsx format*/
+            if ($("#excelfile").val().toLowerCase().indexOf(".xlsx") > 0) {
+                xlsxflag = true;
+            }
+            /*Checks whether the browser supports HTML5*/
+            if (typeof (FileReader) != "undefined") {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var data = e.target.result;
+                    /*Converts the excel data in to object*/
+                    if (xlsxflag) {
+                        var workbook = XLSX.read(data, { type: 'binary' });
+                    }
+                    else {
+                        var workbook = XLS.read(data, { type: 'binary' });
+                    }
+                    /*Gets all the sheetnames of excel in to a variable*/
+                    var sheet_name_list = workbook.SheetNames;
+                    var cnt = 0; /*This is used for restricting the script to consider only first sheet of excel*/
+                    sheet_name_list.forEach(function (x) { /*Iterate through all sheets*/
+                        /*Convert the cell value to Json*/
+                        if (xlsxflag) {
+                            var exceljson = XLSX.utils.sheet_to_json(workbook.Sheets[x]);
+                        }
+                        else {
+                            var exceljson = XLS.utils.sheet_to_row_object_array(workbook.Sheets[x]);
+                        }
+                        if (exceljson.length > 0 && cnt == 0) {
+                            BindTable(exceljson);
+                            cnt++;
+                        }
+                    });
+         
+                }
+                if (xlsxflag) {/*If excel file is .xlsx extension than creates a Array Buffer from excel*/
+                    reader.readAsArrayBuffer($("#excelfile")[0].files[0]);
+                }
+                else {
+                    reader.readAsBinaryString($("#excelfile")[0].files[0]);
+                }
+            }
+            else {
+                alert("Sorry! Your browser does not support HTML5!");
+            }
+        }
+        else {
+            alert("Please upload a valid Excel file!");
+        }
+    }
+
+    function BindTable(jsondata) {/*Function used to convert the JSON array to Html Table*/
+        var columns = BindTableHeader(jsondata); /*Gets all the column headings of Excel*/
+       
+        var bomLst = [];
+        var parentProductNumber;
+        for (var i = 0; i < jsondata.length; i++) {
+            // push to productLst (Excel to array)
+            var description;
+            var childProductNumber;
+            var count;
+            for (var colIndex = 0; colIndex < columns.length; colIndex++) {
+                var cellValue = jsondata[i][columns[colIndex]];
+                if (cellValue == null) {
+                    cellValue = "";
+                }
+                if (colIndex == 1 && cellValue == 999) {
+                    parentProductNumber = jsondata[i][columns[colIndex - 1]];
+                    count = 999;
+                } else {
+                    if (colIndex == 0) {
+                        childProductNumber = cellValue;
+                    } else {
+                        count = cellValue;
+                    }
+                }
+            }
+            bomLst.push({ "ParentProductNumber": parentProductNumber, "ChildProductNumber": childProductNumber, "Count": count });
+        }
+        
+        $.ajax({
+            type: "POST",
+            url: "/api/BOM/",
+            data: "name=John&location=Boston",
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            data: JSON.stringify(bomLst),
+            success: function (response) {
+
+                $('#excelClose').click();
+                window.location.href = '/Board/BOM/';
+            }
+        });
+    }
+
+    function BindTableHeader(jsondata) {/*Function used to get all column names from JSON and bind the html table header*/
+        var columnSet = [];
+        for (var i = 0; i < jsondata.length; i++) {
+            var rowHash = jsondata[i];
+            for (var key in rowHash) {
+                if (rowHash.hasOwnProperty(key)) {
+                    if ($.inArray(key, columnSet) == -1) {/*Adding each unique column names to a variable array*/
+                        columnSet.push(key);
+                    }
+                }
+            }
+        }
+        return columnSet;
+    }
 
     function saveBOM() {
         var bomLst = [];
@@ -115,7 +252,7 @@
             var childProductNumber = $(this).find('td:eq(0) >input').val();
             bomLst.push({ "ParentProductNumber" : parentProductNumber, "ChildProductNumber" : childProductNumber, "Count" : count });
         })
-       
+
         $.ajax({
             type: "POST",
             url: "/api/BOM/",
@@ -128,7 +265,7 @@
             }
         });
     }
-  
+
 
     function DisplayProductInfo() {
         $('#createUser').val('@Model.CreateUserName');
@@ -207,7 +344,7 @@
             success: function (response) {
                 $.each(response, function (key, value) {
                     var count = value.Count;
-                    var productNumber = value.ChildProductNumber; 
+                    var productNumber = value.ChildProductNumber;
 
                     $.ajax({
                         type: "GET",
@@ -227,10 +364,10 @@
                             $('#BOMLst').append(data);
                         }
                     });
-                }) 
+                })
             }
         });
     }
 
-  
+
 </script>

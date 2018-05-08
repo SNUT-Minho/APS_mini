@@ -29,17 +29,21 @@ namespace APS.Controllers.API
         }
 
         // POST: api/BOM
-        
+
         public void Post(List<BOM> bomLst)
         {
             int i = 1;
             foreach (var item in bomLst)
             {
-                if(i == 1)
+                if (i == 1 || item.Count == 999)
                 {
                     productRepo.DeletBOM(item);
-                    i++;
+                    if (item.Count == 999)
+                    {
+                        continue;
+                    }
                 }
+                i++;
                 productRepo.CreateBOM(item);
             }
         }

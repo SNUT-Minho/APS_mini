@@ -273,7 +273,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="excelClose" onclick="clearProduct();">Close</button>
-                <button type="button" class="btn btn-primary" onclick="exportToTable();">Save</button>
+                <button type="button" class="btn btn-primary" onclick="exportToSQL();">Save</button>
                 <table id="exceltable"></table>
             </div>
         </div>
@@ -604,7 +604,7 @@
     };
 
 
-    function exportToTable() {
+    function exportToSQL() {
         var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/;
         /*Checks whether the file is a valid excel file*/
         if (regex.test($("#excelfile").val().toLowerCase())) {
@@ -706,7 +706,7 @@
                 if (value == false) {
                     alert('중복된 품목번호가 있습니다. 품목 리스트를 확인해주시기 바랍니다.');
                     return false;
-                } else { 
+                } else {
                     $('#excelClose').click();
                     window.location.href = '/Board/Product/';
                 }
@@ -1008,7 +1008,7 @@
             return false;
         }
         // Get New Prodct Data (Number / Description / Group / Sub Group / Type)
-       
+
         var description = $('#Description').val();
         var productGroupID = $('#ModalGroupLst').val();
         var productSubGroupID = $('#ModalSubGroupLst').val();
