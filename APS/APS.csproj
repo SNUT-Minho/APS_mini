@@ -186,21 +186,31 @@
     <Compile Include="Controllers\API\BOMController.cs" />
     <Compile Include="Controllers\API\CompanyController.cs" />
     <Compile Include="Controllers\API\ExcelController.cs" />
+    <Compile Include="Controllers\API\ImageController.cs" />
     <Compile Include="Controllers\API\MemoController.cs" />
     <Compile Include="Controllers\API\ProductController.cs" />
     <Compile Include="Controllers\API\ProductGroupController.cs" />
     <Compile Include="Controllers\API\ProductTypeController.cs" />
     <Compile Include="Controllers\API\UserController.cs" />
+    <Compile Include="Controllers\API\WorkStationController.cs" />
     <Compile Include="Controllers\MVC\AccountController.cs" />
     <Compile Include="Controllers\MVC\BoardController.cs" />
     <Compile Include="Controllers\MVC\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="ImageDown.aspx.cs">
+      <DependentUpon>ImageDown.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ImageDown.aspx.designer.cs">
+      <DependentUpon>ImageDown.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Models\Repositories\CompanyRepository.cs" />
     <Compile Include="Models\Repositories\MemoRepository.cs" />
     <Compile Include="Models\Repositories\ProductRepository.cs" />
     <Compile Include="Models\Repositories\UserRepository.cs" />
+    <Compile Include="Models\Repositories\WorkStationRepo.cs" />
     <Compile Include="Models\Views\BOM.cs" />
     <Compile Include="Models\Views\Company.cs" />
     <Compile Include="Models\Views\Memo.cs" />
@@ -208,6 +218,7 @@
     <Compile Include="Models\Views\ProductGroup.cs" />
     <Compile Include="Models\Views\ProductType.cs" />
     <Compile Include="Models\Views\User.cs" />
+    <Compile Include="Models\Views\WorkStation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -287,6 +298,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="ClassDiagram1.cd" />
+    <Content Include="ImageDown.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -369,7 +381,6 @@
     <Content Include="Views\Board\Memo.cshtml" />
     <Content Include="Views\Board\Schedule.cshtml" />
     <Content Include="Views\Board\LineCapacity.cshtml" />
-    <Content Include="Views\Board\Worker.cshtml" />
     <Content Include="Views\Board\Routing.cshtml" />
     <Content Include="Views\Board\WorkStation.cshtml" />
     <Content Include="Views\Board\Product.cshtml" />
@@ -391,6 +402,12 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\index.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Dul\Dul.csproj">
+      <Project>{e49f0469-5037-45b7-81ac-86c95f0be35d}</Project>
+      <Name>Dul</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

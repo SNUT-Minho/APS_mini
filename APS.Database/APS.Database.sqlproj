@@ -68,6 +68,7 @@
     <Folder Include="dbo\Tables\DashBoard" />
     <Folder Include="dbo\Stored Procedures\Product" />
     <Folder Include="dbo\Stored Procedures\BOM" />
+    <Folder Include="dbo\Stored Procedures\WorkStation" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Views\Users.sql" />
@@ -108,6 +109,11 @@
     <Build Include="dbo\Stored Procedures\BOM\GetAllBOM.sql" />
     <Build Include="dbo\Stored Procedures\Product\RemoveProduct.sql" />
     <Build Include="dbo\Stored Procedures\Product\CheckProductNumer.sql" />
+    <Build Include="dbo\Tables\DashBoard\WorkStation.sql" />
+    <Build Include="dbo\Stored Procedures\WorkStation\CreateWorkStation.sql" />
+    <Build Include="dbo\Stored Procedures\WorkStation\GetAllWorkStation.sql" />
+    <Build Include="dbo\Stored Procedures\WorkStation\DeleteWorkStation.sql" />
+    <Build Include="dbo\Stored Procedures\WorkStation\UpdateWorkStationOrder.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="APS.Database.publish.Test.xml" />

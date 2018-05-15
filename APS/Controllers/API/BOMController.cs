@@ -37,7 +37,7 @@ namespace APS.Controllers.API
             {
                 if (i == 1 || item.Count == 999)
                 {
-                    productRepo.DeletBOM(item);
+                    productRepo.DeletBOM(item.ParentProductNumber);
                     if (item.Count == 999)
                     {
                         continue;
@@ -56,6 +56,7 @@ namespace APS.Controllers.API
         // DELETE: api/BOM/5
         public void Delete(int id)
         {
+            productRepo.DeletBOM(id);
         }
     }
 }

@@ -252,6 +252,19 @@
             var childProductNumber = $(this).find('td:eq(0) >input').val();
             bomLst.push({ "ParentProductNumber" : parentProductNumber, "ChildProductNumber" : childProductNumber, "Count" : count });
         })
+        if (bomLst.length == 0) {
+            $.ajax({
+                type: "DELETE",
+                url: "/api/BOM/" + parentProductNumber,
+                data: "name=John&location=Boston",
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify(bomLst),
+                success: function (response) {
+
+                }
+            });
+        }
 
         $.ajax({
             type: "POST",

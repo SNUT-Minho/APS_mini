@@ -31,10 +31,10 @@ namespace APS.Models.Repositories
             return result;
         }
 
-        public void DeletBOM(BOM bom)
+        public void DeletBOM(int parentProductNumber)
         {
             DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("@ParentProductNumber", bom.ParentProductNumber);
+            parameters.Add("@ParentProductNumber", parentProductNumber);
             db.Execute("DeleteBOM", parameters, commandType: CommandType.StoredProcedure);
         }
 

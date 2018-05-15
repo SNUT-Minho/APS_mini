@@ -4,17 +4,324 @@
 }
 
 
+
+<style>
+    h5, h6, p {
+        padding: 8px;
+    }
+
+    .hide-button {
+        display: none;
+        color: gray;
+    }
+
+        .hide-button a {
+            text-decoration: none;
+            color: gray;
+        }
+
+            .hide-button a:hover {
+                color: red;
+            }
+
+    .card:hover {
+        background-color: #2e2c2c !important;
+        color: white;
+    }
+
+        .card:hover .hide-button {
+            display: block;
+        }
+</style>
+
+<!--Memo Page-->
 <div class="row">
     <div class="col-md-2 col-lg-2"></div>
     <div class="col-md-8 col-lg-8 container-fluid">
-        <h3>Work Station</h3>
+        <!--HEADER-->
+        <h3>
+            Work Station
+            <!--Create Memo Button-->
+            <button class="btn btn-danger" style="float:right; border-radius: 0px; margin-right:5px;" id="right" onclick="pagenation(this.id);"><i class="fa fa-angle-right"></i></button>
+            <button class="btn btn-danger" style="float:right; border-radius: 0px; margin-right:5px;" id="left" onclick="pagenation(this.id);"><i class="fa fa-angle-left"></i></button>
+            <button data-target="#createNewWorkStation" data-toggle="modal" class="btn btn-primary" style="float:right; margin-right:5px; border-radius:0px;">
+                생성
+            </button>
+
+            <!--Create Memo Button-->
+        </h3>
+        <!--HEADER-->
         <hr />
+ 
+        <!--Memo Container-->
         <div class="row" id="WorkStationContainer">
-            <!--내용 Container-->
+           
         </div>
+        <!--Memo Container-->
     </div>
     <div class="col-md-2 col-lg-2"></div>
 </div>
+<!--Memo Page-->
+<!--Create WorkStation Modal-->
+<div class="modal fade" draggable="true" id="createNewWorkStation" tabindex="-1" role="dialog" aria-labelledby="myModal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModal-label">Create Work Station</h4>
+            </div>
+            <!--Header-->
+            <div class="modal-body">
+                <form id="form-createWorkStation">
+                    <!--Title-->
+                    <div class="form-group">
+                        <div class="form-inline">
+                            <label class="control-label" for="Title">Title &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : </label>
+                            <input type="text" name="Title" id="Title" value="" class="form-control" style="max-width:70%; margin-left:10px;" maxlength="115" autofocus placeholder="Work Station Title" required />
+                        </div>
+                    </div>
+                    <!--Ttitle-->
+                    <div class="form-group">
+                        <div class="form-inline">
+                            <label class="control-label" for="workStationImage">Image &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : </label>
+                            <!--Upload Work Station Image-->
+                            <input type="file" name="workStationImage" id="workStationImage" value="" style="max-width:50%; margin-left:11px;" />
+                            <!--Upload Work Station Image-->
+                        </div>
+                    </div>
+                    <!--Description-->
+                    <div class="form-group">
+                        <div class="form-inline">
+                            <label class="control-label" for="Description">Description &nbsp;&nbsp; : </label>
+                            <input type="text" name="Description" id="Description" value="" class="form-control" style="max-width:70%; margin-left:10px;" maxlength="115" autofocus placeholder="Work Station Definition" required />
+                        </div>
+                    </div>
+                    <!--Description-->
+                    <!-- Standard Setup Time-->
+                    <div class="form-group">
+                        <div class="form-inline">
+                            <label class="control-label" for="SetupTime">Setup Time &nbsp;&nbsp; : </label>
+                            <input type="number" name="SetupTime" id="SetupTime" value="" class="form-control" style="max-width:50%; margin-left:10px;" maxlength="115" autofocus placeholder="Setup Time" required />
+                        </div>
+                    </div>
+                    <!-- Standard Setup Time-->
+                    <!-- Standard Processing Time-->
+                    <div class="form-group">
+                        <div class="form-inline">
+                            <label class="control-label" for="ProcessingTime">Processing Time &nbsp;&nbsp; : </label>
+                            <input type="number" name="ProcessingTime" id="ProcessingTime" value="" class="form-control" style="max-width:43%; margin-left:10px;" maxlength="115" autofocus placeholder="Processing Time" required />
+                        </div>
+                    </div>
+                    <!-- Standard Processing Time-->
+
+                </form>
+            </div>
+            <div class="modal-footer" style="background-image:">
+                <!--createMemo Button-->
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="modalClose" onclick="clearInput();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="creatWorkStation();">Save</button>
+                <!--createMemo Button-->
+            </div>
+        </div>
+    </div>
+</div>
+<!--Create WorkStation Modal-->
+<input type="hidden" id="pageCount" name="pageCount"  value=""/>
+<script>
+    $(document).ready(function () {
+        var page = 1;
+        $('#pageCount').val(page);
+
+        // newMemo Modal auto focus
+        $('#createNewWorkStation').on('shown.bs.modal', function () {
+            $('#newWorkStation').focus();
+        });
+
+
+       
+        $(window).on('beforeunload', function () {
+           saveWorkStationOrder();
+       });
+
+
+        // Show ALL Data to Memo Container
+        DisplayWorkStation();
+
+
+        // Bind sortable attr to memoContainer
+        $('#WorkStationContainer').sortable({
+            connectWith: '#WorkStationContainer',
+            update: function (e, ui) {
+            }
+        });
+
+        $('#WorkStationContainer').disableSelection();
+
+
+        // Delete Memo Event Handler
+        $('#WorkStationContainer').on('click', '.fa', function (event) {
+            var id = $(event.target).attr('id');
+            // Memo Delete API wtih (MEMO Controller)
+            $.ajax({
+                type: "DELETE",
+                url: "/api/WorkStation/" + id,
+                data: "name=John&location=Boston",
+                dataType: "json",
+                success: function (response) {
+                    ClearWorkStation();
+                    DisplayWorkStation();
+                }
+            });
+        });
+    });
+
+    function pagenation(id) {
+        var page = parseInt($('#pageCount').val());
+        if (id == "right") {
+            $('#pageCount').val(page + 1);
+           
+        } else {
+            if (page == 1) {
+                
+            } else {
+                $('#pageCount').val(page - 1);
+                alert($('#pageCount').val());
+            }
+        }
+    }
+
+
+    // Clear newMemo input form
+    function clearInput() {
+        $('#Title').val('');
+        $('#workStationImage').val('');
+        $('#Description').val('');
+        $('#SetupTime').val('');
+        $('#ProcessingTime').val('');
+    };
+
+
+    // Create newMemo API with (MEMO Controller)
+    function creatWorkStation() {
+        var data = new FormData();
+        var files = $('#workStationImage').get(0).files;
+        if (files.length > 0) {
+            data.append("UploadImage", files[0]);
+        }
+
+        var imageName;
+
+        $.ajax({
+            type: "POST",
+            url: "/api/Image/",
+            contentType: false,
+            processData: false,
+            data: data,
+            async: false,
+            success: function (filename) {
+                imageName = filename;
+            }
+        });
+
+        var title = $('#Title').val();
+        var description = $('#Description').val();
+        var setupTime = $('#SetupTime').val();
+        var processingTime = $('#ProcessingTime').val();
+
+        if (imageName == null) {
+            imageName = "DefaultImage.png";
+        }
+
+        var json = "{ Image : \"" + imageName + "\",  Title : \"" + title + "\", Description : \"" + description + "\", SetupTime : \"" + setupTime + "\", ProcessingTime : \"" + processingTime + "\", GroupUID : \"" + @Session["GroupUID"] + "\"}";
+
+        $.ajax({
+            type: "POST",
+            url: "/api/WorkStation/",
+            data: json,
+            dataType: "json",
+            async: false,
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                var image = response.Image;
+                if (image === null) {
+                    image = "DefaultImage.png";
+                }
+
+                
+
+                var workStation = "<div class='col-md-6' id='" + response.Id + "'> <div class='card' style='height:200px; background-color: white;' draggable='true'><div class='row'>";
+                workStation += "<div class='col-md-3' style = 'width:80%; height:180px; margin-top:10px; margin-left:25px; margin-right:25px;'><img src='/Image/"+ image + "' style= 'width:100%; max-height:100%;'></div>";
+                workStation += "<div class='col-md-8' style='margin-top:5px;'><h5 class='card-title'><span class='hide-button' style='float: right; padding-right: 5px;'>";
+                workStation += "<a href = '#'><i class='fa fa-remove' id='" + response.Id + "'></i ></a ></span >";
+                workStation += "<span style='margin-top:5px;'># Title : " + response.Title + "</span><br /><br />";
+                workStation += "<span># Description : " + response.Description + "</span><br /><br />";
+                workStation += "<span># Setup Time : " + response.SetupTime + "</span ><br /><br />";
+                workStation += "<span># Processing Time : " + response.ProcessingTime + "</span>";
+                workStation += "</h5></div></div></div></div>";
+
+                $('#WorkStationContainer').append(workStation);
+                $('#modalClose').click();
+            }
+        });
+    };
+
+
+    // Get All Memo List API with (MEMO Controller)
+    function DisplayWorkStation() {
+        var page = parseInt($('#pageCount').val());
+
+        $.getJSON("/api/WorkStation/" + @Session["GroupUID"] + "/" + page,
+            function (data, textStatus, jqXHR) {
+                var result = '';
+                $.each(data, function (key, response) {
+                    var image = response.Image;
+                    if (image === null) {
+                        image = "DefaultImage.png";
+                    }
+
+                    var workStation = "<div class='col-md-6' id='"+ response.Id + "'><div class='card' style='height:200px; background-color: white;' draggable='true'><div class='row'>";
+                    workStation += "<div class='col-md-3' style = 'width:80%; height:180px; margin-top:10px; margin-left:25px; margin-right:25px;'><img src='/Image/" + image + "' style= 'width:100%; max-height:100%;'></div>";
+                    workStation += "<div class='col-md-8' style='margin-top:5px;'><h5 class='card-title'><span class='hide-button' style='float: right; padding-right: 5px;'>";
+                    workStation += "<a href = '#'><i class='fa fa-remove' id='" + response.Id + "'></i ></a ></span >";
+                    workStation += "<span style='margin-top:5px;'># Title : " + response.Title + "</span><br /><br />";
+                    workStation += "<span># Description : " + response.Description + "</span><br /><br />";
+                    workStation += "<span># Setup Time : " + response.SetupTime + "</span ><br /><br />";
+                    workStation += "<span># Processing Time : " + response.ProcessingTime + "</span>";
+                    workStation += "</h5></div></div></div></div>";
+
+                    result += workStation;
+                });
+                $('#WorkStationContainer').append(result);
+            }
+        );
+    };
+
+
+    // Clear Memo Container
+    function ClearWorkStation() {
+        $('#WorkStationContainer').html('');
+    };
+
+
+    // Save Display Order of Memos
+    function saveWorkStationOrder() {
+        // Save sortable array data
+        var order = $('#WorkStationContainer').sortable('toArray');
+        var json = "{ Title : \"" + order + "\"}";
+
+        $.ajax({
+            type: "PUT",
+            url: "/api/WorkStation/" + @Session["GroupUID"],
+            data: json,
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                // Empty
+            }
+        });
+    };
+
+</script>
 
 
 
