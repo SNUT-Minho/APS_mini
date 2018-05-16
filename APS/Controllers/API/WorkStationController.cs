@@ -36,10 +36,11 @@ namespace APS.Controllers.API
         }
 
         // PUT: api/WorkStation/5
-        public void Put(int id, WorkStation workStation)
+        [Route("api/WorkStation/{id}/{page}")]
+        public void Put(int id, int page, WorkStation workStation)
         {
             workStation.GroupUID = id;
-            workRepo.UpdateWorkStation(workStation);
+            workRepo.UpdateWorkStation(workStation, page);
         }
 
         // DELETE: api/WorkStation/5

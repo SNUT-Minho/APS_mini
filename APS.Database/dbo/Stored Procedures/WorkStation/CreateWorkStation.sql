@@ -7,6 +7,14 @@
 	@GroupUID INT,
 	@Id INT Output
 AS
-	Insert Into WorkStation(Title, Image, Description, SetupTime, ProcessingTime, GroupUID) Values(@Title, @Image, @Description, @SetupTime, @ProcessingTime, @GroupUID)
+	Declare @ViewOrder Int = 1
+
+	Select @ViewOrder = Max(ViewOrder)
+	From WorkStation
+
+	IF @ViewOrder Is Null
+	Set @ViewOrder = 0
+
+	Insert Into WorkStation(Title, Image, Description, SetupTime, ProcessingTime, GroupUID, ViewOrder) Values(@Title, @Image, @Description, @SetupTime, @ProcessingTime, @GroupUID, (@ViewOrder+1))
 	Select @Id = SCOPE_IDENTITY()
 GO

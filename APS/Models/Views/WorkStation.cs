@@ -12,7 +12,6 @@ namespace APS.Models.Views
         public String Title { get; set; }
         public String Image { get; set; }
         public String Description { get; set; }
-        public int MyProperty { get; set; }
         public int SetupTime { get; set; }
         public int ProcessingTime { get; set; }
 

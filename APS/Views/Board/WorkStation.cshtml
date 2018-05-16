@@ -2,8 +2,8 @@
 @{
     ViewBag.Title = "APSmini";
 }
-
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.7.7/xlsx.core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xls/0.7.4-a/xls.core.min.js"></script>
 
 <style>
     h5, h6, p {
@@ -32,6 +32,28 @@
         .card:hover .hide-button {
             display: block;
         }
+
+    label.error {
+        color: red;
+    }
+
+    input.error {
+        border-color: #ff0000;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    }
+
+        input.error:focus {
+            border-color: #ff0000;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
+        }
+
+    select.error:focus {
+        border-color: #ff0000;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
+    }
 </style>
 
 <!--Memo Page-->
@@ -42,9 +64,9 @@
         <h3>
             Work Station
             <!--Create Memo Button-->
-            <button class="btn btn-danger" style="float:right; border-radius: 0px; margin-right:5px;" id="right" onclick="pagenation(this.id);"><i class="fa fa-angle-right"></i></button>
-            <button class="btn btn-danger" style="float:right; border-radius: 0px; margin-right:5px;" id="left" onclick="pagenation(this.id);"><i class="fa fa-angle-left"></i></button>
-            <button data-target="#createNewWorkStation" data-toggle="modal" class="btn btn-primary" style="float:right; margin-right:5px; border-radius:0px;">
+            <button class="btn btn-danger" style="float:right; margin-right:5px;" id="right" onclick="pagenation(this.id);"><i class="fa fa-angle-right"></i></button>
+            <button class="btn btn-danger" style="float:right; margin-right:5px;" id="left" onclick="pagenation(this.id);"><i class="fa fa-angle-left"></i></button>
+            <button data-target="#createNewWorkStation" data-toggle="modal" class="btn btn-primary" style="float:right; margin-right:5px;">
                 생성
             </button>
 
@@ -52,10 +74,10 @@
         </h3>
         <!--HEADER-->
         <hr />
- 
+
         <!--Memo Container-->
         <div class="row" id="WorkStationContainer">
-           
+
         </div>
         <!--Memo Container-->
     </div>
@@ -113,7 +135,6 @@
                         </div>
                     </div>
                     <!-- Standard Processing Time-->
-
                 </form>
             </div>
             <div class="modal-footer" style="background-image:">
@@ -126,10 +147,47 @@
     </div>
 </div>
 <!--Create WorkStation Modal-->
-<input type="hidden" id="pageCount" name="pageCount"  value=""/>
+<input type="hidden" id="pageCount" name="pageCount" value="" />
 <script>
     $(document).ready(function () {
-        var page = 1;
+        // Create New Product Modal Validation
+        $('#form-createWorkStation').validate({
+            rules: {
+                Title: {
+                    required: true,
+                },
+                Description: {
+                    required: true,
+                },
+                SetupTime: {
+                    required: true,
+                    digits: true
+                },
+                ProcessingTime: {
+                    required: true,
+                    digits: true
+                },
+            },
+            messages: {
+                Title: {
+                    required: "",
+                },
+                Description: {
+                    required: "",
+                },
+                SetupTime: {
+                    required: "",
+                    digits: ""
+                },
+                ProcessingTime: {
+                    required: "",
+                    digits: ""
+                },
+            }
+        });
+
+
+        var page = 0;
         $('#pageCount').val(page);
 
         // newMemo Modal auto focus
@@ -138,14 +196,14 @@
         });
 
 
-       
+
         $(window).on('beforeunload', function () {
            saveWorkStationOrder();
        });
 
 
         // Show ALL Data to Memo Container
-        DisplayWorkStation();
+        DisplayWorkStation(page);
 
 
         // Bind sortable attr to memoContainer
@@ -169,7 +227,7 @@
                 dataType: "json",
                 success: function (response) {
                     ClearWorkStation();
-                    DisplayWorkStation();
+                    DisplayWorkStation($('#pageCount').val());
                 }
             });
         });
@@ -179,13 +237,15 @@
         var page = parseInt($('#pageCount').val());
         if (id == "right") {
             $('#pageCount').val(page + 1);
-           
+            ClearWorkStation();
+            DisplayWorkStation($('#pageCount').val());
         } else {
-            if (page == 1) {
-                
+            if (page == 0) {
+
             } else {
                 $('#pageCount').val(page - 1);
-                alert($('#pageCount').val());
+                ClearWorkStation();
+                DisplayWorkStation($('#pageCount').val());
             }
         }
     }
@@ -198,11 +258,32 @@
         $('#Description').val('');
         $('#SetupTime').val('');
         $('#ProcessingTime').val('');
+
+        $('#form-createWorkStation').validate().resetForm();
     };
 
 
     // Create newMemo API with (MEMO Controller)
     function creatWorkStation() {
+        var count = 0;
+
+        if ($('#Title').valid() == false) {
+            count++;
+        }
+        if ($('#Description').valid() == false) {
+            count++;
+        }
+        if ($('#SetupTime').valid() == false) {
+            count++;
+        }
+        if ($('#ProcessingTime').valid() == false) {
+            count++;
+        }
+     
+        if (count > 0) {
+            return false;
+        } 
+
         var data = new FormData();
         var files = $('#workStationImage').get(0).files;
         if (files.length > 0) {
@@ -242,33 +323,16 @@
             async: false,
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
-                var image = response.Image;
-                if (image === null) {
-                    image = "DefaultImage.png";
-                }
-
-                
-
-                var workStation = "<div class='col-md-6' id='" + response.Id + "'> <div class='card' style='height:200px; background-color: white;' draggable='true'><div class='row'>";
-                workStation += "<div class='col-md-3' style = 'width:80%; height:180px; margin-top:10px; margin-left:25px; margin-right:25px;'><img src='/Image/"+ image + "' style= 'width:100%; max-height:100%;'></div>";
-                workStation += "<div class='col-md-8' style='margin-top:5px;'><h5 class='card-title'><span class='hide-button' style='float: right; padding-right: 5px;'>";
-                workStation += "<a href = '#'><i class='fa fa-remove' id='" + response.Id + "'></i ></a ></span >";
-                workStation += "<span style='margin-top:5px;'># Title : " + response.Title + "</span><br /><br />";
-                workStation += "<span># Description : " + response.Description + "</span><br /><br />";
-                workStation += "<span># Setup Time : " + response.SetupTime + "</span ><br /><br />";
-                workStation += "<span># Processing Time : " + response.ProcessingTime + "</span>";
-                workStation += "</h5></div></div></div></div>";
-
-                $('#WorkStationContainer').append(workStation);
                 $('#modalClose').click();
+                ClearWorkStation();
+                DisplayWorkStation($('#pageCount').val());
             }
         });
     };
 
 
     // Get All Memo List API with (MEMO Controller)
-    function DisplayWorkStation() {
-        var page = parseInt($('#pageCount').val());
+    function DisplayWorkStation(page) {
 
         $.getJSON("/api/WorkStation/" + @Session["GroupUID"] + "/" + page,
             function (data, textStatus, jqXHR) {
@@ -280,7 +344,7 @@
                     }
 
                     var workStation = "<div class='col-md-6' id='"+ response.Id + "'><div class='card' style='height:200px; background-color: white;' draggable='true'><div class='row'>";
-                    workStation += "<div class='col-md-3' style = 'width:80%; height:180px; margin-top:10px; margin-left:25px; margin-right:25px;'><img src='/Image/" + image + "' style= 'width:100%; max-height:100%;'></div>";
+                    workStation += "<div class='col-md-3' style = 'width:80%; height:180px; margin-top:10px; margin-left:25px; margin-right:25px;'><img src='/Image/" + image + "' style= 'width:100%; height:180px;'></div>";
                     workStation += "<div class='col-md-8' style='margin-top:5px;'><h5 class='card-title'><span class='hide-button' style='float: right; padding-right: 5px;'>";
                     workStation += "<a href = '#'><i class='fa fa-remove' id='" + response.Id + "'></i ></a ></span >";
                     workStation += "<span style='margin-top:5px;'># Title : " + response.Title + "</span><br /><br />";
@@ -308,10 +372,11 @@
         // Save sortable array data
         var order = $('#WorkStationContainer').sortable('toArray');
         var json = "{ Title : \"" + order + "\"}";
+        var page = parseInt($('#pageCount').val());
 
         $.ajax({
             type: "PUT",
-            url: "/api/WorkStation/" + @Session["GroupUID"],
+            url: "/api/WorkStation/" + @Session["GroupUID"] +"/"+ page,
             data: json,
             dataType: "json",
             contentType: 'application/json; charset=utf-8',

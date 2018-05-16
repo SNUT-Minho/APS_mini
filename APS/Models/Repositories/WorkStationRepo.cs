@@ -48,7 +48,7 @@ namespace APS.Models.Repositories
             return result;
         }
 
-        public void UpdateWorkStation(WorkStation workStation)
+        public void UpdateWorkStation(WorkStation workStation, int page)
         {
             string[] arr = workStation.Title.Split(',');
 
@@ -57,7 +57,7 @@ namespace APS.Models.Repositories
             {
                 DynamicParameters parameters = new DynamicParameters();
                 parameters.Add("@Id", arr[i]);
-                parameters.Add("@ViewOrder", i);
+                parameters.Add("@ViewOrder", i + (page*8));
                 parameters.Add("@GroupUID", workStation.GroupUID);
                 db.Execute("UpdateWorkStationOrder", parameters, commandType: CommandType.StoredProcedure);
             }
