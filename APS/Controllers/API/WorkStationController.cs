@@ -19,6 +19,13 @@ namespace APS.Controllers.API
             return new string[] { "value1", "value2" };
         }
 
+        [Route("api/WorkStation/{groupUID}")]
+        public IEnumerable<WorkStation> GetList(int groupUID)
+        {
+            var result = workRepo.GetAllWorkStationList(groupUID);
+            return result;
+        }
+
 
         // GET: api/WorkStation/5
         [Route("api/WorkStation/{id}/{pageCount}")]

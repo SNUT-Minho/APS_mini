@@ -14,6 +14,8 @@ namespace APS.Models.Repositories
     {
         private IDbConnection db = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
 
+
+
         public WorkStation CreateWorkStation(WorkStation workStation)
         {
             DynamicParameters parameters = new DynamicParameters();
@@ -37,6 +39,17 @@ namespace APS.Models.Repositories
             parameters.Add("@Id", id);
             db.Execute("DeleteWorkStation", parameters, commandType: CommandType.StoredProcedure);
         }
+
+
+        public IEnumerable<WorkStation> GetAllWorkStationList(int id)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@GroupUID", id);
+
+            var result = db.Query<WorkStation>("GetAllWorkStationList", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return result;
+        }
+
 
         public IEnumerable<WorkStation> GetAllWorkStation(int id, int pageCount)
         {

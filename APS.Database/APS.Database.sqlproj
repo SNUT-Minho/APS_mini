@@ -69,6 +69,7 @@
     <Folder Include="dbo\Stored Procedures\Product" />
     <Folder Include="dbo\Stored Procedures\BOM" />
     <Folder Include="dbo\Stored Procedures\WorkStation" />
+    <Folder Include="dbo\Stored Procedures\Routing" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Views\Users.sql" />
@@ -114,6 +115,7 @@
     <Build Include="dbo\Stored Procedures\WorkStation\GetAllWorkStation.sql" />
     <Build Include="dbo\Stored Procedures\WorkStation\DeleteWorkStation.sql" />
     <Build Include="dbo\Stored Procedures\WorkStation\UpdateWorkStationOrder.sql" />
+    <Build Include="dbo\Stored Procedures\Routing\GetAllWorkStationList.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="APS.Database.publish.Test.xml" />
