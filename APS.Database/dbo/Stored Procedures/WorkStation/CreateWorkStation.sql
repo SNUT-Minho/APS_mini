@@ -5,7 +5,7 @@
 	@SetupTime INT,
 	@ProcessingTime INT,
 	@GroupUID INT,
-	@Id INT Output
+	@WId INT Output
 AS
 	Declare @ViewOrder Int = 1
 
@@ -16,5 +16,5 @@ AS
 	Set @ViewOrder = 0
 
 	Insert Into WorkStation(Title, Image, Description, SetupTime, ProcessingTime, GroupUID, ViewOrder) Values(@Title, @Image, @Description, @SetupTime, @ProcessingTime, @GroupUID, (@ViewOrder+1))
-	Select @Id = SCOPE_IDENTITY()
+	Select @WId = SCOPE_IDENTITY()
 GO

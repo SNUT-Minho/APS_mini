@@ -343,10 +343,10 @@
                         image = "DefaultImage.png";
                     }
 
-                    var workStation = "<div class='col-md-6' id='"+ response.Id + "'><div class='card' style='height:200px; background-color: white;' draggable='true'><div class='row'>";
+                    var workStation = "<div class='col-md-6' id='"+ response.WId + "'><div class='card' style='height:200px; background-color: white;' draggable='true'><div class='row'>";
                     workStation += "<div class='col-md-3' style = 'width:80%; height:180px; margin-top:10px; margin-left:25px; margin-right:25px;'><img src='/Image/" + image + "' style= 'width:100%; height:180px;'></div>";
                     workStation += "<div class='col-md-8' style='margin-top:5px;'><h5 class='card-title'><span class='hide-button' style='float: right; padding-right: 5px;'>";
-                    workStation += "<a href = '#'><i class='fa fa-remove' id='" + response.Id + "'></i ></a ></span >";
+                    workStation += "<a href = '#'><i class='fa fa-remove' id='" + response.WId + "'></i ></a ></span >";
                     workStation += "<span style='margin-top:5px;'># Title : " + response.Title + "</span><br /><br />";
                     workStation += "<span># Description : " + response.Description + "</span><br /><br />";
                     workStation += "<span># Setup Time : " + response.SetupTime + "</span ><br /><br />";

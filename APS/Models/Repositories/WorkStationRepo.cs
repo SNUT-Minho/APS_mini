@@ -14,8 +14,6 @@ namespace APS.Models.Repositories
     {
         private IDbConnection db = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
 
-
-
         public WorkStation CreateWorkStation(WorkStation workStation)
         {
             DynamicParameters parameters = new DynamicParameters();
@@ -25,10 +23,10 @@ namespace APS.Models.Repositories
             parameters.Add("@SetupTime", workStation.SetupTime);
             parameters.Add("@ProcessingTime", workStation.ProcessingTime);
             parameters.Add("@GroupUID", workStation.GroupUID);
-            parameters.Add("@Id", dbType: DbType.Int32, direction: ParameterDirection.Output);
+            parameters.Add("@WId", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
             db.Execute("CreateWorkStation", parameters , commandType: CommandType.StoredProcedure);
-            workStation.Id = parameters.Get<int>("@Id");
+            workStation.WId = parameters.Get<int>("@WId");
 
             return workStation;
         }
@@ -36,7 +34,7 @@ namespace APS.Models.Repositories
         public void DeleteWorkStationById(int id)
         {
             DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("@Id", id);
+            parameters.Add("@WId", id);
             db.Execute("DeleteWorkStation", parameters, commandType: CommandType.StoredProcedure);
         }
 
@@ -69,7 +67,7 @@ namespace APS.Models.Repositories
             for (int i = 0; i < arr.Length; i++)
             {
                 DynamicParameters parameters = new DynamicParameters();
-                parameters.Add("@Id", arr[i]);
+                parameters.Add("@WId", arr[i]);
                 parameters.Add("@ViewOrder", i + (page*8));
                 parameters.Add("@GroupUID", workStation.GroupUID);
                 db.Execute("UpdateWorkStationOrder", parameters, commandType: CommandType.StoredProcedure);

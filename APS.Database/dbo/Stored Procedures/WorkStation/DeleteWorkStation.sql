@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [dbo].[DeleteWorkStation]
-	@Id Int
+	@WId Int
 AS
 	Delete WorkStation
-	Where Id = @Id
+	Where WId = @WId
 Go

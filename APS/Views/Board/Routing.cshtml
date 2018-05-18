@@ -19,43 +19,45 @@
         padding-bottom: 40px*/
         height: 1000px;
     }
-    ul li{
+
+    ul li {
         list-style: none;
- 
     }
-    li[id^="item"]{
+
+    li[id^="item"] {
         height: 40px;
-        left:0px;
+        left: 0px;
         bottom: 0;
         top: 0;
-        margin:0px;
-        padding:0px;
-        position:relative;
+        margin: 0px;
+        padding: 0px;
+        position: relative;
         flex-direction: column !important;
-        z-index:1;
-    }
-  
-    .item{
-        height:80px; width:20px;
-        border: 2px dotted red;
+        z-index: 1;
     }
 </style>
 <div class="row">
     <div class="col-md-2 col-lg-2">
-        
-       <ul id="WorkStationContainer">
+
+        <ul id="WorkStationContainer">
+            <li class='draggable' style='text-align:center;' id='itemstart'><div class='card start' style='width:190px; height:100%; background-color:red;'><span style='margin:auto; color:white;'>Start</span></div></li>
+            <li class='draggable' style='text-align:center;' id='itemend'><div class='card end' style='width:190px; height:100%; background-color:#007bff;'><span style='margin:auto; color:white;'>End</span></div></li>
             @*<li class="nav-item" style="text-align:center;">
-                <div class='card' style='width:200px; height:100%; background-color: white;' draggable='true'><span style="margin:auto;">&nbsp;&nbsp;&nbsp;</span></div>
-            </li>*@
+                    <div class='card' style='width:200px; height:100%; background-color: white;' draggable='true'><span style="margin:auto;">&nbsp;&nbsp;&nbsp;</span></div>
+                </li>*@
         </ul>
     </div>
 
     <div class="col-md-8 col-lg-8 container-fluid">
-        <h3>Routing</h3>
+        <h3>
+            Routing
+            <button data-target="#ModalCreateRouting" data-toggle="modal" class="btn btn-primary" style="float:right;" id="createRouting" name="createRouting">등록</button>
+            <button data-target="#" class="btn btn-danger" style="float:right; margin-right:5px;" id="deleteRouting" name="deleteRouting" onclick="removeProduct();">제거</button>
+        </h3>
         <hr />
-        <ul class="row" id="RoutingContainer" style="width:100%; height: 900px; border:1px dotted gray; margin-left:3px; background-color: #ababab; border-radius:5px; z-index:-1;">
+        <ul class="row" id="RoutingContainer" style="width:100%; height: 900px; border:1px dotted red; margin-left:3px; background-color: #ababab; border-radius:5px; z-index:-1;">
             <!--내용 Container-->
-                @*<div style=" color:#ababab; position:absolute; " class="item" id="start"></div>
+            @*<div style=" color:#ababab; position:absolute; " class="item" id="start"></div>
                 <div style=" color:#ababab; position:absolute;" class="item" id="end"></div>*@
         </ul>
     </div>
@@ -69,7 +71,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModal-label">Modal title</h4>
             </div>
-            <div class="modal-body" >
+            <div class="modal-body">
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
             </div>
             <div class="modal-footer">
@@ -80,6 +82,32 @@
     </div>
 </div>
 
+<!--Create Routing Modal-->
+<div class="modal fade" id="ModalCreateRouting" tabindex="-1" role="dialog" aria-labelledby="Warning-label" style="top:400px; left:0px; position:absolute; ">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Group Management</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-groupmodal">
+                    <div class="form-group" style="padding-top:10px;">
+                        <div class="form-inline" style="margin-top: auto; margin-bottom:auto;">
+                            <label class="control-label" for="CreateNewRouting">Create New Routing : </label>
+                            <input type="text" name="CreateNewRouting" id="CreateNewRouting" value="" class="form-control" style="max-width:70%; margin-left:10px;" maxlength="115" autofocus placeholder="Write New Routing Name." required />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="CreateRoutingModalClose" onclick="clearRoutingModal();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="createRouting();" id="createNewRoutingBtn">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Create Routing Modal-->
+
 <script>
     $(document).ready(function () {
         var common = {
@@ -87,20 +115,25 @@
             isTarget: true
         };
 
-   
+
 
         displayWorkStationList(@Session["GroupUID"]);
 
         var dropped = false;
 
-        $('#WorkStationContainer').sortable({ revert: true });
+        //$('#WorkStationContainer').sortable({
+        //    revert: true,
+        //    stop: function (event, ui) {
+        //        ui.getUuid
+        //    }
+        //});
 
         $('li[id^="item"]').draggable({
             helper: function () {
                 $copy = $(this).clone();
                 return $copy;
             },
-   
+
             start: function (event, ui) {
                 dropped = false;
                // $(this).addClass("hide");
@@ -115,21 +148,29 @@
                   //  $(this).removeClass("hide");
                 }
                 $('#' + $(this).attr('id')).draggable({
-                    connectToSortable: "#WorkStationContainer",
+                    connectToSortable: "#RoutingContainer",
                     //helper: "clone",
-                    revert: "invalid"
+                    revert: "invalid",
+                    stop: function () {
+                        jsPlumb.empty('#WorkStationContainer');
+                    }
                 });
 
-                $('#' + $(this).attr('id')).dblclick(function (e) {
-                    $('#myModal').css({ top: 400, left: 0, position: 'absolute' });
-                    $('#myModal').modal('toggle');
-                });
-
-                $('#' + $(this).attr('id') + " > .card").css('background-color', 'white').mouseover(function () {
-                    $(this).css("background-color", "#007bff");
-                }).mouseout(function () {
-                    $(this).css("background-color", "white");
-                });
+                if ($(this).attr('id') == "itemstart") {
+                    $('#' + $(this).attr('id') + " > .card").css('background-color', 'red').css('width', '50');
+                } else if ($(this).attr('id') == "itemend")  {
+                    $('#' + $(this).attr('id') + " > .card").css('background-color', '#007bff').css('width', '50');
+                } else {
+                    $('#' + $(this).attr('id')).dblclick(function (e) {
+                        $('#myModal').css({ top: 400, left: 0, position: 'absolute' });
+                        $('#myModal').modal('toggle');
+                    });
+                    $('#' + $(this).attr('id') + " > .card").css('background-color', 'white').mouseover(function () {
+                        $(this).css("background-color", "#007bff");
+                    }).mouseout(function () {
+                        $(this).css("background-color", "white");
+                    });
+                }
 
                 //jsPlumb.addEndpoint($(this), {
                 //    isSource: true,
@@ -139,8 +180,8 @@
             }
         });
 
-      
-     
+
+
         $("#RoutingContainer").droppable({
             accept: '.draggable',
             containment: '#RoutingContainer',
@@ -153,33 +194,103 @@
                 $.ui.ddmanager.current.cancelHelperRemoval = true;
                 revert: "invalid"
 
-                jsPlumb.addEndpoint($(droppedElement), {
-                    isSource: true,
-                    isTarget: false,
-                    anchor: "Right"
-                });
+                $(droppedElement).addClass('node');
 
-                jsPlumb.addEndpoint($(droppedElement), {
-                    isSource: false,
-                    isTarget: true,
-                    anchor: "Left"
-                });
+                if ($(droppedElement).attr('id') == "itemstart") {
+                    jsPlumb.addEndpoint($(droppedElement), {
+                        maxConnections: -1,
+                        isSource: true,
+                        isTarget: false,
+                        anchor: "Right"
+                    });
+                } else if ($(droppedElement).attr('id') == "itemend") {
+                    jsPlumb.addEndpoint($(droppedElement), {
+                        maxConnections: -1,
+                        isSource: false,
+                        isTarget: true,
+                        anchor: "Left"
+                    });
+                } else {
+                    jsPlumb.addEndpoint($(droppedElement), {
+                        maxConnections: -1,
+                        isSource: true,
+                        isTarget: false,
+                        anchor: "Right"
+                    });
 
+                    jsPlumb.addEndpoint($(droppedElement), {
+                        maxConnections: -1,
+                        isSource: false,
+                        isTarget: true,
+                        anchor: "Left"
+                    });
+                }
                 $('.draggable').draggable({
                     drag: function () {
                         jsPlumb.repaintEverything();
                     }
                 })
             }
-        });	
+        });
 
-    
+
 
         jsPlumb.ready(function () {
 
         });
     })
 
+    function clearRoutingModal() {
+        $('#CreateNewRouting').val('');
+    }
+
+    function createRouting() {
+        var routingName = $('#CreateNewRouting').val();
+        var blocks = [];
+        $('.node').each(function (event, node) {
+            blocks.push({
+                RoutingName: routingName,
+                SourceID: $(node).attr('id'),
+                X: parseInt($(node).css('left')),
+                Y: parseInt($(node).css('top'))
+            });
+        });
+
+        // POST Node data
+        $.ajax({
+            type: "POST",
+            url: "/api/Routing/",
+            dataType: "json",
+            async: false,
+            data: JSON.stringify(blocks),
+            contentType: 'application/json; charset=utf-8',
+            success: function (value) {
+            }
+        });
+
+        var connections = [];
+        $.each(jsPlumb.getConnections(), function (event, connection) {
+            connections.push({
+                RoutingName: routingName,
+                SourceID: connection.sourceId,
+                TargetID: connection.targetId
+            });
+        });
+
+        // POST Connection data 
+        $.ajax({
+            type: "POST",
+            url: "/api/Routing/",
+            dataType: "json",
+            async: false,
+            data: JSON.stringify(connections),
+            contentType: 'application/json; charset=utf-8',
+            success: function (value) {
+            }
+        });
+
+        $('#CreateRoutingModalClose').click();
+    }
 
     function displayWorkStationList(groupUID) {
 
@@ -190,11 +301,11 @@
             dataType: "json",
             success: function (response) {
                 $.each(response, function (key, value) {
-                    var workStation = "<li class='draggable' style='text-align:center;' id='item" + value.Id + "'>";
+                    var workStation = "<li class='draggable' style='text-align:center;' id='item" + value.WId + "'>";
                     workStation += "<div class='card' style='width:190px; height:100%;'>";
                     workStation += "<span style='margin:auto;'>" + value.Title + "</span>";
 
-                    $('.card').mouseover(function () {
+                    $('.card').not('.start').not('.end').mouseover(function () {
                         $(this).css("background-color", "#007bff");
                     }).mouseout(function () {
                             $(this).css("background-color", "transparent");

@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[WorkStation]
 (
-	[Id] INT NOT NULL Identity(1,1) PRIMARY KEY,
+	[WId] INT NOT NULL Identity(1,1) PRIMARY KEY,
 	[Title] NVarChar(20) Not Null,
 	[Image] NVarChar(55) Null Default('DefaultImage'),
 	[Description] NVarChar(255) Not Null,

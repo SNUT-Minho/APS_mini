@@ -1,9 +1,9 @@
 ﻿CREATE PROCEDURE [dbo].[UpdateWorkStationOrder]
-	@Id Int,
+	@WId Int,
 	@ViewOrder Int,
 	@GroupUID Int
 AS
 	Update WorkStation
 	Set ViewOrder = @ViewOrder
-	Where Id = @Id And GroupUID = @GroupUID 
+	Where WId = @WId And GroupUID = @GroupUID 
 Go

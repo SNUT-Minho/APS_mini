@@ -7,7 +7,7 @@ namespace APS.Models.Views
 {
     public class WorkStation
     {
-        public int Id { get; set; }
+        public int WId { get; set; }
 
         public String Title { get; set; }
         public String Image { get; set; }
