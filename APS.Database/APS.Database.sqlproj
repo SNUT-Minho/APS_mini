@@ -120,6 +120,8 @@
     <Build Include="dbo\Stored Procedures\Routing\CreateRouting.sql" />
     <Build Include="dbo\Tables\DashBoard\RoutingList.sql" />
     <Build Include="dbo\Stored Procedures\Routing\AddConnectionToRouting.sql" />
+    <Build Include="dbo\Stored Procedures\Routing\GetAllRoutingLst.sql" />
+    <Build Include="dbo\Stored Procedures\Routing\GetAllRoutingMember.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="APS.Database.publish.Test.xml" />

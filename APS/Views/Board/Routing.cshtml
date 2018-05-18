@@ -2,7 +2,10 @@
 @{
     ViewBag.Title = "APSmini";
 }
+@model  APS.Models.Views.Routing
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.5.8/js/jsplumb.min.js"></script>
+<script src="~/Scripts/jquery.simulate.js"></script>
 <style>
     #WorkStationContainer {
         background: white;
@@ -40,8 +43,6 @@
     <div class="col-md-2 col-lg-2">
 
         <ul id="WorkStationContainer">
-            <li class='draggable' style='text-align:center;' id='itemstart'><div class='card start' style='width:190px; height:100%; background-color:red;'><span style='margin:auto; color:white;'>Start</span></div></li>
-            <li class='draggable' style='text-align:center;' id='itemend'><div class='card end' style='width:190px; height:100%; background-color:#007bff;'><span style='margin:auto; color:white;'>End</span></div></li>
             @*<li class="nav-item" style="text-align:center;">
                     <div class='card' style='width:200px; height:100%; background-color: white;' draggable='true'><span style="margin:auto;">&nbsp;&nbsp;&nbsp;</span></div>
                 </li>*@
@@ -49,11 +50,15 @@
     </div>
 
     <div class="col-md-8 col-lg-8 container-fluid">
-        <h3>
-            Routing
+        <div>
+            <h3 style="display:inline-block;">Routing</h3>
             <button data-target="#ModalCreateRouting" data-toggle="modal" class="btn btn-primary" style="float:right;" id="createRouting" name="createRouting">등록</button>
             <button data-target="#" class="btn btn-danger" style="float:right; margin-right:5px;" id="deleteRouting" name="deleteRouting" onclick="removeProduct();">제거</button>
-        </h3>
+            
+            <select class="custom-select" style="width:120px; margin-right:5px; float:right;" id="RoutingLst" name="RoutingLst" onchange="bindRoutingData();">
+                <option style="padding-left:10px;" value="0"></option>
+            </select>
+        </div>
         <hr />
         <ul class="row" id="RoutingContainer" style="width:100%; height: 900px; border:1px dotted red; margin-left:3px; background-color: #ababab; border-radius:5px; z-index:-1;">
             <!--내용 Container-->
@@ -115,10 +120,32 @@
             isTarget: true
         };
 
-
+        $('#RoutingLst').val("2");
 
         displayWorkStationList(@Session["GroupUID"]);
+        dragAnddrop();
 
+        // Bind Routing Lst Data
+        $.ajax({
+            type: "GET",
+            url: "/api/Routing/" + @Session["GroupUID"],
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                $.each(response, function (key, value) {
+                    // Option tag Data bind
+                    var routingLst = "<option value=\"" + value.RID + "\" >" + value.RoutingName + "</option>";
+                    $('#RoutingLst').append(routingLst);
+                })
+            }
+        });
+
+        jsPlumb.ready(function () {
+
+        });
+    })
+
+    function dragAnddrop() {
         var dropped = false;
 
         //$('#WorkStationContainer').sortable({
@@ -136,16 +163,16 @@
 
             start: function (event, ui) {
                 dropped = false;
-               // $(this).addClass("hide");
+                // $(this).addClass("hide");
             },
 
             stop: function (event, ui) {
 
                 if (dropped == true) {
-                   $(this).remove();
+                    $(this).remove();
                 } else {
                     dropped = false
-                  //  $(this).removeClass("hide");
+                    //  $(this).removeClass("hide");
                 }
                 $('#' + $(this).attr('id')).draggable({
                     connectToSortable: "#RoutingContainer",
@@ -158,7 +185,7 @@
 
                 if ($(this).attr('id') == "itemstart") {
                     $('#' + $(this).attr('id') + " > .card").css('background-color', 'red').css('width', '50');
-                } else if ($(this).attr('id') == "itemend")  {
+                } else if ($(this).attr('id') == "itemend") {
                     $('#' + $(this).attr('id') + " > .card").css('background-color', '#007bff').css('width', '50');
                 } else {
                     $('#' + $(this).attr('id')).dblclick(function (e) {
@@ -195,36 +222,43 @@
                 revert: "invalid"
 
                 $(droppedElement).addClass('node');
+                if ($(droppedElement).hasClass('droped')) {
 
-                if ($(droppedElement).attr('id') == "itemstart") {
-                    jsPlumb.addEndpoint($(droppedElement), {
-                        maxConnections: -1,
-                        isSource: true,
-                        isTarget: false,
-                        anchor: "Right"
-                    });
-                } else if ($(droppedElement).attr('id') == "itemend") {
-                    jsPlumb.addEndpoint($(droppedElement), {
-                        maxConnections: -1,
-                        isSource: false,
-                        isTarget: true,
-                        anchor: "Left"
-                    });
                 } else {
-                    jsPlumb.addEndpoint($(droppedElement), {
-                        maxConnections: -1,
-                        isSource: true,
-                        isTarget: false,
-                        anchor: "Right"
-                    });
+                    if ($(droppedElement).attr('id') == "itemstart") {
+                        jsPlumb.addEndpoint($(droppedElement), {
+                            maxConnections: -1,
+                            isSource: true,
+                            isTarget: false,
+                            anchor: "Right"
+                        });
+                        $(droppedElement).addClass('droped');
+                    } else if ($(droppedElement).attr('id') == "itemend") {
+                        jsPlumb.addEndpoint($(droppedElement), {
+                            maxConnections: -1,
+                            isSource: false,
+                            isTarget: true,
+                            anchor: "Left"
+                        });
+                        $(droppedElement).addClass('droped');
+                    } else {
+                        jsPlumb.addEndpoint($(droppedElement), {
+                            maxConnections: -1,
+                            isSource: true,
+                            isTarget: false,
+                            anchor: "Right"
+                        });
 
-                    jsPlumb.addEndpoint($(droppedElement), {
-                        maxConnections: -1,
-                        isSource: false,
-                        isTarget: true,
-                        anchor: "Left"
-                    });
+                        jsPlumb.addEndpoint($(droppedElement), {
+                            maxConnections: -1,
+                            isSource: false,
+                            isTarget: true,
+                            anchor: "Left"
+                        });
+                        $(droppedElement).addClass('droped');
+                    }
                 }
+               
                 $('.draggable').draggable({
                     drag: function () {
                         jsPlumb.repaintEverything();
@@ -232,23 +266,72 @@
                 })
             }
         });
-
-
-
-        jsPlumb.ready(function () {
-
-        });
-    })
+    }
 
     function clearRoutingModal() {
         $('#CreateNewRouting').val('');
     }
 
+    function bindRoutingData() {
+        var rid = $('#RoutingLst').val();
+        $('#RoutingContainer').html('');
+        $('#WorkStationContainer').html('');
+        $('.jtk-endpoint').remove();
+
+        displayWorkStationList(@Session["GroupUID"]);
+        dragAnddrop();
+
+        $.ajax({
+            type: "GET",
+            url: "/api/Routing/" + @Session["GroupUID"] + "/" + rid,
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                var node = [];
+                var connection = [];
+                $.each(response, function (key, value) {
+                    if (value.SourceWID != 0) {
+                        node.push({
+                            ID: value.SourceWID,
+                            positionX: value.X,
+                            positionY: value.Y
+                        });
+                    }
+
+                    if (value.TargetWID != 0) {
+                        connection.push({
+                            source: value.SourceWID,
+                            target: value.TargetWID
+                        });
+                    }
+                })
+                //
+                for (i = 0; i < node.length; i++) {
+                    if (node[i].ID == -1) {
+                        $('#itemstart').detach().appendTo("#RoutingContainer").css("top", node[i].positionY).css("left", node[i].positionX).css('position', 'absolute');
+                    } else if (node[i].ID == -99) {
+                        $('#itemend').detach().appendTo("#RoutingContainer").css("top", node[i].positionY).css("left", (node[i].positionX - 100)).css('position', 'absolute');
+                    } else {
+                        $('#item' + node[i].ID).detach().appendTo("#RoutingContainer").css("top", node[i].positionY).css("left", node[i].positionX).css('position', 'absolute');
+                    }
+                }
+
+                for (i = 0; i < connection.length; i++) {
+                    var source = node[i].source;
+                    var target = node[i].target;
+                }
+                
+                
+            }
+        });
+    }
+  
     function createRouting() {
         var routingName = $('#CreateNewRouting').val();
-        var blocks = [];
+        var nodes = [];
         $('.node').each(function (event, node) {
-            blocks.push({
+            nodes.push({
+                GroupUID: @Session["GroupUID"],
                 RoutingName: routingName,
                 SourceID: $(node).attr('id'),
                 X: parseInt($(node).css('left')),
@@ -262,7 +345,7 @@
             url: "/api/Routing/",
             dataType: "json",
             async: false,
-            data: JSON.stringify(blocks),
+            data: JSON.stringify(nodes),
             contentType: 'application/json; charset=utf-8',
             success: function (value) {
             }
@@ -293,6 +376,13 @@
     }
 
     function displayWorkStationList(groupUID) {
+
+
+        var start = "<li class='draggable' style='text-align:center;' id='itemstart'><div class='card start' style='width:190px; height:100%; background-color:red;'><span style='margin:auto; color:white;'>Start</span></div></li>";
+        var end = "<li class='draggable' style='text-align:center;' id='itemend'><div class='card end' style='width:190px; height:100%; background-color:#007bff;'><span style='margin:auto; color:white;'>End</span></div></li>";
+
+        $('#WorkStationContainer').append(start);
+        $('#WorkStationContainer').append(end);
 
         $.ajax({
             type: "GET",

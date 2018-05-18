@@ -7,6 +7,8 @@ namespace APS.Models.Views
 {
     public class Routing
     {
+        public int GroupUID { get; set; }
+
         public int RID { get; set; }
         public string RoutingName { get; set; }
 

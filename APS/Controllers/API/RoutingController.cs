@@ -20,9 +20,18 @@ namespace APS.Controllers.API
         }
 
         // GET: api/Routing/5
-        public string Get(int id)
+        public IEnumerable<Routing> Get(int id)
         {
-            return "value";
+           var result = routingRepo.getAllRoutingLst(id);
+           return result;
+        }
+
+        // GET: api/Routing/5
+        [Route("api/Routing/{groupUID}/{rid}")]
+        public IEnumerable<Routing> Get(int groupUID, int rid)
+        {
+            var result = routingRepo.getAllRoutingMember(rid);
+            return result;
         }
 
         /// <summary>

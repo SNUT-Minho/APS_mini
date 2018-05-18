@@ -14,9 +14,29 @@ namespace APS.Models.Repositories
     {
         private IDbConnection db = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
 
+
+        public IEnumerable<Routing> getAllRoutingMember(int rid)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@RID", rid);
+
+            var result = db.Query<Routing>("GetAllRoutingMember", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return result;
+        }
+
+        public IEnumerable<Routing> getAllRoutingLst(int groupUid)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@GroupUID", groupUid);
+
+            var result = db.Query<Routing>("GetAllRoutingLst", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return result;
+        }
+
         public void createNewRoutingNode(Routing routing)
         {
             DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@GroupUID", routing.GroupUID);
             parameters.Add("@RoutingName", routing.RoutingName);
             parameters.Add("@SourceWID", routing.SourceWID);
             parameters.Add("@X", routing.X);

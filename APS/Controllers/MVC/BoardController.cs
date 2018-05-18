@@ -11,6 +11,7 @@ namespace APS.Controllers
     public class BoardController : Controller
     {
         ProductRepository productRepo = new ProductRepository();
+        RoutingRepo routingRepo = new RoutingRepo();
 
         // GET: Board
         public ActionResult Index()
@@ -73,8 +74,10 @@ namespace APS.Controllers
             return View();
         }
 
+        [HttpGet]
         public ActionResult Routing()
         {
+            
             // 로그인 안한 사용자 Redirect 
             if (Session["UserID"].ToString() == "Anonymous" || Session["UserID"] == null)
             {
@@ -133,16 +136,16 @@ namespace APS.Controllers
             return View(result);
         }
 
-        public ActionResult Memo()
-        {
-            // 로그인 안한 사용자 Redirect 
-            if (Session["UserID"].ToString() == "Anonymous" || Session["UserID"] == null)
-            {
-                TempData["msg"] = "<script>alert('잘못된 접근경로입니다. 로그인 후 이용하세요.');</script>";
-                return RedirectPermanent("~/");
-            }
+        //public ActionResult Memo()
+        //{
+        //    // 로그인 안한 사용자 Redirect 
+        //    if (Session["UserID"].ToString() == "Anonymous" || Session["UserID"] == null)
+        //    {
+        //        TempData["msg"] = "<script>alert('잘못된 접근경로입니다. 로그인 후 이용하세요.');</script>";
+        //        return RedirectPermanent("~/");
+        //    }
 
-            return View();
-        }
+        //    return View();
+        //}
     }
 }
