@@ -2,7 +2,8 @@
 @{
     ViewBag.Title = "APSmini";
 }
-@model  APS.Models.Views.Routing
+
+@model int
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.5.8/js/jsplumb.min.js"></script>
 <script src="~/Scripts/jquery.simulate.js"></script>
@@ -43,6 +44,7 @@
     <div class="col-md-2 col-lg-2">
 
         <ul id="WorkStationContainer">
+            <li id="dragTrigger" class="ui-draggable ui-draggable-handle"></li>
             @*<li class="nav-item" style="text-align:center;">
                     <div class='card' style='width:200px; height:100%; background-color: white;' draggable='true'><span style="margin:auto;">&nbsp;&nbsp;&nbsp;</span></div>
                 </li>*@
@@ -54,13 +56,14 @@
             <h3 style="display:inline-block;">Routing</h3>
             <button data-target="#ModalCreateRouting" data-toggle="modal" class="btn btn-primary" style="float:right;" id="createRouting" name="createRouting">등록</button>
             <button data-target="#" class="btn btn-danger" style="float:right; margin-right:5px;" id="deleteRouting" name="deleteRouting" onclick="removeProduct();">제거</button>
-            
+
             <select class="custom-select" style="width:120px; margin-right:5px; float:right;" id="RoutingLst" name="RoutingLst" onchange="bindRoutingData();">
                 <option style="padding-left:10px;" value="0"></option>
             </select>
         </div>
         <hr />
         <ul class="row" id="RoutingContainer" style="width:100%; height: 900px; border:1px dotted red; margin-left:3px; background-color: #ababab; border-radius:5px; z-index:-1;">
+
             <!--내용 Container-->
             @*<div style=" color:#ababab; position:absolute; " class="item" id="start"></div>
                 <div style=" color:#ababab; position:absolute;" class="item" id="end"></div>*@
@@ -115,21 +118,28 @@
 
 <script>
     $(document).ready(function () {
+        if (@Model != 0) {
+            $('#createRouting').prop('disabled', true);
+        }
+
         var common = {
             isSource: true,
             isTarget: true
         };
 
-        $('#RoutingLst').val("2");
-
-        displayWorkStationList(@Session["GroupUID"]);
-        dragAnddrop();
+        $.ajax({
+            url: displayWorkStationList(@Session["GroupUID"]),
+            async: false,
+            success: function () {
+            }
+        }).done(dragAnddrop()).done(pick());
 
         // Bind Routing Lst Data
         $.ajax({
             type: "GET",
             url: "/api/Routing/" + @Session["GroupUID"],
             dataType: "json",
+            async: false,
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
                 $.each(response, function (key, value) {
@@ -137,13 +147,92 @@
                     var routingLst = "<option value=\"" + value.RID + "\" >" + value.RoutingName + "</option>";
                     $('#RoutingLst').append(routingLst);
                 })
+                $('#RoutingLst').val(@Model.ToString());
             }
         });
+    });
 
-        jsPlumb.ready(function () {
+    function pick() {
+        $.ajax({
+            type: "GET",
+            url: "/api/Routing/" + @Session["GroupUID"] + "/" + @Model,
+            async: false,
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                var node = [];
 
-        });
-    })
+                $.each(response, function (key, value) {
+                    if (value.SourceWID != 0) {
+                        node.push({
+                            ID: value.SourceWID,
+                            positionX: value.X,
+                            positionY: value.Y
+                        });
+                    }
+                })
+                //
+                for (i = 0; i < node.length; i++) {
+                    var id;
+                    if (node[i].ID == -1) {
+                        id = '#itemstart';
+                    } else if (node[i].ID == -99) {
+                        id = '#itemend';
+                    } else {
+                        id = '#item' + node[i].ID;
+                    }
+                    triggerDragAndDrop(id, '#RoutingContainer');
+                    $(id).css("top", node[i].positionY).css("left", node[i].positionX).css('position', 'absolute');
+                }
+                triggerDragAndDrop('#trigger', '#RoutingContainer');
+                $('#trigger').remove();
+
+
+            }
+        }).done(
+            $.ajax({
+                type: "GET",
+                url: "/api/Routing/" + @Session["GroupUID"] + "/" +@Session["GroupUID"] + "/" +  @Model,
+                async: false,
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    var connection = [];
+                    $.each(response, function (key, value) {
+                        connection.push({
+                            source: value.SourceWID,
+                            target: value.TargetWID
+                        });
+                    })
+
+                    for (i = 0; i < connection.length; i++) {
+                        var sourceNode = connection[i].source;
+                        var targetNode = connection[i].target;
+
+                        if (sourceNode == -1) {
+                            sourceNode = 'itemstart';
+                        } else if (sourceNode == -99) {
+                            sourceNode = 'itemend';
+                        } else {
+                            sourceNode = 'R' + 'item' + sourceNode;
+                        }
+
+                        if (targetNode == -1) {
+                            targetNode = 'itemstart';
+                        } else if (targetNode == -99) {
+                            targetNode = 'itemend';
+                        } else {
+                            targetNode = 'L' + 'item' + targetNode;
+                        }
+
+                        jsPlumb.connect({
+                            uuids: [sourceNode, targetNode]
+                        });
+                    }
+                }
+            })
+        );
+    }
 
     function dragAnddrop() {
         var dropped = false;
@@ -225,12 +314,15 @@
                 if ($(droppedElement).hasClass('droped')) {
 
                 } else {
-                    if ($(droppedElement).attr('id') == "itemstart") {
+                    if ($(droppedElement).attr('id') == "trigger") {
+                    }
+                    else if ($(droppedElement).attr('id') == "itemstart") {
                         jsPlumb.addEndpoint($(droppedElement), {
                             maxConnections: -1,
                             isSource: true,
                             isTarget: false,
-                            anchor: "Right"
+                            anchor: "Right",
+                            uuid: $(droppedElement).attr('id')
                         });
                         $(droppedElement).addClass('droped');
                     } else if ($(droppedElement).attr('id') == "itemend") {
@@ -238,7 +330,8 @@
                             maxConnections: -1,
                             isSource: false,
                             isTarget: true,
-                            anchor: "Left"
+                            anchor: "Left",
+                            uuid: $(droppedElement).attr('id')
                         });
                         $(droppedElement).addClass('droped');
                     } else {
@@ -246,19 +339,21 @@
                             maxConnections: -1,
                             isSource: true,
                             isTarget: false,
-                            anchor: "Right"
+                            anchor: "Right",
+                            uuid: 'R' + $(droppedElement).attr('id')
                         });
 
                         jsPlumb.addEndpoint($(droppedElement), {
                             maxConnections: -1,
                             isSource: false,
                             isTarget: true,
-                            anchor: "Left"
+                            anchor: "Left",
+                            uuid: 'L' + $(droppedElement).attr('id')
                         });
                         $(droppedElement).addClass('droped');
                     }
                 }
-               
+
                 $('.draggable').draggable({
                     drag: function () {
                         jsPlumb.repaintEverything();
@@ -266,66 +361,90 @@
                 })
             }
         });
+
+
     }
 
     function clearRoutingModal() {
         $('#CreateNewRouting').val('');
     }
 
+
     function bindRoutingData() {
-        var rid = $('#RoutingLst').val();
+        var routingNumber = $('#RoutingLst').val();
+
+        window.location.href = '/Board/Routing?routingNumber=' + routingNumber;
+
+
+        @*var rid = $('#RoutingLst').val();
         $('#RoutingContainer').html('');
         $('#WorkStationContainer').html('');
         $('.jtk-endpoint').remove();
 
         displayWorkStationList(@Session["GroupUID"]);
-        dragAnddrop();
+        dragAnddrop();*@
 
-        $.ajax({
-            type: "GET",
-            url: "/api/Routing/" + @Session["GroupUID"] + "/" + rid,
-            dataType: "json",
-            contentType: 'application/json; charset=utf-8',
-            success: function (response) {
-                var node = [];
-                var connection = [];
-                $.each(response, function (key, value) {
-                    if (value.SourceWID != 0) {
-                        node.push({
-                            ID: value.SourceWID,
-                            positionX: value.X,
-                            positionY: value.Y
-                        });
-                    }
 
-                    if (value.TargetWID != 0) {
-                        connection.push({
-                            source: value.SourceWID,
-                            target: value.TargetWID
-                        });
-                    }
-                })
-                //
-                for (i = 0; i < node.length; i++) {
-                    if (node[i].ID == -1) {
-                        $('#itemstart').detach().appendTo("#RoutingContainer").css("top", node[i].positionY).css("left", node[i].positionX).css('position', 'absolute');
-                    } else if (node[i].ID == -99) {
-                        $('#itemend').detach().appendTo("#RoutingContainer").css("top", node[i].positionY).css("left", (node[i].positionX - 100)).css('position', 'absolute');
-                    } else {
-                        $('#item' + node[i].ID).detach().appendTo("#RoutingContainer").css("top", node[i].positionY).css("left", node[i].positionX).css('position', 'absolute');
-                    }
-                }
-
-                for (i = 0; i < connection.length; i++) {
-                    var source = node[i].source;
-                    var target = node[i].target;
-                }
-                
-                
-            }
-        });
     }
-  
+
+    function sleep(milliseconds) {
+        var start = new Date().getTime();
+        for (var i = 0; i < 1e7; i++) {
+            if ((new Date().getTime() - start) > milliseconds) {
+                break;
+            }
+        }
+    }
+
+  var triggerDragAndDrop = function (selectorDrag, selectorDrop) {
+
+     // function for triggering mouse events
+     var fireMouseEvent = function (type, elem, centerX, centerY) {
+       var evt = document.createEvent('MouseEvents');
+       evt.initMouseEvent(type, true, true, window, 1, 1, 1, centerX, centerY, false, false, false, false, 0, elem);
+       elem.dispatchEvent(evt);
+     };
+
+     // fetch target elements
+     var elemDrag = document.querySelector(selectorDrag);
+     var elemDrop = document.querySelector(selectorDrop);
+     if (!elemDrag || !elemDrop) return false;
+
+     // calculate positions
+     var pos = elemDrag.getBoundingClientRect();
+     var center1X = Math.floor((pos.left + pos.right) / 2);
+     var center1Y = Math.floor((pos.top + pos.bottom) / 2);
+     pos = elemDrop.getBoundingClientRect();
+     var center2X = Math.floor((pos.left + pos.right) / 2);
+     var center2Y = Math.floor((pos.top + pos.bottom) / 2);
+
+     // mouse over dragged element and mousedown
+     fireMouseEvent('mousemove', elemDrag, center1X, center1Y);
+     fireMouseEvent('mouseenter', elemDrag, center1X, center1Y);
+     fireMouseEvent('mouseover', elemDrag, center1X, center1Y);
+     fireMouseEvent('mousedown', elemDrag, center1X, center1Y);
+
+     // start dragging process over to drop target
+     fireMouseEvent('dragstart', elemDrag, center1X, center1Y);
+     fireMouseEvent('drag', elemDrag, center1X, center1Y);
+     fireMouseEvent('mousemove', elemDrag, center1X, center1Y);
+     fireMouseEvent('drag', elemDrag, center2X, center2Y);
+     fireMouseEvent('mousemove', elemDrop, center2X, center2Y);
+
+     // trigger dragging process on top of drop target
+     fireMouseEvent('mouseenter', elemDrop, center2X, center2Y);
+     fireMouseEvent('dragenter', elemDrop, center2X, center2Y);
+     fireMouseEvent('mouseover', elemDrop, center2X, center2Y);
+     fireMouseEvent('dragover', elemDrop, center2X, center2Y);
+
+     // release dragged element on top of drop target
+     fireMouseEvent('drop', elemDrop, center2X, center2Y);
+     fireMouseEvent('dragend', elemDrag, center2X, center2Y);
+     fireMouseEvent('mouseup', elemDrag, center2X, center2Y);
+
+     return true;
+    };
+
     function createRouting() {
         var routingName = $('#CreateNewRouting').val();
         var nodes = [];
@@ -360,7 +479,7 @@
             });
         });
 
-        // POST Connection data 
+        // POST Connection data
         $.ajax({
             type: "POST",
             url: "/api/Routing/",
@@ -373,6 +492,7 @@
         });
 
         $('#CreateRoutingModalClose').click();
+        window.location.href = '/Board/Routing';
     }
 
     function displayWorkStationList(groupUID) {
@@ -380,9 +500,12 @@
 
         var start = "<li class='draggable' style='text-align:center;' id='itemstart'><div class='card start' style='width:190px; height:100%; background-color:red;'><span style='margin:auto; color:white;'>Start</span></div></li>";
         var end = "<li class='draggable' style='text-align:center;' id='itemend'><div class='card end' style='width:190px; height:100%; background-color:#007bff;'><span style='margin:auto; color:white;'>End</span></div></li>";
+        var trigger = "<li class='draggable' style='text-align:center;' id='trigger'><div class='card end' style='width:190px; height:100%; background-color:pupple'><span style='margin:auto; color:white;'></span></div></li>";
 
+        $('#WorkStationContainer').append(trigger);
         $('#WorkStationContainer').append(start);
         $('#WorkStationContainer').append(end);
+
 
         $.ajax({
             type: "GET",
@@ -405,6 +528,7 @@
                 })
             }
         });
+
     }
 
 </script>

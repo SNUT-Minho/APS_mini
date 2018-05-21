@@ -116,12 +116,14 @@
     <Build Include="dbo\Stored Procedures\WorkStation\DeleteWorkStation.sql" />
     <Build Include="dbo\Stored Procedures\WorkStation\UpdateWorkStationOrder.sql" />
     <Build Include="dbo\Stored Procedures\Routing\GetAllWorkStationList.sql" />
-    <Build Include="dbo\Tables\DashBoard\Routing.sql" />
+    <Build Include="dbo\Tables\DashBoard\RoutingNode.sql" />
     <Build Include="dbo\Stored Procedures\Routing\CreateRouting.sql" />
     <Build Include="dbo\Tables\DashBoard\RoutingList.sql" />
     <Build Include="dbo\Stored Procedures\Routing\AddConnectionToRouting.sql" />
     <Build Include="dbo\Stored Procedures\Routing\GetAllRoutingLst.sql" />
     <Build Include="dbo\Stored Procedures\Routing\GetAllRoutingMember.sql" />
+    <Build Include="dbo\Tables\DashBoard\RoutingConnection.sql" />
+    <Build Include="dbo\Stored Procedures\Routing\GetAllRoutingConnection.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="APS.Database.publish.Test.xml" />

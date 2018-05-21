@@ -14,6 +14,15 @@ namespace APS.Models.Repositories
     {
         private IDbConnection db = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
 
+        public IEnumerable<Routing> getAllRoutingConnection(int rid)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@RID", rid);
+
+            var result = db.Query<Routing>("GetAllRoutingConnection", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return result;
+        }
+
 
         public IEnumerable<Routing> getAllRoutingMember(int rid)
         {

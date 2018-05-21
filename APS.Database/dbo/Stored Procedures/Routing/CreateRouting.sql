@@ -18,12 +18,12 @@ AS
 			From RoutingList
 			Where RoutingName = @RoutingName
 
-			Insert Into Routing(RID, SourceWID, X, Y) Values (@RID, @SourceWID, @X, @Y)
+			Insert Into RoutingNode(RID, SourceWID, X, Y) Values (@RID, @SourceWID, @X, @Y)
 		END
 	ELSE
 		BEGIN
 			Insert Into RoutingList(RoutingName,GroupUID) values(@RoutingName, @GroupUID)
 			SET @RID = SCOPE_IDENTITY()
-			Insert Into Routing(RID, SourceWID, X, Y) Values (@RID, @SourceWID, @X, @Y)
+			Insert Into RoutingNode(RID, SourceWID, X, Y) Values (@RID, @SourceWID, @X, @Y)
 		END
 GO

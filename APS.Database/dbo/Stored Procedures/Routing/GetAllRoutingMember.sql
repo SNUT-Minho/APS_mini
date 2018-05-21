@@ -2,7 +2,7 @@
 	@RID Int
 AS
 	Select *
-	From Routing
+	From RoutingNode
 	Where RID = @RID
 Go	
 

@@ -22,8 +22,8 @@ namespace APS.Controllers.API
         // GET: api/Routing/5
         public IEnumerable<Routing> Get(int id)
         {
-           var result = routingRepo.getAllRoutingLst(id);
-           return result;
+            var result = routingRepo.getAllRoutingLst(id);
+            return result;
         }
 
         // GET: api/Routing/5
@@ -31,6 +31,14 @@ namespace APS.Controllers.API
         public IEnumerable<Routing> Get(int groupUID, int rid)
         {
             var result = routingRepo.getAllRoutingMember(rid);
+            return result;
+        }
+
+        // GET: api/Routing/5
+        [Route("api/Routing/{groupUID}/{fakeID}/{rid}")]
+        public IEnumerable<Routing> Get(int groupUID, int fakeID, int rid)
+        {
+            var result = routingRepo.getAllRoutingConnection(rid);
             return result;
         }
 
@@ -44,32 +52,36 @@ namespace APS.Controllers.API
         {
             foreach (var node in routings)
             {
+                string targetId = node.TargetID;
                 string sourceId = node.SourceID;
-                if(sourceId != null)
-                {
-                    var length = sourceId.Length - 1;
-                    var ren = length - 3;
-                    var id = sourceId.Substring(4, ren);
 
-                    if(id == "start")
-                    {
-                        node.SourceWID = -1;
-                    }else if(id == "end")
-                    {
-                        node.SourceWID = -99;
-                    }
-                    else
-                    {
-                        node.SourceWID = Convert.ToInt32(id);
-                    }
+                var length = sourceId.Length - 1;
+                var ren = length - 3;
+                var id = sourceId.Substring(4, ren);
+
+                if (id == "start")
+                {
+                    node.SourceWID = -1;
+                }
+                else if (id == "end")
+                {
+                    node.SourceWID = -99;
+                }
+                else
+                {
+                    node.SourceWID = Convert.ToInt32(id);
                 }
 
-                string targetId = node.TargetID;
-                if(targetId != null)
+
+                if (targetId == null)
                 {
-                    var length = targetId.Length - 1;
-                    var ren = length - 3;
-                    var id = targetId.Substring(4, ren);
+                    routingRepo.createNewRoutingNode(node);
+                }
+                else
+                {
+                    length = targetId.Length - 1;
+                    ren = length - 3;
+                    id = targetId.Substring(4, ren);
 
                     if (id == "start")
                     {
@@ -84,10 +96,6 @@ namespace APS.Controllers.API
                         node.TargetWID = Convert.ToInt32(id);
                     }
                     routingRepo.createNewRoutingConnection(node);
-                }
-                else
-                {
-                    routingRepo.createNewRoutingNode(node);
                 }
             }
         }

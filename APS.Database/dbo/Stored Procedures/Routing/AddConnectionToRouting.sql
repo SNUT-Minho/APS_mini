@@ -6,8 +6,6 @@ AS
 	Declare @RID Int 
 	Select @RID = RID  From RoutingList Where RoutingName = @RoutingName
 
-	Update Routing
-	Set TargetWID = @TargetWID
-	Where RID = @RID AND SourceWID = @SourceWID
+	Insert Into RoutingConnection(RID, SourceWID, TargetWID) values(@RID, @SourceWID, @TargetWID)
 GO
 
