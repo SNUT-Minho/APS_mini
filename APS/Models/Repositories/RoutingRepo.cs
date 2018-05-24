@@ -14,6 +14,16 @@ namespace APS.Models.Repositories
     {
         private IDbConnection db = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
 
+        public void DeleteRouting(int rid)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@RID", rid);
+
+            var result = db.Query<Routing>("DeleteRouting", parameters, commandType: CommandType.StoredProcedure).ToList();
+          
+        }
+
+
         public IEnumerable<Routing> getAllRoutingConnection(int rid)
         {
             DynamicParameters parameters = new DynamicParameters();
@@ -42,6 +52,19 @@ namespace APS.Models.Repositories
             return result;
         }
 
+        public void updateRoutingInfo(Routing routing)
+        {
+
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@SourceWID", routing.SourceWID);
+            parameters.Add("@RID", routing.RID);
+            parameters.Add("@ProcessingTime", routing.ProcessingTime);
+            parameters.Add("@SetupTime", routing.SetupTime);
+            parameters.Add("@Cycle", routing.Cycle);
+
+            db.Execute("UpdateRoutingInfo", parameters, commandType: CommandType.StoredProcedure);
+        }
+
         public void createNewRoutingNode(Routing routing)
         {
             DynamicParameters parameters = new DynamicParameters();
@@ -50,6 +73,9 @@ namespace APS.Models.Repositories
             parameters.Add("@SourceWID", routing.SourceWID);
             parameters.Add("@X", routing.X);
             parameters.Add("@Y", routing.Y);
+            parameters.Add("@ProcessingTime", routing.ProcessingTime);
+            parameters.Add("@SetupTime", routing.SetupTime);
+            parameters.Add("@Cycle", routing.Cycle);
 
             db.Execute("CreateRouting", parameters, commandType: CommandType.StoredProcedure);
 

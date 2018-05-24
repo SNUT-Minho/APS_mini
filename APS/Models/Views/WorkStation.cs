@@ -12,8 +12,8 @@ namespace APS.Models.Views
         public String Title { get; set; }
         public String Image { get; set; }
         public String Description { get; set; }
-        public int SetupTime { get; set; }
-        public int ProcessingTime { get; set; }
+        public double SetupTime { get; set; }
+        public double ProcessingTime { get; set; }
 
         public int VeiwOrder { get; set; }
         public int GroupUID { get; set; }

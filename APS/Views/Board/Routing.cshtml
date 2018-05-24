@@ -3,7 +3,7 @@
     ViewBag.Title = "APSmini";
 }
 
-@model int
+@model  int?
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.5.8/js/jsplumb.min.js"></script>
 <script src="~/Scripts/jquery.simulate.js"></script>
@@ -39,70 +39,114 @@
         flex-direction: column !important;
         z-index: 1;
     }
+
+    ::-webkit-input-placeholder { /* WebKit browsers */
+        text-align:right;
+    }
+
+    :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+        text-align: right;
+    }
+
+    ::-moz-placeholder { /* Mozilla Firefox 19+ but I'm not sure about working */
+        text-align: right;
+    }
+
+    :-ms-input-placeholder { /* Internet Explorer 10+ */
+        text-align: right;
+    }
+  
 </style>
 <div class="row">
-    <div class="col-md-2 col-lg-2">
+    <div class="col-md-2 col-lg-2" id="WC">
+        <!--WorkStationContainer-->
+        <!--WorkStationContainer-->
 
-        <ul id="WorkStationContainer">
-            <li id="dragTrigger" class="ui-draggable ui-draggable-handle"></li>
-            @*<li class="nav-item" style="text-align:center;">
-                    <div class='card' style='width:200px; height:100%; background-color: white;' draggable='true'><span style="margin:auto;">&nbsp;&nbsp;&nbsp;</span></div>
-                </li>*@
-        </ul>
     </div>
 
-    <div class="col-md-8 col-lg-8 container-fluid">
+    <div class="col-md-8 col-lg-8 container-fluid" id="RC">
         <div>
             <h3 style="display:inline-block;">Routing</h3>
             <button data-target="#ModalCreateRouting" data-toggle="modal" class="btn btn-primary" style="float:right;" id="createRouting" name="createRouting">등록</button>
-            <button data-target="#" class="btn btn-danger" style="float:right; margin-right:5px;" id="deleteRouting" name="deleteRouting" onclick="removeProduct();">제거</button>
+            <button data-target="#" class="btn btn-danger" style="float:right; margin-right:5px;" id="deleteRouting" name="deleteRouting" onclick="removeRouting();">제거</button>
 
             <select class="custom-select" style="width:120px; margin-right:5px; float:right;" id="RoutingLst" name="RoutingLst" onchange="bindRoutingData();">
                 <option style="padding-left:10px;" value="0"></option>
             </select>
         </div>
         <hr />
-        <ul class="row" id="RoutingContainer" style="width:100%; height: 900px; border:1px dotted red; margin-left:3px; background-color: #ababab; border-radius:5px; z-index:-1;">
-
-            <!--내용 Container-->
-            @*<div style=" color:#ababab; position:absolute; " class="item" id="start"></div>
-                <div style=" color:#ababab; position:absolute;" class="item" id="end"></div>*@
-        </ul>
+        <!--RoutingContiner-->
+        <!--RoutingContiner-->
     </div>
     <div class="col-md-2 col-lg-2"></div>
 </div>
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal-label">
+<!--WorkStation Info-->
+<div class="modal fade" id="workStationInfo" tabindex="-1" role="dialog" aria-labelledby="myModal-label" style="">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModal-label">Modal title</h4>
+                <h4 class="modal-title" id="workStationTitle"></h4>
             </div>
             <div class="modal-body">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <!--Set WorkStation Info Form-->
+                <form id="form-workStationInfo">
+                    <!--WorkStation Info-->
+                    <div class="form-group">
+                        <div class="form-inline">
+                            <label class="control-label" for="workStationNumber">WorkStation : </label>
+                            <input type="text" name="workStationNumber" id="workStationNumber" value="" class="form-control" style="max-width:70%; margin-left:10px; " maxlength="115" autofocus placeholder="" required readonly/>
+                        </div>
+                    </div>
+                    <!--WorkStation Info-->
+                    <!--Setup Time-->
+                    <div class="form-group">
+                        <div class="form-inline">
+                            <label class="control-label" for="SetupTime">Setup Time &nbsp;&nbsp;: </label>
+                            <input type="text" name="SetupTime" id="SetupTime" value="" class="form-control" style="max-width:70%; margin-left:10px; " maxlength="115" autofocus placeholder="분" required />
+                        </div>
+                    </div>
+                    <!--Setup Time-->
+                    <!--Processing Time-->
+                    <div class="form-group">
+                        <div class="form-inline">
+                            <label class="control-label" for="ProcessingTime">Processing &nbsp;&nbsp;&nbsp;: </label>
+                            <input type="text" name="ProcessingTime" id="ProcessingTime" value="" class="form-control" style="max-width:70%;  margin-left:10px;" maxlength="115" autofocus placeholder="분" required />
+                        </div>
+                    </div>
+                    <!--Processing Time-->
+                    <!--Cycle Time-->
+                    <div class="form-group">
+                        <div class="form-inline">
+                            <label class="control-label" for="CycleTime">Cycle Time &nbsp;&nbsp;&nbsp;: </label>
+                            <input type="text" name="CycleTime" id="CycleTime" value="" class="form-control" style="max-width:70%;  margin-left:10px;" maxlength="115" autofocus placeholder="회" required />
+                        </div>
+                    </div>
+                    <!--Cycle Time-->
+                </form>
+                <!--Set WorkStation Info Form-->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="modalclose" onclick="closeWorkStationInfo();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="saveWorkStationInfo();">Save</button>
             </div>
         </div>
     </div>
 </div>
-
+<!--WorkStation Info-->
 <!--Create Routing Modal-->
 <div class="modal fade" id="ModalCreateRouting" tabindex="-1" role="dialog" aria-labelledby="Warning-label" style="top:400px; left:0px; position:absolute; ">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4>Group Management</h4>
+                <h4>Create New Routing</h4>
             </div>
             <div class="modal-body">
                 <form id="form-groupmodal">
                     <div class="form-group" style="padding-top:10px;">
                         <div class="form-inline" style="margin-top: auto; margin-bottom:auto;">
                             <label class="control-label" for="CreateNewRouting">Create New Routing : </label>
-                            <input type="text" name="CreateNewRouting" id="CreateNewRouting" value="" class="form-control" style="max-width:70%; margin-left:10px;" maxlength="115" autofocus placeholder="Write New Routing Name." required />
+                            <input type="text" name="CreateNewRouting" id="CreateNewRouting" value="" class="form-control" style="max-width:70%; margin-left:10px;" maxlength="115" autofocus placeholder="Write New Routing" required />
                         </div>
                     </div>
                 </form>
@@ -117,22 +161,62 @@
 <!--Create Routing Modal-->
 
 <script>
+    var workStationInfo = [];
+
+
     $(document).ready(function () {
-        if (@Model != 0) {
-            $('#createRouting').prop('disabled', true);
+
+        $('#workStationInfo').on('shown.bs.modal', function () {
+            for (var i = 0; i < workStationInfo.length; i++) {
+                if (workStationInfo[i].WID == $('#workStationNumber').val()) {
+                    $('#workStationTitle').text(workStationInfo[i].Title);
+                    $('#SetupTime').val(workStationInfo[i].SetupTime);
+                    $('#ProcessingTime').val(workStationInfo[i].ProcessingTime);
+                    $('#CycleTime').val(workStationInfo[i].CycleTime);
+                }
+            }
+        })
+         
+
+        // 나중에 해결
+        window.onerror = function() {
+            window.location.href = window.location;
         }
 
-        var common = {
-            isSource: true,
-            isTarget: true
-        };
 
         $.ajax({
             url: displayWorkStationList(@Session["GroupUID"]),
             async: false,
             success: function () {
+                $.ajax({
+                    url: dragAnddrop(),
+                    async: false,
+                    success: function () {
+
+                    }
+                });
             }
-        }).done(dragAnddrop()).done(pick());
+        });
+
+
+        if (@Model != 0) {
+            $('#createRouting').prop('disabled', true);
+
+             $.ajax({
+                 url: pick(),
+                 async: false,
+                 success: function () {
+
+                 }
+            });
+        }
+
+
+
+        //var common = {
+        //    isSource: true,
+        //    isTarget: true
+        //};
 
         // Bind Routing Lst Data
         $.ajax({
@@ -147,12 +231,63 @@
                     var routingLst = "<option value=\"" + value.RID + "\" >" + value.RoutingName + "</option>";
                     $('#RoutingLst').append(routingLst);
                 })
-                $('#RoutingLst').val(@Model.ToString());
+               $('#RoutingLst').val(@Model.ToString());
             }
         });
     });
 
+    function closeWorkStationInfo() {
+
+    }
+
+    function saveWorkStationInfo() {
+        var WID;
+        for (var i = 0; i < workStationInfo.length; i++) {
+            if (workStationInfo[i].WID == $('#workStationNumber').val()) {
+               index = i;
+            }
+        }
+
+        workStationInfo[index].ProcessingTime = $('#ProcessingTime').val();
+        workStationInfo[index].SetupTime = $('#SetupTime').val();
+        workStationInfo[index].CycleTime = $('#CycleTime').val();
+
+        
+
+        if ($('#RoutingLst').val() != 0) {
+            var rid = parseInt($('#RoutingLst').val());
+            var routing = [];
+
+            routing.push({
+                SourceWID: parseInt($('#workStationNumber').val()),
+                ProcessingTime: parseFloat($('#ProcessingTime').val()),
+                SetupTime: parseFloat($('#SetupTime').val()),
+                Cycle: parseInt($('#CycleTime').val())
+            });
+
+
+            // POST Node data
+            $.ajax({
+                type: "PUT",
+                url: "/api/Routing/" + rid,
+                dataType: "json",
+                async: false,
+                data: JSON.stringify(routing),
+                contentType: 'application/json; charset=utf-8',
+                success: function (value) {
+                }
+            });
+        }
+
+        $('#modalclose').click();
+    }
+ 
+
     function pick() {
+        window.onerror = function () {
+            window.location.href = window.location;
+        }
+
         $.ajax({
             type: "GET",
             url: "/api/Routing/" + @Session["GroupUID"] + "/" + @Model,
@@ -161,8 +296,22 @@
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
                 var node = [];
-
+            
                 $.each(response, function (key, value) {
+                    if (value.SourceWID != -99 && value.SourceWID != -1) {
+                        var index;
+                        //WorkStation Info set
+                        for (var i = 0; i < workStationInfo.length; i++) {
+                            if (workStationInfo[i].WID == value.SourceWID) {
+                                index = i;
+                            }
+                        }
+                         workStationInfo[index].ProcessingTime = value.ProcessingTime;
+                         workStationInfo[index].SetupTime = value.SetupTime;
+                         workStationInfo[index].CycleTime = value.Cycle;
+                    }
+                
+
                     if (value.SourceWID != 0) {
                         node.push({
                             ID: value.SourceWID,
@@ -171,6 +320,7 @@
                         });
                     }
                 })
+                //WorkStation Info set
                 //
                 for (i = 0; i < node.length; i++) {
                     var id;
@@ -181,13 +331,13 @@
                     } else {
                         id = '#item' + node[i].ID;
                     }
+
                     triggerDragAndDrop(id, '#RoutingContainer');
                     $(id).css("top", node[i].positionY).css("left", node[i].positionX).css('position', 'absolute');
+
                 }
                 triggerDragAndDrop('#trigger', '#RoutingContainer');
                 $('#trigger').remove();
-
-
             }
         }).done(
             $.ajax({
@@ -232,7 +382,9 @@
                 }
             })
         );
+
     }
+
 
     function dragAnddrop() {
         var dropped = false;
@@ -249,12 +401,10 @@
                 $copy = $(this).clone();
                 return $copy;
             },
-
             start: function (event, ui) {
                 dropped = false;
                 // $(this).addClass("hide");
             },
-
             stop: function (event, ui) {
 
                 if (dropped == true) {
@@ -271,15 +421,16 @@
                         jsPlumb.empty('#WorkStationContainer');
                     }
                 });
-
                 if ($(this).attr('id') == "itemstart") {
                     $('#' + $(this).attr('id') + " > .card").css('background-color', 'red').css('width', '50');
                 } else if ($(this).attr('id') == "itemend") {
                     $('#' + $(this).attr('id') + " > .card").css('background-color', '#007bff').css('width', '50');
                 } else {
                     $('#' + $(this).attr('id')).dblclick(function (e) {
-                        $('#myModal').css({ top: 400, left: 0, position: 'absolute' });
-                        $('#myModal').modal('toggle');
+                        $('#workStationInfo').css({ top: 400, left: 900, position: 'absolute', width: 400 });
+                        var id = $(this).attr('id').substring(4, $(this).attr('id').length);
+                        $('#workStationNumber').val(id);
+                        $('#workStationInfo').modal('toggle');
                     });
                     $('#' + $(this).attr('id') + " > .card").css('background-color', 'white').mouseover(function () {
                         $(this).css("background-color", "#007bff");
@@ -287,36 +438,32 @@
                         $(this).css("background-color", "white");
                     });
                 }
-
-                //jsPlumb.addEndpoint($(this), {
-                //    isSource: true,
-                //    isTarget: false,
-                //    anchor: "Right"
-                //})
             }
+
         });
-
-
 
         $("#RoutingContainer").droppable({
             accept: '.draggable',
             containment: '#RoutingContainer',
 
             drop: function (event, ui) {
+
                 dropped = true;
                 droppedElement = ui.helper;
+                $.ui.ddmanager.current.cancelHelperRemoval = true;
                 droppedElement.appendTo('#RoutingContainer');
 
-                $.ui.ddmanager.current.cancelHelperRemoval = true;
                 revert: "invalid"
 
                 $(droppedElement).addClass('node');
+
                 if ($(droppedElement).hasClass('droped')) {
 
                 } else {
                     if ($(droppedElement).attr('id') == "trigger") {
                     }
                     else if ($(droppedElement).attr('id') == "itemstart") {
+
                         jsPlumb.addEndpoint($(droppedElement), {
                             maxConnections: -1,
                             isSource: true,
@@ -326,6 +473,7 @@
                         });
                         $(droppedElement).addClass('droped');
                     } else if ($(droppedElement).attr('id') == "itemend") {
+
                         jsPlumb.addEndpoint($(droppedElement), {
                             maxConnections: -1,
                             isSource: false,
@@ -335,6 +483,7 @@
                         });
                         $(droppedElement).addClass('droped');
                     } else {
+
                         jsPlumb.addEndpoint($(droppedElement), {
                             maxConnections: -1,
                             isSource: true,
@@ -352,18 +501,19 @@
                         });
                         $(droppedElement).addClass('droped');
                     }
+
                 }
 
                 $('.draggable').draggable({
                     drag: function () {
                         jsPlumb.repaintEverything();
                     }
-                })
+                });
             }
         });
 
-
     }
+
 
     function clearRoutingModal() {
         $('#CreateNewRouting').val('');
@@ -371,10 +521,11 @@
 
 
     function bindRoutingData() {
-        var routingNumber = $('#RoutingLst').val();
 
-        window.location.href = '/Board/Routing?routingNumber=' + routingNumber;
-
+        if ($('#RoutingLst').val() != @Model.ToString()) {
+            var routingNumber = $('#RoutingLst').val();
+            window.location.href = '/Board/Routing?routingNumber=' + routingNumber;
+        }
 
         @*var rid = $('#RoutingLst').val();
         $('#RoutingContainer').html('');
@@ -383,8 +534,6 @@
 
         displayWorkStationList(@Session["GroupUID"]);
         dragAnddrop();*@
-
-
     }
 
     function sleep(milliseconds) {
@@ -419,42 +568,78 @@
      var center2Y = Math.floor((pos.top + pos.bottom) / 2);
 
      // mouse over dragged element and mousedown
-     fireMouseEvent('mousemove', elemDrag, center1X, center1Y);
-     fireMouseEvent('mouseenter', elemDrag, center1X, center1Y);
-     fireMouseEvent('mouseover', elemDrag, center1X, center1Y);
-     fireMouseEvent('mousedown', elemDrag, center1X, center1Y);
 
-     // start dragging process over to drop target
-     fireMouseEvent('dragstart', elemDrag, center1X, center1Y);
-     fireMouseEvent('drag', elemDrag, center1X, center1Y);
-     fireMouseEvent('mousemove', elemDrag, center1X, center1Y);
-     fireMouseEvent('drag', elemDrag, center2X, center2Y);
-     fireMouseEvent('mousemove', elemDrop, center2X, center2Y);
+      $.ajax({
+          url: fireMouseEvent('mousemove', elemDrag, center1X, center1Y),
+          async: false,
+          success: function () {
 
-     // trigger dragging process on top of drop target
-     fireMouseEvent('mouseenter', elemDrop, center2X, center2Y);
-     fireMouseEvent('dragenter', elemDrop, center2X, center2Y);
-     fireMouseEvent('mouseover', elemDrop, center2X, center2Y);
-     fireMouseEvent('dragover', elemDrop, center2X, center2Y);
+          }
+      }).done(fireMouseEvent('mouseenter', elemDrag, center1X, center1Y)).done(fireMouseEvent('mouseover', elemDrag, center1X, center1Y)).done(fireMouseEvent('mousedown', elemDrag, center1X, center1Y)).done(fireMouseEvent('dragstart', elemDrag, center1X, center1Y)).done(fireMouseEvent('drag', elemDrag, center1X, center1Y)).done(fireMouseEvent('mousemove', elemDrag, center1X, center1Y)).done(fireMouseEvent('drag', elemDrag, center2X, center2Y)).done(fireMouseEvent('mousemove', elemDrop, center2X, center2Y)).done(fireMouseEvent('mouseenter', elemDrop, center2X, center2Y)).done(fireMouseEvent('dragenter', elemDrop, center2X, center2Y)).done(fireMouseEvent('mouseover', elemDrop, center2X, center2Y)).done(fireMouseEvent('dragover', elemDrop, center2X, center2Y)).done(fireMouseEvent('drop', elemDrop, center2X, center2Y)).done(fireMouseEvent('dragend', elemDrag, center2X, center2Y)).done(fireMouseEvent('mouseup', elemDrag, center2X, center2Y));
 
-     // release dragged element on top of drop target
-     fireMouseEvent('drop', elemDrop, center2X, center2Y);
-     fireMouseEvent('dragend', elemDrag, center2X, center2Y);
-     fireMouseEvent('mouseup', elemDrag, center2X, center2Y);
+      // start dragging process over to drop target
 
-     return true;
+
+      // trigger dragging process on top of drop target
+
+
+      // release dragged element on top of drop target
+
+
+      return true;
+
+     //fireMouseEvent('mouseenter', elemDrag, center1X, center1Y);
+     //fireMouseEvent('mouseover', elemDrag, center1X, center1Y);
+     //fireMouseEvent('mousedown', elemDrag, center1X, center1Y);
+
+     //// start dragging process over to drop target
+     //fireMouseEvent('dragstart', elemDrag, center1X, center1Y);
+     //fireMouseEvent('drag', elemDrag, center1X, center1Y);
+     //fireMouseEvent('mousemove', elemDrag, center1X, center1Y);
+     //fireMouseEvent('drag', elemDrag, center2X, center2Y);
+     //fireMouseEvent('mousemove', elemDrop, center2X, center2Y);
+
+     //// trigger dragging process on top of drop target
+     //fireMouseEvent('mouseenter', elemDrop, center2X, center2Y);
+     //fireMouseEvent('dragenter', elemDrop, center2X, center2Y);
+     //fireMouseEvent('mouseover', elemDrop, center2X, center2Y);
+     //fireMouseEvent('dragover', elemDrop, center2X, center2Y);
+
+     //// release dragged element on top of drop target
+     //fireMouseEvent('drop', elemDrop, center2X, center2Y);
+     //fireMouseEvent('dragend', elemDrag, center2X, center2Y);
+     //fireMouseEvent('mouseup', elemDrag, center2X, center2Y);
+
+     // return true;
     };
 
     function createRouting() {
         var routingName = $('#CreateNewRouting').val();
         var nodes = [];
         $('.node').each(function (event, node) {
+
+            var WID = $(node).attr('id').substring(4, $(this).attr('id').length);
+            var setupTime;
+            var processingTime;
+            var cycleTime;
+
+            for (var i = 0; i < workStationInfo.length; i++) {
+                if (workStationInfo[i].WID == WID) {
+                    setupTime =   workStationInfo[i].SetupTime;
+                    processingTime =  workStationInfo[i].ProcessingTime;
+                    cycleTime = workStationInfo[i].CycleTime;
+                }
+            }
+          
             nodes.push({
                 GroupUID: @Session["GroupUID"],
                 RoutingName: routingName,
                 SourceID: $(node).attr('id'),
                 X: parseInt($(node).css('left')),
-                Y: parseInt($(node).css('top'))
+                Y: parseInt($(node).css('top')),
+                SetupTime: setupTime,
+                ProcessingTime: processingTime,
+                Cycle: cycleTime
             });
         });
 
@@ -495,8 +680,27 @@
         window.location.href = '/Board/Routing';
     }
 
-    function displayWorkStationList(groupUID) {
+    function removeRouting() {
+        var rid = parseInt($('#RoutingLst').val());
 
+        $.ajax({
+            type: "DELETE",
+            url: "/api/Routing/" + rid,
+            dataType: "json",
+            success: function (response) {
+                alert("'" + $('#RoutingLst :selected').text() + "'가 삭제되었습니다.");
+                window.location.href = '/Board/Routing/';
+            }
+        });
+    }
+
+
+    function displayWorkStationList(groupUID) {
+        var workStationContainer = "<ul id='WorkStationContainer'></ul>";
+        $('#WC').append(workStationContainer);
+
+        var routingContainer = "<ul class='row' id='RoutingContainer' style='width:100%; height: 900px; border:1px dotted red; margin-left:3px; background-color: #ababab; border-radius:5px; z-index: -1;'></ul>";
+        $('#RC').append(routingContainer);
 
         var start = "<li class='draggable' style='text-align:center;' id='itemstart'><div class='card start' style='width:190px; height:100%; background-color:red;'><span style='margin:auto; color:white;'>Start</span></div></li>";
         var end = "<li class='draggable' style='text-align:center;' id='itemend'><div class='card end' style='width:190px; height:100%; background-color:#007bff;'><span style='margin:auto; color:white;'>End</span></div></li>";
@@ -516,7 +720,15 @@
                 $.each(response, function (key, value) {
                     var workStation = "<li class='draggable' style='text-align:center;' id='item" + value.WId + "'>";
                     workStation += "<div class='card' style='width:190px; height:100%;'>";
-                    workStation += "<span style='margin:auto;'>" + value.Title + "</span>";
+                    workStation += "<span style='margin:auto;'>" + value.Title + "</span></div></li>";
+
+                    workStationInfo.push({
+                        WID: value.WId,
+                        Title: value.Title,
+                        ProcessingTime: value.ProcessingTime,
+                        SetupTime: value.SetupTime,
+                        CycleTime: 1
+                    });
 
                     $('.card').not('.start').not('.end').mouseover(function () {
                         $(this).css("background-color", "#007bff");
@@ -528,8 +740,6 @@
                 })
             }
         });
-
     }
-
 </script>
 

@@ -21,5 +21,9 @@ namespace APS.Models.Views
 
         public int X { get; set; }
         public int Y { get; set; }
+
+        public double ProcessingTime { get; set; }
+        public double SetupTime { get; set; }
+        public int Cycle { get; set; }
     }
 }

@@ -124,6 +124,8 @@
     <Build Include="dbo\Stored Procedures\Routing\GetAllRoutingMember.sql" />
     <Build Include="dbo\Tables\DashBoard\RoutingConnection.sql" />
     <Build Include="dbo\Stored Procedures\Routing\GetAllRoutingConnection.sql" />
+    <Build Include="dbo\Stored Procedures\Routing\DeleteRouting.sql" />
+    <Build Include="dbo\Stored Procedures\Routing\UpdateRoutingInfo.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="APS.Database.publish.Test.xml" />

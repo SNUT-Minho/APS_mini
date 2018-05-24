@@ -20,6 +20,8 @@ namespace APS.Controllers.API
         }
 
         // GET: api/Routing/5
+        [HttpGet]
+        [Route("api/Routing/{id}")]
         public IEnumerable<Routing> Get(int id)
         {
             var result = routingRepo.getAllRoutingLst(id);
@@ -27,6 +29,7 @@ namespace APS.Controllers.API
         }
 
         // GET: api/Routing/5
+        [HttpGet]
         [Route("api/Routing/{groupUID}/{rid}")]
         public IEnumerable<Routing> Get(int groupUID, int rid)
         {
@@ -35,11 +38,14 @@ namespace APS.Controllers.API
         }
 
         // GET: api/Routing/5
+        [HttpGet]
         [Route("api/Routing/{groupUID}/{fakeID}/{rid}")]
         public IEnumerable<Routing> Get(int groupUID, int fakeID, int rid)
         {
             var result = routingRepo.getAllRoutingConnection(rid);
             return result;
+
+
         }
 
         /// <summary>
@@ -48,6 +54,7 @@ namespace APS.Controllers.API
         /// </summary>
         /// <param name="routings"></param>
         // POST: api/Routing
+        [HttpPost]
         public void Post(List<Routing> routings)
         {
             foreach (var node in routings)
@@ -101,13 +108,22 @@ namespace APS.Controllers.API
         }
 
         // PUT: api/Routing/5
-        public void Put(int id, [FromBody]string value)
+        [Route("api/Routing/{rid}")]
+        public void Put(int rid, List<Routing> routing)
         {
+            foreach (var n in routing)
+            {
+                n.RID = rid;
+                routingRepo.updateRoutingInfo(n);
+            }
         }
 
         // DELETE: api/Routing/5
-        public void Delete(int id)
+        [HttpDelete]
+        [Route("api/Routing/{rid}")]
+        public void Delete(int rid)
         {
+            routingRepo.DeleteRouting(rid);
         }
     }
 }
