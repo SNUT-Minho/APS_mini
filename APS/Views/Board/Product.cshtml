@@ -342,12 +342,40 @@
         </div>
     </div>
 </div>
+<!--Create Routing Modal-->
+<!--Select Routing Modal-->
+<div class="modal fade" id="ModalSelectRouting" tabindex="-1" role="dialog" aria-labelledby="Warning-label" style="top:400px; left:0px; position:absolute; ">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="productNumber"></h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-groupmodal">
+                    <div class="form-group" style="padding-top:10px;">
+                        <div class="form-inline">
+                            <label class="control-label" for="RoutingLst">Select Routing &nbsp;&nbsp;: &nbsp;&nbsp;&nbsp;</label>
+                            <select id="RoutingLst" class="custom-select" style="width:100%;">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="SelectRoutingModalClose" onclick="clearRoutingModal();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="selectRouting();" id="createNewRoutingBtn">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Select Routing Modal-->
 
 <script>
     $(document).ready(function () {
 
 
-
+        
             // New Group Modal Validation
         $('#form-excelmodal').validate({
             rules: {
@@ -548,6 +576,20 @@
             }
         });
 
+        // Bind Routing Lst Data
+        $.ajax({
+            type: "GET",
+            url: "/api/Routing/" + @Session["GroupUID"],
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                $.each(response, function (key, value) {
+                    // Option tag Data bind
+                    var routingLst = "<option value=\"" + value.RID + "\" >" + value.RoutingName + "</option>";
+                    $('#RoutingLst').append(routingLst);
+                })
+            }
+        });
 
         // Show All Product List
         DisplayProduct();
@@ -567,6 +609,37 @@
         $('#CreateNewSubGroup').val('');
     }
 
+    function clearRoutingModal() {
+        $('#RoutingLst').val(0);
+    }
+
+    function selectRouting() {
+        var pid = $('#productNumber').text().substring(3, $('#productNumber').text().length);
+        var rid = parseInt($('#RoutingLst').val());
+
+        //update Routing of Product
+        $.ajax({
+            type: "PUT",
+            url: "/api/Product/" + @Session["GroupUID"] + "/" + parseInt(pid) + "/" + rid,
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                $('#SelectRoutingModalClose').click();
+                DisplayProduct();
+            }
+        });
+            
+    }
+
+
+    function openSelectRoutingModal(productNumber, routingNumber) {
+
+        $('#ModalSelectRouting').modal('toggle');
+        var pid = "No." + productNumber;
+        $('#productNumber').text(pid);
+        $('#RoutingLst').val(routingNumber);
+       
+    }
 
     // Clear Type Modal
     function clearTypeModal() {
@@ -818,11 +891,12 @@
                             data += "<td width=\"10.2%\">" + "<a href=\"#\" onclick=\"redirectToBom(" + productNumber + ")\"><i class=\"fa fa-check\" style=\"color: green;\"></i></a>" + "</td>";
                         }
                         if (value.RoutingNumber == 0 && value.ProductTypeID != 3) {
-                            data += "<td width=\"14%\">" + "&nbsp;&nbsp;&nbsp;" + "<a href=\"#\"><i class=\"fa fa-lock\" style=\"color: red;\"></i></a>" + "</td>";
+                            data += "<td width=\"14%\">" + "&nbsp;&nbsp;&nbsp;" + "<a href=\"#\" onclick=\"openSelectRoutingModal(" + productNumber + ");\"><i class=\"fa fa-lock\" style=\"color: red;\"></i></a>" + "</td>";
                         } else {
-                            data += "<td width=\"14%\">" + "&nbsp;&nbsp;&nbsp;" + "<a><i class=\"fa fa-check\" style=\"color: green;\"></i></a>" + "</td>";
+                            data += "<td width=\"14%\">" + "&nbsp;&nbsp;&nbsp;" + "<a href=\"#\" onclick=\"openSelectRoutingModal(" + productNumber + " , " + value.RoutingNumber + ");\"><i class=\"fa fa-check\" style=\"color: green;\"></i></a>" + "</td>";
                         }
                     } else {
+                        // 원재료
                         data += "<td width=\"10.2%\">" + "<a><i class=\"fa fa-minus\" style=\"color: orange;\"></i></a>" + "</td>";
                         data += "<td width=\"14%\">" + "&nbsp;&nbsp;&nbsp;" + "<a><i class=\"fa fa-minus\" style=\"color: orange;\"></i></a>" + "</td>";
                     }
@@ -1036,9 +1110,9 @@
                         data += "<td width=\"10.2%\">" + "<a href=\"#\" onclick=\"redirectToBom(" + productNumber + ")\"><i class=\"fa fa-check\" style=\"color: green;\"></i></a>" + "</td>";
                     }
                     if (value.RoutingNumber == 0 && value.ProductTypeID != 3) {
-                        data += "<td width=\"14%\">" + "&nbsp;&nbsp;&nbsp;" + "<a href=\"#\"><i class=\"fa fa-lock\" style=\"color: red;\"></i></a>" + "</td>";
+                        data += "<td width=\"14%\">" + "&nbsp;&nbsp;&nbsp;" + "<a href=\"#\" onclick=\"openSelectRoutingModal(" + productNumber + ");\"><i class=\"fa fa-lock\" style=\"color: red;\"></i></a>" + "</td>";
                     } else {
-                        data += "<td width=\"14%\">" + "&nbsp;&nbsp;&nbsp;" + "<a><i class=\"fa fa-check\" style=\"color: green;\"></i></a>" + "</td>";
+                        data += "<td width=\"14%\">" + "&nbsp;&nbsp;&nbsp;" + "<a href=\"#\" onclick=\"openSelectRoutingModal(" + productNumber + " , " + value.RoutingNumber + ");\"><i class=\"fa fa-check\" style=\"color: green;\"></i></a>" + "</td>";
                     }
                 } else {
                     data += "<td width=\"10.2%\">" + "<a><i class=\"fa fa-minus\" style=\"color: orange;\"></i></a>" + "</td>";

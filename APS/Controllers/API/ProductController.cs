@@ -48,8 +48,10 @@ namespace APS.Controllers.API
         }
 
         // PUT: api/Product/5
-        public void Put(int id, [FromBody]string value)
+        [Route("api/Product/{groupUID}/{pid}/{rid}")]
+        public void Put(int groupUID, int pid, int rid)
         {
+            productRepo.updateRouting(groupUID, pid, rid);
         }
 
         // DELETE: api/Product/5
