@@ -135,21 +135,72 @@
                         </div>
                     </div>
                     <!-- Standard Processing Time-->
+                    <div class="form-group">
+                        <div class="form-inline">
+                            <label class="control-label" for="RoutingLst"><i style="color:red;">#&nbsp;</i>WorkStation Group &nbsp; : &nbsp; </label>
+                            <select id="WorkStationGroupLst" class="form-control custom-select" style="width:36%;">
+                                <option value="0"></option>
+                            </select>
+                            <button class="btn btn-danger" style="margin-left: 5px;" data-target="#createWorkStationGroup" data-toggle="modal"><i class="fa fa-plus"></i></button>
+                        </div>
+                    </div>
                 </form>
             </div>
-            <div class="modal-footer" style="background-image:">
+            <div class="modal-footer">
                 <!--createMemo Button-->
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="modalClose" onclick="clearInput();">Close</button>
-                <button type="button" class="btn btn-primary" onclick="creatWorkStation();">Save</button>
+                <button type="button" class="btn btn-primary" onclick="creatWorkStation();">Create</button>
                 <!--createMemo Button-->
             </div>
         </div>
     </div>
 </div>
 <!--Create WorkStation Modal-->
+<!--Work Station Group-->
+<div class="modal fade" id="createWorkStationGroup" tabindex="-1" role="dialog" aria-labelledby="Warning-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Create WorkStation Group</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-groupmodal">
+                    <div class="form-group" style="padding-top:10px;">
+                        <div class="form-inline" style="margin-top: auto; margin-bottom:auto;">
+                            <label class="control-label" for="CreateNewGroup">New Group : </label>
+                            <input type="text" name="CreateNewWorkStationGroup" id="NewWorkStationGroup" value="" class="form-control" style="max-width:70%; margin-left:10px;" maxlength="115" autofocus placeholder="New WorkStation Group" required />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="createWorkStationGroupModalClose" onclick="clearWorkStationGroupModal();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="return createNewWorkStationGroup();" id="CreateNewWorkStationGroupBtn">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Work Station Group-->
 <input type="hidden" id="pageCount" name="pageCount" value="" />
 <script>
     $(document).ready(function () {
+
+        // Bind WorkStationGroup Lst Data (Set Eqal WorkStation)
+        $.ajax({
+            type: "GET",
+            url: "/api/WorkStationGroup/" + @Session["GroupUID"],
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                $.each(response, function (key, value) {
+                    // Option tag Data bind
+                    var workStationLst = "<option value=\"" + value.WorkStationGroupID + "\" >" + value.WorkStationGroupTitle + "</option>";
+                    $('#WorkStationGroupLst').append(workStationLst);
+                })
+            }
+        });
+
+
         // Create New Product Modal Validation
         $('#form-createWorkStation').validate({
             rules: {
@@ -219,17 +270,19 @@
         // Delete Memo Event Handler
         $('#WorkStationContainer').on('click', '.fa', function (event) {
             var id = $(event.target).attr('id');
-            // Memo Delete API wtih (MEMO Controller)
-            $.ajax({
-                type: "DELETE",
-                url: "/api/WorkStation/" + id,
-                data: "name=John&location=Boston",
-                dataType: "json",
-                success: function (response) {
-                    ClearWorkStation();
-                    DisplayWorkStation($('#pageCount').val());
-                }
-            });
+
+            if (confirm('Routing 정보도 같이 삭제됩니다. 정말 삭제하시겠습니까?')) {
+                // Memo Delete API wtih (MEMO Controller)
+                $.ajax({
+                    type: "DELETE",
+                    url: "/api/WorkStation/" + id,
+                    dataType: "json",
+                    success: function (response) {
+                        ClearWorkStation();
+                        DisplayWorkStation($('#pageCount').val());
+                    }
+                });
+            }
         });
     });
 
@@ -250,6 +303,30 @@
         }
     }
 
+    function createNewWorkStationGroup() {
+        var workStationGroupTitle = $("#NewWorkStationGroup").val();
+
+        var json = "{ GroupUID : \"" + @Session["GroupUID"] + "\",  WorkStationGroupTitle : \"" + workStationGroupTitle + "\"}";
+
+        $.ajax({
+            type: "POST",
+            url: "/api/WorkStationGroup/",
+            data: json,
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (value) {
+                // Option tag Data bind
+                var workStationLst = "<option value=\"" + value.WorkStationGroupID + "\" >" + value.WorkStationGroupTitle + "</option>";
+                $('#WorkStationGroupLst').append(workStationLst);
+
+                $("#createWorkStationGroupModalClose").click();
+            }
+        });
+    }
+
+    function clearWorkStationGroupModal() {
+        $("#createWorkStationGroupModalClose").val();
+    }
 
     // Clear newMemo input form
     function clearInput() {
@@ -258,6 +335,8 @@
         $('#Description').val('');
         $('#SetupTime').val('');
         $('#ProcessingTime').val('');
+        $('#WorkStationLst').val('0');
+        $('#WorkStationGroupLst').val('0');
 
         $('#form-createWorkStation').validate().resetForm();
     };
@@ -279,10 +358,10 @@
         if ($('#ProcessingTime').valid() == false) {
             count++;
         }
-     
+
         if (count > 0) {
             return false;
-        } 
+        }
 
         var data = new FormData();
         var files = $('#workStationImage').get(0).files;
@@ -308,12 +387,13 @@
         var description = $('#Description').val();
         var setupTime = $('#SetupTime').val();
         var processingTime = $('#ProcessingTime').val();
+        var workStationGroup = $('#WorkStationGroupLst').val();
 
         if (imageName == null) {
             imageName = "DefaultImage.png";
         }
 
-        var json = "{ Image : \"" + imageName + "\",  Title : \"" + title + "\", Description : \"" + description + "\", SetupTime : \"" + setupTime + "\", ProcessingTime : \"" + processingTime + "\", GroupUID : \"" + @Session["GroupUID"] + "\"}";
+        var json = "{ Image : \"" + imageName + "\",  Title : \"" + title + "\", Description : \"" + description + "\", SetupTime : \"" + setupTime + "\", ProcessingTime : \"" + processingTime + "\", GroupUID : \"" + @Session["GroupUID"] + "\" , WorkStationGroupID : \"" + workStationGroup + "\" }";
 
         $.ajax({
             type: "POST",

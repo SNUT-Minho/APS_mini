@@ -5,6 +5,7 @@
 	@SetupTime INT,
 	@ProcessingTime INT,
 	@GroupUID INT,
+	@WorkStationGroupID Int,
 	@WId INT Output
 AS
 	Declare @ViewOrder Int = 1
@@ -15,6 +16,6 @@ AS
 	IF @ViewOrder Is Null
 	Set @ViewOrder = 0
 
-	Insert Into WorkStation(Title, Image, Description, SetupTime, ProcessingTime, GroupUID, ViewOrder) Values(@Title, @Image, @Description, @SetupTime, @ProcessingTime, @GroupUID, (@ViewOrder+1))
+	Insert Into WorkStation(Title, Image, Description, SetupTime, ProcessingTime, GroupUID, ViewOrder, WorkStationGroupID) Values(@Title, @Image, @Description, @SetupTime, @ProcessingTime, @GroupUID, (@ViewOrder+1), @WorkStationGroupID)
 	Select @WId = SCOPE_IDENTITY()
 GO

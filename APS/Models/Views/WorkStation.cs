@@ -17,5 +17,6 @@ namespace APS.Models.Views
 
         public int VeiwOrder { get; set; }
         public int GroupUID { get; set; }
+        public int WorkStationGroupID { get; set; }
     }
 }

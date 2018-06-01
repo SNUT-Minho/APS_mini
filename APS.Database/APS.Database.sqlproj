@@ -127,6 +127,11 @@
     <Build Include="dbo\Stored Procedures\Routing\DeleteRouting.sql" />
     <Build Include="dbo\Stored Procedures\Routing\UpdateRoutingInfo.sql" />
     <Build Include="dbo\Stored Procedures\Product\UpdateRouting.sql" />
+    <Build Include="dbo\Stored Procedures\WorkStation\GetRemoveRoutingNumber.sql" />
+    <Build Include="dbo\Stored Procedures\WorkStation\RemoveRoutingInfo.sql" />
+    <Build Include="dbo\Tables\DashBoard\WorkStationGroupList.sql" />
+    <Build Include="dbo\Stored Procedures\WorkStation\GetAllWorkStationGroupList.sql" />
+    <Build Include="dbo\Stored Procedures\WorkStation\CreateWorkStationGroup.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="APS.Database.publish.Test.xml" />

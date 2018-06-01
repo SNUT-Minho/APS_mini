@@ -194,6 +194,7 @@
     <Compile Include="Controllers\API\RoutingController.cs" />
     <Compile Include="Controllers\API\UserController.cs" />
     <Compile Include="Controllers\API\WorkStationController.cs" />
+    <Compile Include="Controllers\API\WorkStationGroupController.cs" />
     <Compile Include="Controllers\MVC\AccountController.cs" />
     <Compile Include="Controllers\MVC\BoardController.cs" />
     <Compile Include="Controllers\MVC\HomeController.cs" />
@@ -222,6 +223,7 @@
     <Compile Include="Models\Views\Routing.cs" />
     <Compile Include="Models\Views\User.cs" />
     <Compile Include="Models\Views\WorkStation.cs" />
+    <Compile Include="Models\Views\WorkStationGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

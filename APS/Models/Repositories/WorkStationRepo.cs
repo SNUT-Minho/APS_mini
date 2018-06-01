@@ -14,6 +14,30 @@ namespace APS.Models.Repositories
     {
         private IDbConnection db = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
 
+        public WorkStationGroup CreateWorkStationGroup(WorkStationGroup workStationGroup)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@GroupUID", workStationGroup.GroupUID);
+            parameters.Add("@WorkStationGroupTitle", workStationGroup.WorkStationGroupTitle);
+            var WG = db.Query<WorkStationGroup>("CreateWorkStationGroup", parameters, commandType: CommandType.StoredProcedure).SingleOrDefault();
+
+            return WG;
+        }
+
+        public void RemoveRoutingInfo(int Wid)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@WID", Wid);
+            var RID = db.Query<int>("GetRemoveRoutingNumber", parameters, commandType: CommandType.StoredProcedure).ToList();
+
+            foreach (var rid in RID)
+            {
+                parameters = new DynamicParameters();
+                parameters.Add("RID", rid);
+                db.Execute("RemoveRoutingInfo", parameters, commandType:CommandType.StoredProcedure);
+            }
+        }
+
         public WorkStation CreateWorkStation(WorkStation workStation)
         {
             DynamicParameters parameters = new DynamicParameters();
@@ -23,7 +47,9 @@ namespace APS.Models.Repositories
             parameters.Add("@SetupTime", workStation.SetupTime);
             parameters.Add("@ProcessingTime", workStation.ProcessingTime);
             parameters.Add("@GroupUID", workStation.GroupUID);
+            parameters.Add("@WorkStationGroupID", workStation.WorkStationGroupID);
             parameters.Add("@WId", dbType: DbType.Int32, direction: ParameterDirection.Output);
+         
 
             db.Execute("CreateWorkStation", parameters , commandType: CommandType.StoredProcedure);
             workStation.WId = parameters.Get<int>("@WId");
@@ -38,6 +64,16 @@ namespace APS.Models.Repositories
             db.Execute("DeleteWorkStation", parameters, commandType: CommandType.StoredProcedure);
         }
 
+
+
+        public IEnumerable<WorkStationGroup> GetAllWorkStationGroupList(int id)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@GroupUID", id);
+
+            var result = db.Query<WorkStationGroup>("GetAllWorkStationGroupList", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return result;
+        }
 
         public IEnumerable<WorkStation> GetAllWorkStationList(int id)
         {

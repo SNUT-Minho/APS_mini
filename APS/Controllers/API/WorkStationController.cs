@@ -51,9 +51,12 @@ namespace APS.Controllers.API
         }
 
         // DELETE: api/WorkStation/5
+        [HttpDelete]
+        [Route("api/WorkStation/{id}")]
         public void Delete(int id)
-        {
+        {   
             workRepo.DeleteWorkStationById(id);
+            workRepo.RemoveRoutingInfo(id);
             return;
         }
     }

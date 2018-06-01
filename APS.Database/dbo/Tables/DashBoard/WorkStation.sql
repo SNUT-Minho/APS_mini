@@ -8,5 +8,6 @@
 	[ProcessingTime] float NOT NULL,
 
 	[ViewOrder] Int	Default(1),
-	[GroupUID] Int Not Null Default(1) -- 작성 그룹 코드번호
+	[GroupUID] Int Not Null Default(1), -- 작성 그룹 코드번호
+	[WorkStationGroupID] Int Null Default(0)
 )
