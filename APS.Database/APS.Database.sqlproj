@@ -70,6 +70,7 @@
     <Folder Include="dbo\Stored Procedures\BOM" />
     <Folder Include="dbo\Stored Procedures\WorkStation" />
     <Folder Include="dbo\Stored Procedures\Routing" />
+    <Folder Include="dbo\Stored Procedures\Order" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Views\Users.sql" />
@@ -132,6 +133,13 @@
     <Build Include="dbo\Tables\DashBoard\WorkStationGroupList.sql" />
     <Build Include="dbo\Stored Procedures\WorkStation\GetAllWorkStationGroupList.sql" />
     <Build Include="dbo\Stored Procedures\WorkStation\CreateWorkStationGroup.sql" />
+    <Build Include="dbo\Tables\DashBoard\Order.sql" />
+    <Build Include="dbo\Stored Procedures\Order\CreateNewOrder.sql" />
+    <Build Include="dbo\Stored Procedures\Routing\GetRouting.sql" />
+    <Build Include="dbo\Stored Procedures\Order\GetAllOrderLst.sql" />
+    <Build Include="dbo\Stored Procedures\Order\UpdateNote.sql" />
+    <Build Include="dbo\Stored Procedures\Order\RemoveOrder.sql" />
+    <Build Include="dbo\Stored Procedures\Order\UpdateOrder.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="APS.Database.publish.Test.xml" />

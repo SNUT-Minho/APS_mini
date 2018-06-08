@@ -200,8 +200,7 @@
 
 
         if (@Model != 0) {
-            $('#createRouting').prop('disabled', true);
-
+             $('#createRouting').prop('disabled', true);
              $.ajax({
                  url: pick(),
                  async: false,
@@ -682,16 +681,21 @@
 
     function removeRouting() {
         var rid = parseInt($('#RoutingLst').val());
-
-        $.ajax({
-            type: "DELETE",
-            url: "/api/Routing/" + rid,
-            dataType: "json",
-            success: function (response) {
-                alert("'" + $('#RoutingLst :selected').text() + "'가 삭제되었습니다.");
-                window.location.href = '/Board/Routing/';
+        if (rid == 0) {
+            alert('삭제할 대상을 선택하세요');
+        } else {
+            if (confirm('정말 삭제하시겠습니까?, 삭제된 Routing은 복구할 수 없습니다.')) {
+                $.ajax({
+                    type: "DELETE",
+                    url: "/api/Routing/" + rid,
+                    dataType: "json",
+                    success: function (response) {
+                        alert("'" + $('#RoutingLst :selected').text() + "'가 삭제되었습니다.");
+                        window.location.href = '/Board/Routing/';
+                    }
+                });
             }
-        });
+        }
     }
 
 
@@ -740,6 +744,7 @@
                 })
             }
         });
+
     }
 </script>
 

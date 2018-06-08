@@ -12,6 +12,7 @@ namespace APS.Controllers.API
     public class ProductController : ApiController
     {
         ProductRepository productRepo = new ProductRepository();
+        RoutingRepo routingRepo = new RoutingRepo();
 
         // GET: api/Product
         [Route("api/Product/{productNumber}")]
@@ -19,6 +20,18 @@ namespace APS.Controllers.API
         {
             Product p = productRepo.GetProductByProductNumber(productNumber);
             var result = productRepo.GetProductData(p);
+
+            return result;
+        }
+
+        [Route("api/Product/{groupUID}/{productNumber}")]
+        public Routing Get(int groupUID, int productNumber)
+        {
+            var result = routingRepo.getRouting(groupUID, productNumber);
+            if(result == null)
+            {
+                return null;
+            }
 
             return result;
         }

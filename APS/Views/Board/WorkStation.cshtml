@@ -115,7 +115,7 @@
                     <div class="form-group">
                         <div class="form-inline">
                             <label class="control-label" for="Description">Description &nbsp;&nbsp; : </label>
-                            <input type="text" name="Description" id="Description" value="" class="form-control" style="max-width:70%; margin-left:10px;" maxlength="115" autofocus placeholder="Work Station Definition" required />
+                            <input type="text" name="Description" id="Description" value="" class="form-control" style="max-width:70%; margin-left:10px;" maxlength="28" autofocus placeholder="Work Station Definition" required />
                         </div>
                     </div>
                     <!--Description-->
@@ -123,7 +123,7 @@
                     <div class="form-group">
                         <div class="form-inline">
                             <label class="control-label" for="SetupTime">Setup Time &nbsp;&nbsp; : </label>
-                            <input type="number" name="SetupTime" id="SetupTime" value="" class="form-control" style="max-width:50%; margin-left:10px;" maxlength="115" autofocus placeholder="Setup Time" required />
+                            <input type="number" name="SetupTime" id="SetupTime" value="" class="form-control" style="max-width:50%; margin-left:10px;" maxlength="10" autofocus placeholder="Setup Time(m)" required />
                         </div>
                     </div>
                     <!-- Standard Setup Time-->
@@ -131,7 +131,7 @@
                     <div class="form-group">
                         <div class="form-inline">
                             <label class="control-label" for="ProcessingTime">Processing Time &nbsp;&nbsp; : </label>
-                            <input type="number" name="ProcessingTime" id="ProcessingTime" value="" class="form-control" style="max-width:43%; margin-left:10px;" maxlength="115" autofocus placeholder="Processing Time" required />
+                            <input type="number" name="ProcessingTime" id="ProcessingTime" value="" class="form-control" style="max-width:43%; margin-left:10px;" maxlength="10" autofocus placeholder="Processing Time(m)" required />
                         </div>
                     </div>
                     <!-- Standard Processing Time-->
@@ -141,7 +141,7 @@
                             <select id="WorkStationGroupLst" class="form-control custom-select" style="width:36%;">
                                 <option value="0"></option>
                             </select>
-                            <button class="btn btn-danger" style="margin-left: 5px;" data-target="#createWorkStationGroup" data-toggle="modal"><i class="fa fa-plus"></i></button>
+                            <label class="btn btn-danger" style="margin-left: 5px; height:35px;" data-target="#createWorkStationGroup" data-toggle="modal"><i class="fa fa-plus"></i></label>
                         </div>
                     </div>
                 </form>
@@ -212,11 +212,11 @@
                 },
                 SetupTime: {
                     required: true,
-                    digits: true
+                    number: true
                 },
                 ProcessingTime: {
                     required: true,
-                    digits: true
+                    number: true
                 },
             },
             messages: {
@@ -228,11 +228,11 @@
                 },
                 SetupTime: {
                     required: "",
-                    digits: ""
+                    number: ""
                 },
                 ProcessingTime: {
                     required: "",
-                    digits: ""
+                    number: ""
                 },
             }
         });
@@ -287,6 +287,7 @@
     });
 
     function pagenation(id) {
+        saveWorkStationOrder();
         var page = parseInt($('#pageCount').val());
         if (id == "right") {
             $('#pageCount').val(page + 1);
@@ -427,12 +428,15 @@
                     workStation += "<div class='col-md-3' style = 'width:80%; height:180px; margin-top:10px; margin-left:25px; margin-right:25px;'><img src='/Image/" + image + "' style= 'width:100%; height:180px;'></div>";
                     workStation += "<div class='col-md-8' style='margin-top:5px;'><h5 class='card-title'><span class='hide-button' style='float: right; padding-right: 5px;'>";
                     workStation += "<a href = '#'><i class='fa fa-remove' id='" + response.WId + "'></i ></a ></span >";
-                    workStation += "<span style='margin-top:5px;'># Title : " + response.Title + "</span><br /><br />";
-                    workStation += "<span># Description : " + response.Description + "</span><br /><br />";
-                    workStation += "<span># Setup Time : " + response.SetupTime + "</span ><br /><br />";
-                    workStation += "<span># Processing Time : " + response.ProcessingTime + "</span>";
+                    if (response.WorkStationGroupID == 0) {
+                        workStation += "<span style='margin-top:5px;'><i class='fa fa-caret-right'></i> Title : " + response.Title + "</span><br /><br />";
+                    } else {
+                        workStation += "<span style='margin-top:5px;'><i class='fa fa-caret-right'></i> Title : " + response.Title + " (G: " + response.WorkStationGroupID + ")</span><br /><br />";
+                    }
+                    workStation += "<span><i class='fa fa-caret-right'></i> Description : " + response.Description + "</span><br /><br />";
+                    workStation += "<span><i class='fa fa-caret-right'></i> Setup Time : " + response.SetupTime + "(m)</span ><br /><br />";
+                    workStation += "<span><i class='fa fa-caret-right'></i> Processing Time : " + response.ProcessingTime + "(m)</span>";
                     workStation += "</h5></div></div></div></div>";
-
                     result += workStation;
                 });
                 $('#WorkStationContainer').append(result);

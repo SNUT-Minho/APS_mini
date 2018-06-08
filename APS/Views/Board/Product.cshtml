@@ -15,7 +15,7 @@
 
     @@media (min-width: 1800px) and (max-width: 2400px) {
         table tbody {
-            max-height: 700px;
+            max-height: 730px;
         }
     }
 
@@ -69,9 +69,10 @@
         <!--Header-->
         <h3>
             Product
+          
             <button data-target="#excelModal" data-toggle="modal" class="btn btn-info" style="float:right;" id="uploadExcel" name="uploadExcel"><i class="fa fa-file-excel-o"></i></button>
-            <button data-target="#myModal" data-toggle="modal" class="btn btn-primary" style="float:right; margin-right:5px;" id="createProduct" name="createProduct">품목 생성</button>
-            <button data-target="#" data-toggle="modal" class="btn btn-danger" style="float:right; margin-right:5px;" id="deleteProduct" name="deleteProduct" onclick="removeProduct();">품목 삭제</button>
+            <button data-target="#myModal" data-toggle="modal" class="btn btn-primary" style="float:right; margin-right:5px;" id="createProduct" name="createProduct">생성</button>
+            <button data-target="#" data-toggle="modal" class="btn btn-danger" style="float:right; margin-right:5px;" id="deleteProduct" name="deleteProduct" onclick="removeProduct();">삭제</button>
         </h3>
         <!--Header-->
         <hr />
@@ -1127,9 +1128,9 @@
     };
 
     function removeProduct() {
-
+        var flag = true;
         $('#ProductLst').find('tbody > tr > td:first-child.table-danger').each(function () {
-
+            flag = false;
             var id = $(this).attr('id');
             $.ajax({
                 type: "DELETE",
@@ -1144,7 +1145,12 @@
                 }
             });
         });
-        DisplayProduct();
+
+        if (flag == true) {
+            alert('품목을 선택해주세요.');
+        } else {
+            DisplayProduct();
+        }
     }
 
 

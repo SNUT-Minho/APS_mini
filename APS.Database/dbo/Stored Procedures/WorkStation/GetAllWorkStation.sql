@@ -5,7 +5,7 @@ AS
 	With WorkStationByGroup
 	As
 	(
-		Select WId, Title, Image, Description, SetupTime, ProcessingTime, ViewOrder, GroupUID, 
+		Select WId, Title, Image, Description, SetupTime, ProcessingTime, ViewOrder, GroupUID, WorkStationGroupID, 
 		ROW_NUMBER() Over (Order by ViewOrder Asc) as 'RowNumber'
 		From WorkStation
 	)

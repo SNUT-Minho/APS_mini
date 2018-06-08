@@ -14,6 +14,19 @@ namespace APS.Models.Repositories
     {
         private IDbConnection db = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
 
+    
+
+        public Routing getRouting(int groupUID, int productNumber)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@GroupUID", groupUID);
+            parameters.Add("@ProductNumber", productNumber);
+
+            var result = db.Query<Routing>("GetRouting", parameters, commandType: CommandType.StoredProcedure).SingleOrDefault();
+
+            return result;
+        }
+
         public void DeleteRouting(int rid)
         {
             DynamicParameters parameters = new DynamicParameters();

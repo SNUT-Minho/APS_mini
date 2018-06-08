@@ -3,6 +3,37 @@
     ViewBag.Title = "APSmini";
 }
 
+<style>
+
+    label.error {
+        color: red;
+    }
+
+    input.error {
+        border-color: #ff0000;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    }
+
+    select.error {
+        border-color: #ff0000;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    }
+
+    input.error:focus {
+        border-color: #ff0000;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
+    }
+
+    select.error:focus {
+        border-color: #ff0000;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
+    }
+</style>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <div class="row">
     <div class="col-md-2 col-lg-2"></div>
     <div class="col-md-8 col-lg-8 container-fluid">
@@ -25,26 +56,191 @@
                 <h4>Create Schedule</h4>
             </div>
             <div class="modal-body">
-                <form class="form-inline" role="form">
+                <form id="form-createNewSchedule">
                     <div class="form-group">
-                        <label for="productNumber">Product Number : &nbsp;</label>
-                        <input type="number" class="form-control" id="productNumber" placeholder="Enter Product Number">
+                        <div class="form-inline">
+                            <label for="productNumber">Product Number&nbsp; : &nbsp;</label>
+                            <input type="number" class="form-control" name="productNumber" id="productNumber" placeholder="Enter Product Number" required>
+                        </div>
                     </div>
                     <div class="form-group" style="margin-top:5px;">
-                        <label for="lotSize">Lot Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : &nbsp;</label>
-                        <input type="number" class="form-control" id="lotSize" placeholder="Enter Lot Size">
+                        <div class="form-inline">
+                            <label for="lotSize">Lot Size &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : &nbsp;</label>
+                            <input type="number" class="form-control" name="lotSize" id="lotSize" placeholder="Enter Lot Size" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top:5px;">
+                        <div class="form-inline">
+                            <label for="lotSize">Start Date &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : &nbsp;</label>
+                            <input type="text" class="form-control" name="startDate" id="startDate" placeholder="Select Start Date" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top:5px;">
+                        <div class="form-inline">
+                            <label for="lotSize">End Date &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : &nbsp;</label>
+                            <input type="text" class="form-control" name="endDate" id="endDate" placeholder="Select Due Date" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top:5px;">
+                        <div class="form-inline">
+                            <label for="lotSize">Critical Ratio &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : &nbsp;</label>
+                            <select class="custom-select" id="criticalRatio">
+                                <option style="background-color:green;" value="0">Low</option>
+                                <option style="background-color:orange;" value="1">Middle</option>
+                                <option style="background-color:red;" value="2">High</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top:20px;">
+                        <div class="form-inline">
+                            <label for="productNumber">Allow WorkStation Group &nbsp; : &nbsp;</label>
+                            <input type="checkbox" class="form-control" id="allowWorkStationGroup" placeholder="Enter Product Number">
+                        </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Create</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal" onclick="closeCreateScheduleModal();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="return createNewSchedule();">Create</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+    $(document).ready(function () {
 
+        // Create New Product Modal Validation
+        $('form').validate({
+            rules: {
+                productNumber: {
+                    required: true,
+                    digits: true,
+                    minlength: 1
+                },
+                lotSize: {
+                    required: true,
+                    minlength: 1
+                },
+                startDate: {
+                    required: true
+                },
+                endDate: {
+                    required: true
+                },
+            },
+            messages: {
+                productNumber: {
+                    required: "",
+                    digits: "",
+                    minlength: ""
+                },
+                lotSize: {
+                    required: "",
+                    minlength: ""
+                },
+                startDate: {
+                    required: ""
+                },
+                endDate: {
+                    required: ""
+                },
+            }
+        });
+
+        $('#startDate').datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+
+        var startDate = $.datepicker.formatDate('yy-mm-dd', new Date());
+        $('#startDate').datepicker('setDate', startDate);
+
+        $('#endDate').datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+
+        // New Group Modal auto focus
+        $('#createScheduleModal').on('shown.bs.modal', function () {
+            $('#productNumber').focus();
+        });
+    })
+
+    function closeCreateScheduleModal() {
+        $('#productNumber').val('');
+        $('#lotSize').val('');
+        var startDate = $.datepicker.formatDate('yy-mm-dd', new Date());
+        $('#startDate').datepicker('setDate', startDate);
+        $('#endDate').val('');
+        $('#criticalRatio').val('0');
+        $('#allowWorkStationGroup').prop('checked', false);
+        $('#form-createNewSchedule').validate().resetForm();
+    }
+
+
+    function createNewSchedule() {
+        var productNumber = $('#productNumber').val();
+        var routingName; 
+
+  
+
+        var lotSize = $('#lotSize').val();
+        var startDate = $('#startDate').val();
+        var endDate = $('#endDate').val();
+        var criticalRatio = $('#criticalRatio').val();
+        var allowWorkStationGroup = 0;
+
+        var count = 0;
+        if ($('#productNumber').valid() == false) {
+            count++;
+        }
+        if ($('#lotSize').valid() == false) {
+  
+            count++;
+        }
+        if ($('#startDate').valid() == false) {
+         
+            count++;
+        }
+        if ($('#endDate').valid() == false) {
+          
+            count++;
+        }
+        if (count > 0) {
+         
+            return false;
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "/api/Product/"+ @Session["GroupUID"] + "/" + productNumber,
+            dataType: "json",
+            async: false,
+            success: function (response) {
+                if (response == null) {
+                    alert('Routing 정보가 등록되지 않았습니다. 등록후 입력가능합니다.');
+                    $('#productNumber').val('');
+                    return false;
+                } else {
+                    routingName = response.RoutingName;
+                }
+            }
+        });
+
+        if ($('#allowWorkStationGroup').is(":checked") == true) {
+            allowWorkStationGroup = 1;
+        }
+
+        var data = "{GroupUID : \"" + @Session["GroupUID"] + "\", ProductNumber : \"" + productNumber + "\", LotSize : \"" + lotSize + "\", StartDate: \"" + startDate + "\", EndDate : \"" + endDate + "\", CriticalRatio : \"" + criticalRatio + "\", UserName : \"" + "@Session["UserName"]" + "\", AllowWorkStationGroup : \"" + allowWorkStationGroup + "\" , RoutingName : \"" + routingName + "\"}";
+        $.ajax({
+            type: "POST",
+            url: "/api/Order",
+            contentType: 'application/json; charset=utf-8',
+            data: data,
+            dataType: "json",
+            success: function (response) {
+                $('#closeModal').click();
+            }
+        });
+    }
 </script>
 

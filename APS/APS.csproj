@@ -188,6 +188,7 @@
     <Compile Include="Controllers\API\ExcelController.cs" />
     <Compile Include="Controllers\API\ImageController.cs" />
     <Compile Include="Controllers\API\MemoController.cs" />
+    <Compile Include="Controllers\API\OrderController.cs" />
     <Compile Include="Controllers\API\ProductController.cs" />
     <Compile Include="Controllers\API\ProductGroupController.cs" />
     <Compile Include="Controllers\API\ProductTypeController.cs" />
@@ -210,6 +211,7 @@
     </Compile>
     <Compile Include="Models\Repositories\CompanyRepository.cs" />
     <Compile Include="Models\Repositories\MemoRepository.cs" />
+    <Compile Include="Models\Repositories\OrderRepo.cs" />
     <Compile Include="Models\Repositories\ProductRepository.cs" />
     <Compile Include="Models\Repositories\RoutingRepo.cs" />
     <Compile Include="Models\Repositories\UserRepository.cs" />
@@ -217,6 +219,8 @@
     <Compile Include="Models\Views\BOM.cs" />
     <Compile Include="Models\Views\Company.cs" />
     <Compile Include="Models\Views\Memo.cs" />
+    <Compile Include="Models\Views\Note.cs" />
+    <Compile Include="Models\Views\Order.cs" />
     <Compile Include="Models\Views\Product.cs" />
     <Compile Include="Models\Views\ProductGroup.cs" />
     <Compile Include="Models\Views\ProductType.cs" />

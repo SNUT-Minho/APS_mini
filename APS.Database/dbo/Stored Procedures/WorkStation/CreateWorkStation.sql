@@ -2,8 +2,8 @@
 	@Title NVarChar(20),
 	@Image NVarChar(50),
 	@Description NVarChar(255),
-	@SetupTime INT,
-	@ProcessingTime INT,
+	@SetupTime float,
+	@ProcessingTime float,
 	@GroupUID INT,
 	@WorkStationGroupID Int,
 	@WId INT Output

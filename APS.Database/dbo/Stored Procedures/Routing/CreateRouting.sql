@@ -4,8 +4,8 @@
 	@SourceWID Int,
 	@X Int,
 	@Y Int,
-	@ProcessingTime Int,
-	@SetupTime Int,
+	@ProcessingTime float,
+	@SetupTime float,
 	@Cycle Int
 AS
 	Declare @Check Int
