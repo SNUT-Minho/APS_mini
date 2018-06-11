@@ -43,7 +43,17 @@
         </h3>
         <hr />
         <div class="row" id="ScheduleContainer">
-            <!--내용 Container-->
+            <div class="col-12">
+                <!--Date Picker-->
+                <input type="text" class="form-control" name="name" style="width:150px; display:inline-block;" id="Startdatepicker" onchange="DisplayOrder();" value="" />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-ellipsis-h"></i>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="text" class="form-control" name="name" style="width:150px; display:inline-block;" id="Finishdatepicker" onchange="DisplayOrder();" value="" />
+
+                <!--Slider-->  
+                <div id="slider" style="float:right; display:inline-block; width:200px; margin-left:10px; margin-top:10px;"></div>
+                <i class="fa fa-2x fa-search" style="float: right;"></i>
+            </div>
         </div>
     </div>
     <div class="col-md-2 col-lg-2"></div>
@@ -109,6 +119,23 @@
 
 <script>
     $(document).ready(function () {
+        $('#slider').slider();
+
+        // 화면 좌측 상단 DatePicker
+        var startDate = '2018-01-01';
+        startDate = $.datepicker.parseDate('yy-mm-dd', startDate);
+        $('#Startdatepicker').datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+        $('#Startdatepicker').datepicker('setDate', startDate);
+        var now = new Date();
+        now.setDate(now.getDate() + 30);
+        var endDate = $.datepicker.formatDate('yy-mm-dd', now);
+        $('#Finishdatepicker').datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+        $('#Finishdatepicker').datepicker('setDate', endDate);
+        // 화면 좌측 상단 DatePicker
 
         // Create New Product Modal Validation
         $('form').validate({
@@ -148,6 +175,7 @@
             }
         });
 
+
         $('#startDate').datepicker({
             dateFormat: 'yy-mm-dd'
         });
@@ -180,8 +208,7 @@
     function createNewSchedule() {
         var productNumber = $('#productNumber').val();
         var routingName; 
-
-  
+      
 
         var lotSize = $('#lotSize').val();
         var startDate = $('#startDate').val();
@@ -209,7 +236,7 @@
          
             return false;
         }
-
+        
         $.ajax({
             type: "GET",
             url: "/api/Product/"+ @Session["GroupUID"] + "/" + productNumber,

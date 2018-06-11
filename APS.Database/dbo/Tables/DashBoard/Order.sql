@@ -3,6 +3,7 @@
 	[OId] INT Identity(1,1) NOT NULL PRIMARY KEY,
 	[GroupUID] INT NOT NULL,
 	[ProductNumber] INT NOT NULL,
+	[RID] INT NOT NULL,
 	[RoutingName] NVarChar(25) NOT NULL,
 	[Description] NVarChar(25) NOT NULL,
 	[LotSize] INT NOT NULL,

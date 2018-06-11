@@ -10,6 +10,7 @@ namespace APS.Models.Views
         public int OId { get; set; } // Order Number
         public int GroupUID { get; set; }
         public int ProductNumber { get; set; }
+        public int RID { get; set; }
         public string RoutingName { get; set; }
         public string Description { get; set; }
         public int LotSize { get; set; }

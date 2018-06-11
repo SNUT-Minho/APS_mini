@@ -297,6 +297,7 @@
     }
 
     function closeOrderModal() {
+        $('#allowWorkStationGroup').prop('checked', false);
         $('#form-changeOrderModal').validate().resetForm();
         $('#OrderLst').find("tr:gt(0)").remove();
         DisplayOrder();

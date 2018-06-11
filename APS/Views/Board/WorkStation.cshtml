@@ -64,8 +64,8 @@
         <h3>
             Work Station
             <!--Create Memo Button-->
-            <button class="btn btn-danger" style="float:right; margin-right:5px;" id="right" onclick="pagenation(this.id);"><i class="fa fa-angle-right"></i></button>
-            <button class="btn btn-danger" style="float:right; margin-right:5px;" id="left" onclick="pagenation(this.id);"><i class="fa fa-angle-left"></i></button>
+            <button class="btn btn-danger" style="float:right; margin-right:5px;" id="right" onclick="return pagenation(this.id);"><i class="fa fa-angle-right"></i></button>
+            <button class="btn btn-danger" style="float:right; margin-right:5px;" id="left" onclick="return pagenation(this.id);"><i class="fa fa-angle-left"></i></button>
             <button data-target="#createNewWorkStation" data-toggle="modal" class="btn btn-primary" style="float:right; margin-right:5px;">
                 생성
             </button>
@@ -287,9 +287,18 @@
     });
 
     function pagenation(id) {
+        var count = 0;
+        $('#WorkStationContainer').find('.card').each(function () {
+            count++;
+        });
+       
+
         saveWorkStationOrder();
         var page = parseInt($('#pageCount').val());
         if (id == "right") {
+            if (count < 8) {
+                return false;
+            }
             $('#pageCount').val(page + 1);
             ClearWorkStation();
             DisplayWorkStation($('#pageCount').val());
