@@ -4,6 +4,21 @@
 }
 
 <style>
+    @@media (min-width: 400px) and (max-width: 1800px) {
+        table :not(.ui-datepicker-calendar) tbody {
+            max-height: 580px;
+        }
+    }
+
+    @@media (min-width: 1800px) and (max-width: 2400px) {
+        table > #ScheduleLst1 > tbody{
+            max-height:820px;
+            max-width:225px;
+        }
+        /*table tbody {
+            max-height: 820px;
+        }*/
+    }
 
     label.error {
         color: red;
@@ -32,6 +47,49 @@
         -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
         box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c35e5e;
     }
+
+    /*.headT {
+        max-width: 200px !important;
+        min-width: 200px !important;
+        min-height: 50px !important;
+        max-height: 50px !important;
+    }
+ 
+    .minute{
+        min-width: 50px;
+        max-width: 50px;
+    }*/
+
+    .workStation {
+        width: 225px !important;
+    }
+    #ScheduleLst1 > tbody {
+        overflow-x: no-display;
+    }
+
+    #ScheduleLst2 > tbody {
+        display: block;
+        overflow-y: scroll;
+        overflow-x: scroll;
+    }
+
+    table:not(.ui-datepicker-calendar)> tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    table > #ScheduleLst1 {
+        display: table;
+        max-width: 20% !important;
+        table-layout: fixed;
+    }
+
+    table > #ScheduleLst2 > tbody {
+        display: table;
+        width: 80%;
+        table-layout: fixed;
+    }
 </style>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <div class="row">
@@ -50,15 +108,55 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <input type="text" class="form-control" name="name" style="width:150px; display:inline-block;" id="Finishdatepicker" onchange="DisplayOrder();" value="" />
 
-                <!--Slider-->  
+                <!--Slider-->
                 <div id="slider" style="float:right; display:inline-block; width:200px; margin-left:10px; margin-top:10px;"></div>
                 <i class="fa fa-2x fa-search" style="float: right;"></i>
             </div>
+        </div>
+        <hr />
+        <div class="row container-fluid data-table" id="ScheduleContainer">
+            @*<!--Schedule Table-->
+            <table class="table table-striped table-fixed table-responsive table-bordered table-hover header-fixed" id="ScheduleLst" name="ScheduleLst" style="text-align:center;">
+                <thead>
+                </thead>
+                <tbody>
+                    <tr id="line1">
+                        <th class="workStation" style="width:225px !important;"><!--Empty Space--></th>
+                    </tr>
+                    <tr id="line2" class="table-danger">
+                        <th class="workStation" style="width:225px !important">Work Station</th>
+                    </tr>
+                </tbody>
+            </table>*@
+            <table class="table table-striped table-fixed table-responsive table-bordered table-hover header-fixed" id="ScheduleLst1" name="ScheduleLst1" style="text-align:center; width: 18%;">
+                <thead>
+                </thead>
+                <tbody>
+                    <tr id="">
+                        <th class="" style="width:225px !important;"><i class="fa fa-calendar"></i></th>
+                    </tr>
+                    <tr id="" class="table-danger">
+                        <th class="" style="width:225px !important">Work Station</th>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-striped table-fixed table-responsive table-bordered table-hover header-fixed" id="ScheduleLst2" name="ScheduleLst2" style="text-align:center; width:82%;">
+                <tbody>
+                    <tr id="line1">
+                       
+                    </tr>
+                    <tr id="line2" class="table-danger">
+                       
+                    </tr>
+                </tbody>
+            </table>
+            <!--Schedule Table-->
         </div>
     </div>
     <div class="col-md-2 col-lg-2"></div>
 </div>
 
+<!--Create Schedule Modal-->
 <div class="modal fade" id="createScheduleModal" tabindex="-1" role="dialog" aria-labelledby="Warning-label">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -116,20 +214,65 @@
         </div>
     </div>
 </div>
+<!--Create Schedule Modal-->
 
 <script>
+    var workStationInfo = [];
+
     $(document).ready(function () {
-        $('#slider').slider();
+
+        // WorkStation List Display
+        $.ajax({
+            type: "GET",
+            url: "/api/WorkStation/" + @Session["GroupUID"],
+            dataType: "json",
+            async: false,
+            success: function (response) {
+                $.each(response, function (key, value) {
+                    var workStation = "<tr><th id='" + value.WId + "' class='workStation'>" + value.Title + "</th></tr>";
+                    $('#ScheduleLst1 > tbody').append(workStation);
+                })
+                $('.workStation').attr('style', 'width: 225px !important;')
+            }
+        });
+
+        $('#slider').slider(
+            {
+                value: 1,
+                min: 1,
+                max: 3,
+                step: 1,
+                change: function (event, ui) {
+                    switch (ui.value) {
+                        case 1:
+                            displayScheduleByMinute();
+                            break;
+                        case 2:
+                            displayScheduleByHour();
+                            break;
+                        case 3:
+                            displayScheduleByDay();
+                            break;
+
+                        default: displayScheduleByMinute();
+                    }
+                }
+            }
+        );
 
         // 화면 좌측 상단 DatePicker
-        var startDate = '2018-01-01';
-        startDate = $.datepicker.parseDate('yy-mm-dd', startDate);
+
+        var now = new Date();
+
+        now.setDate(now.getDate() - 1);
+        var startDate = $.datepicker.formatDate('yy-mm-dd', now);
         $('#Startdatepicker').datepicker({
             dateFormat: 'yy-mm-dd'
         });
         $('#Startdatepicker').datepicker('setDate', startDate);
-        var now = new Date();
-        now.setDate(now.getDate() + 30);
+
+
+        now.setDate(now.getDate() + 7);
         var endDate = $.datepicker.formatDate('yy-mm-dd', now);
         $('#Finishdatepicker').datepicker({
             dateFormat: 'yy-mm-dd'
@@ -191,7 +334,74 @@
         $('#createScheduleModal').on('shown.bs.modal', function () {
             $('#productNumber').focus();
         });
+
+        displayScheduleByHour();
     })
+    
+    function displayScheduleByMinute() {
+       
+    }
+
+
+    function displayScheduleByHour() {
+        var f = $('#Finishdatepicker').datepicker('getDate');
+        var s = $('#Startdatepicker').datepicker('getDate');
+
+        var DayBetween = Math.floor((f.getTime() - s.getTime()) / 86400000);
+        for (var i = 0; i < DayBetween; i++) {
+
+            var k = $('#Startdatepicker').datepicker('getDate');
+            k.setDate(k.getDate() + i);
+
+            var dateString = (k.getFullYear() + "-" + (k.getMonth() + 1) + "-" + k.getDate());
+            var date = "<th class='date'>" + dateString + "</th>";
+            $('#line1').append(date);
+            $('.date').attr('style', 'width: 675px !important;');
+
+
+            for (var j = 8; j <= 22; j++) {
+                var d = "<th class='minute' id='" + (i + "-" + j) + "'>" + j + "</th>";
+                if (j == 22) {
+                    d = "<th class='minute' style='background-color: #fff7dc !important;'></th>"
+                }
+                $('#line2').append(d);
+            }
+        }
+
+        var count = 0;
+        $('#ScheduleLst1').find('tbody > tr > th').each(function () {
+            if ($(this).hasClass('workStation')) {
+                // 나중에 시간있을때 추가
+                //count++;
+                //if ( (count%14) == 0) {
+                //}
+                var id = $(this).attr('id');
+                var hour = "<tr>";
+                for (var i = 0; i < DayBetween; i++) {
+                    for (var j = 8; j <= 22; j++) {
+                        if (j == 22) {
+                            hour += "<th class='minute' style='background-color: #fff7dc !important;'>-</th>"
+                        } else {
+                            hour += "<th class='minute' id='" + ("w"+ id + "-" + i + "-" + j) + "'></th>";
+                        }
+                    }
+                }
+                hour += "</tr>";
+                $('#line2').after(hour);
+            }
+        });
+        $('.minute').width(20);
+    }
+ 
+                 
+    function displayScheduleByDay() {
+       
+    }
+
+
+    function updateSchedule(value) {
+        alert(value);
+    }
 
     function closeCreateScheduleModal() {
         $('#productNumber').val('');
@@ -207,8 +417,8 @@
 
     function createNewSchedule() {
         var productNumber = $('#productNumber').val();
-        var routingName; 
-      
+        var routingName;
+
 
         var lotSize = $('#lotSize').val();
         var startDate = $('#startDate').val();
@@ -221,22 +431,22 @@
             count++;
         }
         if ($('#lotSize').valid() == false) {
-  
+
             count++;
         }
         if ($('#startDate').valid() == false) {
-         
+
             count++;
         }
         if ($('#endDate').valid() == false) {
-          
+
             count++;
         }
         if (count > 0) {
-         
+
             return false;
         }
-        
+
         $.ajax({
             type: "GET",
             url: "/api/Product/"+ @Session["GroupUID"] + "/" + productNumber,
