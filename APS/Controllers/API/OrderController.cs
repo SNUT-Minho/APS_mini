@@ -12,6 +12,8 @@ namespace APS.Controllers.API
     public class OrderController : ApiController
     {
         OrderRepo orderRepo = new OrderRepo();
+        ScheduleRepository scheduleRepo = new ScheduleRepository();
+        RoutingRepo routingRepo = new RoutingRepo();
 
         // GET: api/Order
         public IEnumerable<string> Get()
@@ -35,7 +37,15 @@ namespace APS.Controllers.API
         {
             order.StartDate = Convert.ToDateTime(order.StartDate);
             order.EndDate = Convert.ToDateTime(order.EndDate);
+
             var result = orderRepo.createNewOrder(order);
+
+            //create Schedule
+            int rid = routingRepo.getRouting(order.GroupUID, order.ProductNumber).RID;
+            var node = routingRepo.getAllRoutingMember(rid);
+            var connection = routingRepo.getAllRoutingConnection(rid);
+            scheduleRepo.CreateSchedule(result, rid, node, connection);
+            //create Schedule
 
             return result;
         }

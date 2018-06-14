@@ -193,6 +193,7 @@
     <Compile Include="Controllers\API\ProductGroupController.cs" />
     <Compile Include="Controllers\API\ProductTypeController.cs" />
     <Compile Include="Controllers\API\RoutingController.cs" />
+    <Compile Include="Controllers\API\ScheduleController.cs" />
     <Compile Include="Controllers\API\UserController.cs" />
     <Compile Include="Controllers\API\WorkStationController.cs" />
     <Compile Include="Controllers\API\WorkStationGroupController.cs" />
@@ -214,6 +215,7 @@
     <Compile Include="Models\Repositories\OrderRepo.cs" />
     <Compile Include="Models\Repositories\ProductRepository.cs" />
     <Compile Include="Models\Repositories\RoutingRepo.cs" />
+    <Compile Include="Models\Repositories\ScheduleRepository.cs" />
     <Compile Include="Models\Repositories\UserRepository.cs" />
     <Compile Include="Models\Repositories\WorkStationRepo.cs" />
     <Compile Include="Models\Views\BOM.cs" />
@@ -225,6 +227,7 @@
     <Compile Include="Models\Views\ProductGroup.cs" />
     <Compile Include="Models\Views\ProductType.cs" />
     <Compile Include="Models\Views\Routing.cs" />
+    <Compile Include="Models\Views\Schedule.cs" />
     <Compile Include="Models\Views\User.cs" />
     <Compile Include="Models\Views\WorkStation.cs" />
     <Compile Include="Models\Views\WorkStationGroup.cs" />

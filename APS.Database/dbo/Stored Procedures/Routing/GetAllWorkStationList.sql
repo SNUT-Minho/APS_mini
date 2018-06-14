@@ -4,5 +4,5 @@ AS
 	Select *
 	From WorkStation
 	Where GroupUID = @GroupUID
-	Order by WId
+	Order by ViewOrder
 Go
