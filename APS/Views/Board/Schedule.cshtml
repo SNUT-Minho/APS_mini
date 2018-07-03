@@ -146,9 +146,13 @@
     <div class="col-md-8 col-lg-8 container-fluid">
         <h3>
             Schedule
+            <!--CreateSchedule Button-->
             <button data-target="#createScheduleModal" data-toggle="modal" class="btn btn-danger" style="float:right;" id="createSchedule" name="createSchedule"><i class="fa fa-paperclip"></i></button>
+            <!--CreateSchedule Button-->
         </h3>
+        <!--Loade Image-->
         <div id="wait" class="loader" style="position:absolute; left:700px; top:400px;"></div>
+        <!--Loader Image-->
         <hr />
         <div class="row" id="ScheduleContainer">
             <div class="col-12">
@@ -157,28 +161,17 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-ellipsis-h" id="symbol"></i>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <input type="text" class="form-control" name="name" style="width:150px; display:inline-block;" id="Finishdatepicker" onchange="DisplayOrder();" value="" />
-
+                <!--Date Picker-->
                 <!--Slider-->
                 <h5 style="float: right;">H</h5>
                 <div id="slider" style="float:right; display:inline-block; width:200px; margin-left:10px; margin-right:10px; margin-top:8px;"></div>
                 <h5 style="float: right;">M</h5>
+                <!--Slider-->
             </div>
         </div>
         <hr />
         <div class="row container-fluid data-table" id="ScheduleContainer">
-            @*<!--Schedule Table-->
-                <table class="table table-striped table-fixed table-responsive table-bordered table-hover header-fixed" id="ScheduleLst" name="ScheduleLst" style="text-align:center;">
-                    <thead>
-                    </thead>
-                    <tbody>
-                        <tr id="line1">
-                            <th class="workStation" style="width:225px !important;"><!--Empty Space--></th>
-                        </tr>
-                        <tr id="line2" class="table-danger">
-                            <th class="workStation" style="width:225px !important">Work Station</th>
-                        </tr>
-                    </tbody>
-                </table>*@
+            <!--WorkStation Lst Table-->
             <table class="table table-striped table-fixed table-responsive table-bordered table-hover header-fixed" id="ScheduleLst1" name="ScheduleLst1" style="text-align:center; width: 18%;">
                 <thead>
                 </thead>
@@ -191,6 +184,8 @@
                     </tr>
                 </tbody>
             </table>
+            <!--WorkStation Lst Table-->
+            <!--Schedule Table-->
             <table class="table table-striped table-fixed table-responsive table-bordered header-fixed" id="ScheduleLst2" name="ScheduleLst2" style="text-align:center; width:82%;">
                 <tbody></tbody>
             </table>
@@ -208,31 +203,41 @@
                 <h4>Create Schedule</h4>
             </div>
             <div class="modal-body">
+                <!-- From Create Schedule -->
                 <form id="form-createNewSchedule">
+                    <!--input productNumber-->
                     <div class="form-group">
                         <div class="form-inline">
                             <label for="productNumber">Product Number&nbsp; : &nbsp;</label>
                             <input type="number" class="form-control" name="productNumber" id="productNumber" placeholder="Enter Product Number" required>
                         </div>
                     </div>
+                    <!--input productNumber-->
+                    <!--input lotSize-->
                     <div class="form-group" style="margin-top:5px;">
                         <div class="form-inline">
                             <label for="lotSize">Lot Size &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : &nbsp;</label>
                             <input type="number" class="form-control" name="lotSize" id="lotSize" placeholder="Enter Lot Size" required>
                         </div>
                     </div>
+                    <!--input lotSize-->
+                    <!--select StartDate-->
                     <div class="form-group" style="margin-top:5px;">
                         <div class="form-inline">
                             <label for="lotSize">Start Date &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : &nbsp;</label>
                             <input type="text" class="form-control" name="startDate" id="startDate" placeholder="Select Start Date" required>
                         </div>
                     </div>
+                    <!--select StartDate-->
+                    <!--select endDate-->
                     <div class="form-group" style="margin-top:5px;">
                         <div class="form-inline">
                             <label for="lotSize">End Date &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : &nbsp;</label>
                             <input type="text" class="form-control" name="endDate" id="endDate" placeholder="Select Due Date" required>
                         </div>
                     </div>
+                    <!--select endDate-->
+                    <!--select criticalRatio-->
                     <div class="form-group" style="margin-top:5px;">
                         <div class="form-inline">
                             <label for="lotSize">Critical Ratio &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : &nbsp;</label>
@@ -243,13 +248,17 @@
                             </select>
                         </div>
                     </div>
+                    <!--select criticalRatio-->
+                    <!--select allow-->
                     <div class="form-group" style="margin-top:20px;">
                         <div class="form-inline">
                             <label for="productNumber">Allow WorkStation Group &nbsp; : &nbsp;</label>
                             <input type="checkbox" class="form-control" id="allowWorkStationGroup" placeholder="Enter Product Number">
                         </div>
                     </div>
+                    <!--select allow-->
                 </form>
+                <!-- From Create Schedule -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal" onclick="closeCreateScheduleModal();">Close</button>
@@ -261,10 +270,15 @@
 <!--Create Schedule Modal-->
 
 <script>
+    // WorkStaion Lst Array
     var workStationInfo = [];
+    // check MVC?
     var set = 0;
 
     $(document).ready(function () {
+
+        // order data tooltip
+        $('[data-toggle="tooltip"]').tooltip(); 
 
         // WorkStation List Display
         $.ajax({
@@ -281,6 +295,7 @@
             }
         });
 
+        // Slider
         $('#slider').slider(
             {
                 value: 1,
@@ -295,17 +310,14 @@
                         case 2:
                             displayScheduleByHour();
                             break;
-
                         default: displayScheduleByMinute();
                     }
                 }
             }
         );
 
-        // 화면 좌측 상단 DatePicker
-
+        // Set DatePicker Date to Day before
         var now = new Date();
-
         now.setDate(now.getDate() - 1);
         var startDate = $.datepicker.formatDate('yy-mm-dd', now);
         $('#Startdatepicker').datepicker({
@@ -313,14 +325,13 @@
         });
         $('#Startdatepicker').datepicker('setDate', startDate);
 
-
+        // Set DatePicker Date +7 Days from today
         now.setDate(now.getDate() + 7);
         var endDate = $.datepicker.formatDate('yy-mm-dd', now);
         $('#Finishdatepicker').datepicker({
             dateFormat: 'yy-mm-dd'
         });
         $('#Finishdatepicker').datepicker('setDate', endDate);
-        // 화면 좌측 상단 DatePicker
 
         // Create New Product Modal Validation
         $('form').validate({
@@ -360,14 +371,12 @@
             }
         });
 
-
+        // set Datepicker dateFormat
         $('#startDate').datepicker({
             dateFormat: 'yy-mm-dd'
         });
-
         var startDate = $.datepicker.formatDate('yy-mm-dd', new Date());
         $('#startDate').datepicker('setDate', startDate);
-
         $('#endDate').datepicker({
             dateFormat: 'yy-mm-dd'
         });
@@ -377,9 +386,11 @@
             $('#productNumber').focus();
         });
 
+        // Set Sldier Default Value
         $('#slider').slider('value', 1);
     })
 
+    // Display Order on Schedule Table
     function DisplayOrder() {
         switch ($('#slider').slider("option", "value")) {
             case 1:
@@ -394,16 +405,13 @@
         }
     }
 
-    // 하루만 전체 분단위로 보기 가능
+    // Display Order by 5Minutes? 
     function displayScheduleByMinute() {
-   
-
         if (set == 0) {
               set++;
               $('#wait').show();
               $('#symbol').hide();
               $('#Finishdatepicker').hide();
-
               $('#ScheduleLst2 > tbody').html('');
               $('#ScheduleLst2 > tbody').append("<tr id='line1'></tr><tr id='line2' class='table-danger'></tr>")
 
@@ -419,7 +427,8 @@
                           d += "<th class='minute' id='" + (i + "-" + j) + "'>" + (j*5) + "</th>";
                       }
                   }
-              }
+            }
+
               $('#line1').append(hour);
               $('#line2').append(d);
               $('.date').attr('style', 'width: 585px !important;');
@@ -428,7 +437,7 @@
               var minute = "";
               $('#ScheduleLst1').find('tbody > tr > th').each(function () {
                   if ($(this).hasClass('workStation')) {
-                      // 나중에 시간있을때 추가
+                      // !! Should be updated someday.
                       //count++;
                       //if ( (count%14) == 0) {
                       //}
@@ -451,25 +460,52 @@
               $('#wait').hide();
         }
 
+        // add 'start' or 'end' or 'node' class to schedule
         $('#ScheduleLst2').find('tbody > tr > th').each(function () {
             if ($(this).hasClass('node')) {
                 $(this).removeClass('node');
             }
+            if ($(this).hasClass('start')) {
+                $(this).removeClass('start');
+                $(this).html('');
+            }
+            if ($(this).hasClass('end')) {
+                $(this).removeClass('end');
+                $(this).html('');
+            }
         });
 
+        // Get all Schedule Lst by selected date
         var start = $('#Startdatepicker').val();
-
-       // api/Schedule + "GET"
         $.ajax({
             type: "GET",
             url: "/api/Schedule/" + @Session["GroupUID"] + "/" + start,
             dataType: "json",
             success: function (response) {
+                var oid;
+                var data;
                 $.each(response, function (key, value) {
+                    if (oid != value.OId) {
+                        oid = value.OId;
+               
+                       // get tooltip data by algorithm
+                       $.ajax({
+                           type: "GET",
+                           url: "/api/Data/"+ oid,
+                           dataType: "json",
+                           async: false,
+                           success: function (response) {
+                               data = "";
+                               $.each(response, function (key, value) {
+                                   data += value.Description + "(" + value.productNumber + ")" + " : " + value.count + " -- ";
+                               });
+                           }
+                       });
+                    }
+
                     var w = value.WId;
                     var start = new Date(value.StartDate);
                     var end = new Date(value.EndDate);
-
                     var s1 = start.getHours();
                     var s2 = (start.getMinutes()/5)+1;
 
@@ -487,7 +523,6 @@
                     var a = s1;
                     var b = s2; 
                     var check = true;
-
                     var f = true;
                   
                     while (check) {
@@ -495,6 +530,8 @@
                             var id = 'w' + w + '-' + a + '-' + b;
                             $('#' + id).addClass('end');
                             $('#' + id).html('E');
+                            $('#' + id).attr('data-toggle', 'tooltip');
+                            $('#' + id).attr('title', data);
                             check = false;
                         } else {
                             var id = 'w' + w + '-' + a + '-' + b;
@@ -502,12 +539,15 @@
                             if (f == true) {
                                 $('#' + id).addClass('start');
                                 $('#' + id).html('S');
+                                $('#' + id).attr('data-toggle', 'tooltip');
+                                $('#' + id).attr('title', data);
                                 f = false;
                             } else {
                                 $('#' + id).addClass('node');
+                                $('#' + id).attr('data-toggle', 'tooltip');
+                                $('#' + id).attr('title', data);
                             }
                         }
-
                         if (b == 12) {
                             a++;
                             b = 1;
@@ -520,28 +560,22 @@
         });
     }
 
-
+    // !! Should be updated someday.
     function displayScheduleByHour() {
         set = 0;
-
         $('#wait').show();
-
         $('#symbol').show();
         $('#Finishdatepicker').show();
-
         $('#ScheduleLst2 > tbody').html('');
         $('#ScheduleLst2 > tbody').append("<tr id='line1'></tr><tr id='line2' class='table-danger'></tr>")
-
         var f = $('#Finishdatepicker').datepicker('getDate');
         var s = $('#Startdatepicker').datepicker('getDate');
-
         var DayBetween = Math.floor((f.getTime() - s.getTime()) / 86400000);
         var date = "";
         var d = "";
         for (var i = 0; i <= DayBetween; i++) {
             var k = $('#Startdatepicker').datepicker('getDate');
             k.setDate(k.getDate() + i);
-            
             var dateString = (k.getFullYear() + "-" + (k.getMonth() + 1) + "-" + k.getDate());
             date += "<th class='date'>" + dateString + "</th>";
             for (var j = 8; j <= 22; j++) {
@@ -552,18 +586,14 @@
                 }
             }
         }
-
         $('#line1').append(date);
         $('#line2').append(d);
         $('.date').attr('style', 'width: 675px !important;');
-
-
-
         // var count = 0;
         var hour = "";
         $('#ScheduleLst1').find('tbody > tr > th').each(function () {
             if ($(this).hasClass('workStation')) {
-                // 나중에 시간있을때 추가
+                // !! Should be updated someday.
                 //count++;
                 //if ( (count%14) == 0) {
                 //}
@@ -586,16 +616,12 @@
         $('#wait').hide();
     }
 
-
-    function displayScheduleByDay() {
-
-    }
-
-
+    // ?
     function updateSchedule(value) {
         alert(value);
     }
 
+    // Close Create ScheduleModal
     function closeCreateScheduleModal() {
         $('#productNumber').val('');
         $('#lotSize').val('');
@@ -607,40 +633,34 @@
         $('#form-createNewSchedule').validate().resetForm();
     }
 
-
+    // Create New Schedule
     function createNewSchedule() {
         var productNumber = $('#productNumber').val();
         var routingName;
-
-
         var lotSize = $('#lotSize').val();
         var startDate = $('#startDate').val();
         var endDate = $('#endDate').val();
         var criticalRatio = $('#criticalRatio').val();
         var allowWorkStationGroup = 0;
-
         var count = 0;
         if ($('#productNumber').valid() == false) {
             count++;
         }
         if ($('#lotSize').valid() == false) {
-
             count++;
         }
         if ($('#startDate').valid() == false) {
-
             count++;
         }
         if ($('#endDate').valid() == false) {
-
             count++;
         }
         if (count > 0) {
-
             return false;
         }
         var flag = false;
 
+        // Get Routing Info From Routing DB
         $.ajax({
             type: "GET",
             url: "/api/Product/"+ @Session["GroupUID"] + "/" + productNumber,
@@ -657,13 +677,12 @@
                 }
             }
         });
-
         if ($('#allowWorkStationGroup').is(":checked") == true) {
             allowWorkStationGroup = 1;
         }
-
         var data = "{GroupUID : \"" + @Session["GroupUID"] + "\", ProductNumber : \"" + productNumber + "\", LotSize : \"" + lotSize + "\", StartDate: \"" + startDate + "\", EndDate : \"" + endDate + "\", CriticalRatio : \"" + criticalRatio + "\", UserName : \"" + "@Session["UserName"]" + "\", AllowWorkStationGroup : \"" + allowWorkStationGroup + "\" , RoutingName : \"" + routingName + "\"}";
 
+        // Create New Schedule
         if (!flag) {
             $.ajax({
                 type: "POST",
@@ -675,6 +694,16 @@
                     $('#closeModal').click();
                 }
             });
+        }
+
+        // Check Slider value
+        switch ($('#slider').slider("option", "value")) {
+            case 1:
+                displayScheduleByMinute();
+                break;
+            case 2:
+                displayScheduleByHour();
+                break;
         }
     }
 </script>

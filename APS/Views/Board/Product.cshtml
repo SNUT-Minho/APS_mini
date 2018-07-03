@@ -375,9 +375,7 @@
 <script>
     $(document).ready(function () {
 
-
-        
-            // New Group Modal Validation
+        // New Group Modal Validation
         $('#form-excelmodal').validate({
             rules: {
                 ExcelGroupLst: {
@@ -595,7 +593,7 @@
         // Show All Product List
         DisplayProduct();
 
-
+        // bind click event to product Lst
         $('#ProductLst').bind('click', function (e) {
             $(e.target).closest('tbody > tr').children('td,th').toggleClass('table-danger');
         })
@@ -610,14 +608,15 @@
         $('#CreateNewSubGroup').val('');
     }
 
+    // clear routing modal
     function clearRoutingModal() {
         $('#RoutingLst').val(0);
     }
 
+    // select routing
     function selectRouting() {
         var pid = $('#productNumber').text().substring(3, $('#productNumber').text().length);
         var rid = parseInt($('#RoutingLst').val());
-
         //update Routing of Product
         $.ajax({
             type: "PUT",
@@ -632,9 +631,8 @@
             
     }
 
-
+    // select routing modal
     function openSelectRoutingModal(productNumber, routingNumber) {
-
         $('#ModalSelectRouting').modal('toggle');
         var pid = "No." + productNumber;
         $('#productNumber').text(pid);
@@ -1127,6 +1125,7 @@
         });
     };
 
+    // Remove product (find selected tr)
     function removeProduct() {
         var flag = true;
         $('#ProductLst').find('tbody > tr > td:first-child.table-danger').each(function () {
@@ -1145,15 +1144,11 @@
                 }
             });
         });
-
         if (flag == true) {
             alert('품목을 선택해주세요.');
         } else {
             DisplayProduct();
         }
     }
-
-
-
 </script>
 

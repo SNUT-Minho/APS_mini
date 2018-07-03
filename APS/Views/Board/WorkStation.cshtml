@@ -247,10 +247,10 @@
         });
 
 
-
+        // Save workStation order before move out from this page
         $(window).on('beforeunload', function () {
            saveWorkStationOrder();
-       });
+        });
 
 
         // Show ALL Data to Memo Container
@@ -286,12 +286,12 @@
         });
     });
 
+    // Javascript pagenation
     function pagenation(id) {
         var count = 0;
         $('#WorkStationContainer').find('.card').each(function () {
             count++;
         });
-       
 
         saveWorkStationOrder();
         var page = parseInt($('#pageCount').val());
@@ -313,11 +313,12 @@
         }
     }
 
+    // Create New WorkStation Group -- !! Should be updated someday..
     function createNewWorkStationGroup() {
         var workStationGroupTitle = $("#NewWorkStationGroup").val();
-
         var json = "{ GroupUID : \"" + @Session["GroupUID"] + "\",  WorkStationGroupTitle : \"" + workStationGroupTitle + "\"}";
 
+        // Create WorkStation Group 
         $.ajax({
             type: "POST",
             url: "/api/WorkStationGroup/",
@@ -328,12 +329,12 @@
                 // Option tag Data bind
                 var workStationLst = "<option value=\"" + value.WorkStationGroupID + "\" >" + value.WorkStationGroupTitle + "</option>";
                 $('#WorkStationGroupLst').append(workStationLst);
-
                 $("#createWorkStationGroupModalClose").click();
             }
         });
     }
 
+    // Clear workStation Group Modal
     function clearWorkStationGroupModal() {
         $("#createWorkStationGroupModalClose").val();
     }
@@ -355,7 +356,6 @@
     // Create newMemo API with (MEMO Controller)
     function creatWorkStation() {
         var count = 0;
-
         if ($('#Title').valid() == false) {
             count++;
         }
@@ -368,7 +368,6 @@
         if ($('#ProcessingTime').valid() == false) {
             count++;
         }
-
         if (count > 0) {
             return false;
         }
@@ -378,9 +377,9 @@
         if (files.length > 0) {
             data.append("UploadImage", files[0]);
         }
-
         var imageName;
 
+        // Save Image File to DB
         $.ajax({
             type: "POST",
             url: "/api/Image/",
@@ -405,6 +404,7 @@
 
         var json = "{ Image : \"" + imageName + "\",  Title : \"" + title + "\", Description : \"" + description + "\", SetupTime : \"" + setupTime + "\", ProcessingTime : \"" + processingTime + "\", GroupUID : \"" + @Session["GroupUID"] + "\" , WorkStationGroupID : \"" + workStationGroup + "\" }";
 
+        // create new workStation
         $.ajax({
             type: "POST",
             url: "/api/WorkStation/",
@@ -432,7 +432,6 @@
                     if (image === null) {
                         image = "DefaultImage.png";
                     }
-
                     var workStation = "<div class='col-md-6' id='"+ response.WId + "'><div class='card' style='height:200px; background-color: white;' draggable='true'><div class='row'>";
                     workStation += "<div class='col-md-3' style = 'width:80%; height:180px; margin-top:10px; margin-left:25px; margin-right:25px;'><img src='/Image/" + image + "' style= 'width:100%; height:180px;'></div>";
                     workStation += "<div class='col-md-8' style='margin-top:5px;'><h5 class='card-title'><span class='hide-button' style='float: right; padding-right: 5px;'>";

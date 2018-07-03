@@ -175,6 +175,7 @@
 <script>
     $(document).ready(function () {
 
+        // validation for form
         $('form').validate({
             rules: {
                 productNumber: {
@@ -212,26 +213,21 @@
             }
         });
 
+        // set date picker value to '2018-01-01' 
         var startDate = '2018-01-01';
         startDate = $.datepicker.parseDate('yy-mm-dd', startDate);
-
         $('#Startdatepicker').datepicker({
             dateFormat: 'yy-mm-dd'
         });
 
-   
-
-
+        // set date picker value to +30 Days from 'Today'
         $('#Startdatepicker').datepicker('setDate', startDate);
-
         var now = new Date();
         now.setDate(now.getDate() + 30);
         var endDate = $.datepicker.formatDate('yy-mm-dd', now);
-
         $('#Finishdatepicker').datepicker({
             dateFormat: 'yy-mm-dd'
         });
-
         $('#Finishdatepicker').datepicker('setDate', endDate);
 
         // Modal Datepicker
@@ -241,14 +237,17 @@
         $('#ModalendDate').datepicker({
             dateFormat: 'yy-mm-dd'
         });
+
         // Show All Order List
         DisplayOrder();
 
+        // bind click event to tr
         $('#OrderLst').bind('click', function (e) {
             $(e.target).closest('tbody > tr').children('td,th').toggleClass('table-danger');
         })
     });
 
+    // update order data
     function updateOrder() {
         var productNumber = $('#productNumber').val();
         var lotSize = $('#lotSize').val();
@@ -257,8 +256,8 @@
         var criticalRatio = $('#criticalRatio').val();
         var allowWorkStationGroup = 0;
         var oid = $('#orderNumber').html();
-
         var count = 0;
+
         if ($('#productNumber').valid() == false) {
             count++;
         }
@@ -278,12 +277,12 @@
 
             return false;
         }
-
-         if ($('#allowWorkStationGroup').is(":checked") == true) {
+        if ($('#allowWorkStationGroup').is(":checked") == true) {
             allowWorkStationGroup = 1;
         }
 
         var data = "{GroupUID : \"" + @Session["GroupUID"]  + "\", LotSize : \"" + lotSize + "\", StartDate: \"" + startDate + "\", EndDate : \"" + endDate + "\", CriticalRatio : \"" + criticalRatio + "\", UserName : \"" + "@Session["UserName"]" + "\", AllowWorkStationGroup : \"" + allowWorkStationGroup +  "\"}";
+        // Update order data
         $.ajax({
             type: "POST",
             url: "/api/Order/" + oid,
@@ -296,6 +295,7 @@
         });
     }
 
+    // close order info Modal
     function closeOrderModal() {
         $('#allowWorkStationGroup').prop('checked', false);
         $('#form-changeOrderModal').validate().resetForm();
@@ -303,12 +303,11 @@
         DisplayOrder();
     }
 
+    // Display Order Lst
     function DisplayOrder() {
 
         // Get All Selceted Index
         $('#OrderLst').find("tr:gt(0)").remove();
-        // --> 여기에 날짜추가해서 Display해야된다.
-
         var start = $('#Startdatepicker').val();
         var end = $('#Finishdatepicker').val();
 
@@ -322,20 +321,16 @@
                     var data = "<tr><td width=\"10.2%\"  id=\"" + value.OId + "\">" + value.ProductNumber + "</td>";
                     data += "<td width=\"15.2%\">" + value.Description + "</td>";
                     data += "<td width=\"10.2%\"> " + value.LotSize + "</td>";
-
                     data += "<td width=\"15.2%\">" + value.RoutingName + "</td>";
 
                     var startDate = new Date(value.StartDate);
                     startDate.setDate(startDate.getDate() + 1);
                     startDate =  startDate.toISOString().slice(0, 10);
-             
-
                     data += "<td width=\"10.2%\">" + startDate + "</td>";
 
                     var endDate = new Date(value.EndDate);
                     endDate.setDate(endDate.getDate() + 1);
                     endDate = endDate.toISOString().slice(0, 10);
-
                     data += "<td width=\"10.2%\"> " + endDate + "</td >";
 
                     var CriticalRatio;
@@ -348,10 +343,8 @@
                     }
 
                     data += "<td width=\"5.2%\"> " + CriticalRatio + "</td >";
-
                     data += "<td width=\"14.1%\"><input type='text' class='form-control' id='i" + value.OId + "' style='height:30px;' value='"+ value.Note + "'></td >";
                     data += "</tr>";
-
                   
                     $('#OrderLst').append(data);
                     $('#i' + value.OId).focusout(function () {
@@ -361,7 +354,7 @@
                         }
                         var OId = parseInt(value.OId);
 
-
+                        // Put Order Data to DB
                         $.ajax({
                             type: "PUT",
                             url: "/api/Order/" + OId,
@@ -396,13 +389,11 @@
                         // -- End Date Datepicker
                        
                         $('#criticalRatio').val(value.CriticalRatio);
-
                         if (value.AllowWorkStationGroup == 1) {
                             $('#allowWorkStationGroup').prop('checked', true);
                         }
 
                         $('#allowWorkStationGroup').val(value.ProductNumber);
-
                         $('#changeOrderModal').modal('toggle');
                     });
                 })
@@ -410,9 +401,8 @@
         });
     }
 
+    // remove order 
     function removeOrder(e) {
-
-
         if (confirm('정말 삭제하시겠습니까? 삭제한 주문은 되돌릴 수 없습니다.')) {
             var flag = true;
             $('#OrderLst').find('tbody > tr > td:first-child.table-danger').each(function () {
@@ -424,7 +414,6 @@
                     data: "name=John&location=Boston",
                     dataType: "json",
                     success: function (data, statusText) {
-
                     },
                     error: function (request, textStatus, error) {
 

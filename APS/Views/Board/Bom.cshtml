@@ -38,40 +38,65 @@
         <hr />
         <div class="row" id="ProductInfoContainer" style="height:200px; margin-left:1%; margin-right:1%;">
             <div class="col-md-12" id="">
+                <!--BOM Data Panel-->
                 <div class="form-group row" style="padding-left:20px; padding-top:20px; border:1px solid gray; background-color:white; height:130px;">
+                    <!--product Number-->
                     <label for="productNumber" class="col-1 col-form-label">Number : </label>
                     <div class="col-3">
                         <input type="text" readonly class="form-control" id="productNumber" name="productNumber" style="width:100%;" value="">
                     </div>
+                    <!--product Number-->
+                    <!--product Group-->
                     <label for="productGroup" class="col-1 col-form-label">Group : </label>
                     <div class="col-3">
                         <input type="text" readonly class="form-control" id="productGroup" name="productGroup" value="">
                     </div>
+                    <!--product Group-->
+                    <!--product Sub Group-->
                     <label for="productSubGroup" class="col-1 col-form-label" style="font-size:14px;"> Sub Group : </label>
                     <div class="col-3">
                         <input type="text" readonly class="form-control" id="productSubGroup" name="productSubGroup" value="">
                     </div>
+                    <!--product Sub Group-->
+                    <!--product Type-->
                     <label for="productType" class="col-1 col-form-label">Type :</label>
                     <div class="col-3">
                         <input type="text" readonly class="form-control" id="productType" name="productType" style="width:100%;" value="">
                     </div>
+                    <!--product Type-->
+                    <!--User-->
                     <label for="createUser" class="col-1 col-form-label">User : </label>
                     <div class="col-3">
                         <input type="text" readonly class="form-control" id="createUser" name="createUser" value="">
                     </div>
+                    <!--User-->
+                    <!--Description-->
                     <label for="description" class="col-1 col-form-label">Description : </label>
                     <div class="col-3">
                         <input type="text" readonly class="form-control" id="description" name="description" value="">
                     </div>
+                    <!--Description-->
                 </div>
+                <!--BOM Data Panel-->
+                <!--Button Group-->
                 <div class="row" style="float:right; margin-top: 5px;">
+                    <!--Minus Structure-->
                     <label id="minusBtn" class="btn btn-danger" style="float:right; border-radius:0px; margin-right:5px;" onclick="minusStructure();"><i class="fa fa-minus"></i></label>
+                    <!--Minus Structure-->
+                    <!--Plus Structure-->
                     <label id="plusBtn" class="btn btn-warning" style="float:right; border-radius:0px; margin-right:5px;" onclick="plusStructure();"><i class="fa fa-plus"></i></label>
-                    <label id="plusBtn" class="btn btn-success" style="float:right; border-radius:0px; margin-right:5px;" onclick="saveBOM();"><i class="fa fa-save"></i></label>
+                    <!--Plus Structure-->
+                    <!--Save BOM-->
+                    <label id="saveBtn" class="btn btn-success" style="float:right; border-radius:0px; margin-right:5px;" onclick="saveBOM();"><i class="fa fa-save"></i></label>
+                    <!--Save BOM-->
+                    <!--Upload excel Data-->
                     <label data-target="#excelModal" data-toggle="modal" class="btn btn-info" style="float:right; border-radius:0px;" id="uploadExcel" name="uploadExcel"><i class="fa fa-file-excel-o"></i></label>
+                    <!--Upload excel Data-->
                 </div>
+                <!--Button Group-->
             </div>
         </div>
+        <!--BOM Container-->
         <div class="row" id="BomContainer" style="margin-top:5px;">
             <table class="table table-striped table-bordered table-hover header-fixed" id="BOMLst" name="BOMLst" style="text-align:center; width:90%; margin-left:5%;">
                 <thead>
@@ -87,6 +112,7 @@
                 <tbody></tbody>
             </table>
         </div>
+        <!--BOM Container-->
     </div>
     <div class="col-md-2 col-lg-2"></div>
 </div>
@@ -118,19 +144,20 @@
 
     $(document).ready(function () {
 
+        // up mouse down
         $(".btn").mousedown(function (e) {
             e.preventDefault();
         })
 
+        // check MVC data & display BOM data
         if (@Model.ProductNumber!= 0) {
             $('#searchBOM').val(@Model.ProductNumber);
             DisplayProductInfo();
             DisplayBOM();
         }
-
     });
 
-
+    // Excel Lst data to BOM DB
     function exportToBOM() {
         var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/;
         /*Checks whether the file is a valid excel file*/
@@ -167,7 +194,6 @@
                             cnt++;
                         }
                     });
-         
                 }
                 if (xlsxflag) {/*If excel file is .xlsx extension than creates a Array Buffer from excel*/
                     reader.readAsArrayBuffer($("#excelfile")[0].files[0]);
@@ -185,9 +211,9 @@
         }
     }
 
+    // Bind Excel data to DB Table
     function BindTable(jsondata) {/*Function used to convert the JSON array to Html Table*/
         var columns = BindTableHeader(jsondata); /*Gets all the column headings of Excel*/
-       
         var bomLst = [];
         var parentProductNumber;
         for (var i = 0; i < jsondata.length; i++) {
@@ -213,7 +239,8 @@
             }
             bomLst.push({ "ParentProductNumber": parentProductNumber, "ChildProductNumber": childProductNumber, "Count": count });
         }
-        
+
+        // Create BOM by Excel Data Lst
         $.ajax({
             type: "POST",
             url: "/api/BOM/",
@@ -222,13 +249,13 @@
             dataType: 'json',
             data: JSON.stringify(bomLst),
             success: function (response) {
-
                 $('#excelClose').click();
                 window.location.href = '/Board/BOM/';
             }
         });
     }
 
+    // Bind Excel data to DB Table Header
     function BindTableHeader(jsondata) {/*Function used to get all column names from JSON and bind the html table header*/
         var columnSet = [];
         for (var i = 0; i < jsondata.length; i++) {
@@ -244,6 +271,7 @@
         return columnSet;
     }
 
+    // Save BOM Data
     function saveBOM() {
         var bomLst = [];
         var parentProductNumber = $('#productNumber').val();
@@ -253,6 +281,7 @@
             bomLst.push({ "ParentProductNumber" : parentProductNumber, "ChildProductNumber" : childProductNumber, "Count" : count });
         })
         if (bomLst.length == 0) {
+            // Delete BOM if structure size is less than 0
             $.ajax({
                 type: "DELETE",
                 url: "/api/BOM/" + parentProductNumber,
@@ -265,7 +294,7 @@
                 }
             });
         }
-
+        // Create BOM data
         $.ajax({
             type: "POST",
             url: "/api/BOM/",
@@ -274,12 +303,10 @@
             dataType: 'json',
             data: JSON.stringify(bomLst),
             success: function (response) {
-
             }
         });
     }
-
-
+    // Display Product Info
     function DisplayProductInfo() {
         $('#createUser').val('@Model.CreateUserName');
         $('#productNumber').val(@Model.ProductNumber);
@@ -289,6 +316,7 @@
         $('#description').val('@Model.Description');
     }
 
+    // Plus BOM Structure
     var index = 1;
     function plusStructure() {
         $(this).keyup();
@@ -319,11 +347,12 @@
         index++;
     }
 
-
+    // Minus Structure
     function minusStructure() {
         $('#BOMLst > tbody > tr:last').remove();
     }
 
+    // Display BOM data
     function DisplayBOM() {
         $('#BOMLst > tbody').html('');
         var productNumber = $('#searchBOM').val();
@@ -339,7 +368,6 @@
                  $('#productSubGroup').val(response.ProductSubGroupName);
                  $('#productType').val(response.ProductTypeName);
                  $('#description').val(response.Description);
-
                 // 전체 BOM 출력 구문
             },
             error: function (xhr, ajaxOptions, thrownErorr) {
@@ -347,6 +375,7 @@
             }
         });
 
+        // Get BOM Data by product Number
         $.ajax({
             type: "GET",
             url: "/api/BOM/" + productNumber,
@@ -358,7 +387,7 @@
                 $.each(response, function (key, value) {
                     var count = value.Count;
                     var productNumber = value.ChildProductNumber;
-
+                    // Get Child Proudct Number
                     $.ajax({
                         type: "GET",
                         url: "/api/Product/" + productNumber,
@@ -381,6 +410,4 @@
             }
         });
     }
-
-
 </script>

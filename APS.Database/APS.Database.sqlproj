@@ -145,6 +145,9 @@
     <Build Include="dbo\Stored Procedures\Schedule\CreateSchedule.sql" />
     <Build Include="dbo\Stored Procedures\Schedule\GetAllSchedule.sql" />
     <Build Include="dbo\Stored Procedures\Schedule\CheckSchedule.sql" />
+    <Build Include="dbo\Stored Procedures\Order\GetOrder.sql" />
+    <Build Include="dbo\Stored Procedures\Order\GetAllProductLstByOfOrder.sql" />
+    <Build Include="dbo\Stored Procedures\Order\GetProductDescription.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="APS.Database.publish.Test.xml" />
