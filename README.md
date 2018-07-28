@@ -13,8 +13,8 @@
 화면 구성
 --------  
     - 로그인
-     ![회원가입](./Users/MinhoLee/Desktop/github/회원가입.PNG)
-    
+     ![login](https://user-images.githubusercontent.com/35621861/43353970-d404e0e2-927d-11e8-8d3e-9efb098b2799.PNG)
+     
     - 회원가입
      <img src="https://user-images.githubusercontent.com/35621861/43353798-70057680-927b-11e8-8ab4-35364d60d365.PNG"></img>
     
