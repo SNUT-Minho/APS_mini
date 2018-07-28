@@ -10,12 +10,36 @@
     - 동일 그룹에 속해있는 기업 및 관리자들끼리 스케줄링을 공유할 수 있도록 구성하자.
     - User의 편안한 환경을 위해 PostBack 없는 Restful API 웹을 구축하자.
     
-사용 예제
+화면 구성
 --------  
     - 로그인
-   <img src="https://user-images.githubusercontent.com/35621861/43353760-a75b619a-927a-11e8-967f-e1f99968618c.PNG">
+    <img src="https://user-images.githubusercontent.com/35621861/43353793-58782f76-927b-11e8-8437-77aa4bb22c30.PNG">
+    
+    - 회원가입
+    <img src="https://user-images.githubusercontent.com/35621861/43353798-70057680-927b-11e8-8ab4-35364d60d365.PNG">
+    
+    - 유저정보
+    <img src="https://user-images.githubusercontent.com/35621861/43353841-007badb0-927c-11e8-87dc-e1236b7d08c8.PNG">
+    
+    - Schedule
+    <img src="https://user-images.githubusercontent.com/35621861/43353859-41e7c914-927c-11e8-84a9-01c5bfcb5c76.PNG">
+    
+    - Order
+    <img src="https://user-images.githubusercontent.com/35621861/43353867-5334cf78-927c-11e8-908a-4450bc4e6b25.PNG">
 
-    - 
+    - Routing
+    <img src="https://user-images.githubusercontent.com/35621861/43353869-5f2755ee-927c-11e8-82bb-146191311ef8.PNG">
+    
+    - Work Station
+    <img src="https://user-images.githubusercontent.com/35621861/43353871-6dcaccb6-927c-11e8-8984-164af54724ff.PNG">
+    
+    - Product
+    <img src="https://user-images.githubusercontent.com/35621861/43353878-7a48290c-927c-11e8-986d-f752af391cc2.PNG">
+    
+    - BOM
+    <img src="https://user-images.githubusercontent.com/35621861/43353884-854b9064-927c-11e8-87d3-97082ac009fc.PNG">
+    
+
 개발 환경
 --------
     - Visual Studio Community 2017
