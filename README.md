@@ -13,7 +13,7 @@
 화면 구성
 --------  
     - 로그인
-<img src="https://user-images.githubusercontent.com/35621861/43354036-938277da-927f-11e8-9b3f-495bf2250aad.PNG">
+<img src="https://user-images.githubusercontent.com/35621861/43354036-938277da-927f-11e8-9b3f-495bf2250aad.PNG" width="60%" height="60%">
      
    
 
