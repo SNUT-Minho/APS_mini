@@ -9,6 +9,11 @@
     - Scheudule by Product보다 Schedule by Workstation을 생성하자.
     - 동일 그룹에 속해있는 기업 및 관리자들끼리 스케줄링을 공유할 수 있도록 구성하자.
     - User의 편안한 환경을 위해 PostBack 없는 Restful API 웹을 구축하자.
+
+실행
+--------
+    - APS > Views > Account > Login.cshtml
+    - DB 변경시 : Web.config -> connectionstring
     
 화면 구성 & 사용방법
 --------  
